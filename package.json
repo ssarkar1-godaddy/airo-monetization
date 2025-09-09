@@ -1,0 +1,20 @@
+{
+  "name": "airo-prototype",
+  "version": "1.0.0",
+  "description": "A fully responsive prototype of the GoDaddy Airo interface based on Figma designs.",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "figma:tokens": "echo 'Install figma-tokens plugin and export tokens.json here'",
+    "figma:icons": "echo 'Export SVG icons from Figma to assets/icons/'",
+    "figma:images": "echo 'Export images from Figma to assets/images/'",
+    "optimize:assets": "echo 'Run image optimization tools'",
+    "build:tokens": "echo 'Convert Figma tokens to CSS custom properties'",
+    "start": "python3 -m http.server 8000",
+    "dev": "live-server --port=3000 --host=localhost",
+    "serve": "python3 -m http.server 8000"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

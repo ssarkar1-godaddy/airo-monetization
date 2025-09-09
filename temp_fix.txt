@@ -1,0 +1,9 @@
+                    // Restore original content, footer, and header with tabs
+                    sidebarContent.style.display = 'block';
+                    footer.style.display = 'flex';
+                    if (sidebarHeader) {
+                        sidebarHeader.style.display = 'block';
+                    }
+                    
+                    // Update to V2 logos (new versions from customize tab)
+                    updateLogoSidebarWithNewVersion(2);

@@ -1,0 +1,5054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Logo - GoDaddy Airo</title>
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'GD Sherpa', sans-serif;
+            background-color: transparent;
+            min-height: 100vh;
+            color: #333333;
+        }
+
+        /* Main Content Wrapper - Flex container for chat and sidebar */
+        .main-content-wrapper {
+            display: flex;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            min-height: calc(100vh - 80px);
+            gap: 24px;
+            align-items: flex-start; /* Align items to top */
+            position: relative; /* Establish containing block for absolute positioned children */
+            overflow: hidden; /* Prevent content from bleeding outside wrapper */
+        }
+
+        /* Mobile responsive for wrapper */
+        @media (max-width: 768px) {
+            .main-content-wrapper {
+                flex-direction: column;
+                padding: 0 16px;
+            }
+        }
+
+
+
+        .header {
+            background-color: transparent !important;
+        }
+
+        .upgrade-btn {
+            color: #666;
+            text-decoration: underline;
+            font-weight: 500;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666666;
+            padding: 4px;
+        }
+
+
+        
+        .chat-interface {
+            flex: 1; /* Take remaining space in flex container */
+            padding: 40px 0 120px;
+            min-height: calc(100vh - 160px);
+            max-height: calc(100vh - 160px);
+            display: flex;
+            flex-direction: column;
+            background-color: transparent;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+            position: relative; /* Establish proper stacking context */
+            z-index: 1; /* Keep chat below sidebar */
+        }
+        
+        .chat-messages {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        
+        .user-message {
+            align-self: flex-end;
+            max-width: 70%;
+        }
+        
+        .user-bubble {
+            background: #ffffff;
+            color: #333333;
+            padding: 16px 20px;
+            border-radius: 20px;
+            border-bottom-right-radius: 6px;
+            font-size: 16px;
+            line-height: 1.4;
+            border: 1px solid #e5e5e5;
+        }
+        
+        .airo-message {
+            align-self: flex-start;
+            max-width: 80%;
+            animation: slideInLeft 0.4s ease-out;
+        }
+        
+        .airo-bubble {
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            color: #333333;
+            padding: 20px 24px;
+            border-radius: 20px;
+            border-bottom-left-radius: 6px;
+            font-size: 16px;
+            line-height: 1.5;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+
+
+        /* User Action Buttons - appear on user's side */
+        .user-action-buttons {
+            align-self: flex-end;
+            max-width: 70%;
+            margin-top: 16px;
+            animation: fadeInUp 0.3s ease-out 0.5s both;
+            background: transparent !important;
+            border: none !important;
+            padding: 0 !important;
+            box-shadow: none !important;
+        }
+        
+        .user-action-buttons .user-bubble {
+            background: transparent !important;
+            border: none !important;
+            padding: 0 !important;
+            box-shadow: none !important;
+        }
+        
+        .action-buttons-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 16px;
+        }
+
+        .action-buttons-row {
+            display: flex;
+            flex-direction: row;
+            gap: 12px;
+        }
+
+        .action-buttons-row:last-child {
+            margin-left: 50px !important;
+            position: relative;
+            left: 50px;
+        }
+        .action-buttons-row .action-btn {
+            flex: 1;
+        }
+
+        .action-buttons-row.horizontal-layout {
+            display: flex;
+            flex-direction: row;
+            gap: 16px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .action-buttons-row.horizontal-layout .action-btn {
+            flex: 0 1 auto;
+            min-width: 140px;
+            white-space: nowrap;
+            font-size: 14px;
+            padding: 12px 20px;
+        }
+
+        .action-btn.full-width {
+            width: 100%;
+        }
+
+        .action-btn {
+            flex: 1.5;
+            padding: 12px 24px;
+            border: 1px solid #6C47B4;
+            background: transparent;
+            color: #6C47B4;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'GD Sherpa', sans-serif;
+            font-size: 14px;
+        }
+
+        .action-btn.update-info {
+            flex: 1.6;
+        }
+
+        .action-btn:hover {
+            background: #D3C1F7;
+            color: #6C47B4;
+            border-color: #6C47B4;
+        }
+
+        .helper-text {
+            text-align: right;
+            color: #666666;
+            font-size: 14px;
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .helper-icon {
+            margin-right: 8px;
+            font-size: 16px;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Action Buttons - Outline Style */
+        .action-btn.outline-btn {
+            background: transparent;
+            border: 1px solid #6C47B4;
+            color: #6C47B4;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .action-btn.outline-btn:hover {
+            background: #D3C1F7;
+            color: #6C47B4;
+            border-color: #6C47B4;
+        }
+        
+        /* Marketing Action Buttons Container */
+        .marketing-action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+
+        .action-buttons-row:last-child {
+            margin-left: 50px !important;
+            position: relative;
+            left: 50px;
+
+        .action-buttons-container .action-buttons-row:last-child {
+            margin-left: 50px !important;
+            position: relative;
+            left: 50px;
+        }        }            padding: 16px 0;
+            justify-content: center;
+        }
+
+        /* Typing Dots Animation */
+        .typing-dots {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .typing-dots span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #6C47B4;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-dots span:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+
+        .typing-dots span:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+
+        @keyframes typing {
+            0%, 80%, 100% {
+                transform: scale(0);
+                opacity: 0.5;
+            }
+            40% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Logo Selection Sidebar */
+        .logo-selection-sidebar {
+            width: 50%;
+            flex-shrink: 0; /* Don't shrink in flex container */
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 16px;
+            display: none;
+            flex-direction: column;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+            overflow-y: auto; /* Allow vertical scrolling */
+            overflow-x: hidden; /* Prevent horizontal overflow */
+            height: calc(100vh - 145px); /* From near header to control bar bottom */
+            margin-top: 10px; /* Small gap from header */
+            z-index: 100; /* Ensure sidebar stays above chat content */
+            position: relative; /* Establish proper containment */
+        }
+
+        .logo-selection-sidebar.visible {
+            display: flex;
+        }
+
+        /* Reduce logo selection sidebar during preference editing */
+        .logo-selection-sidebar.hidden-for-editing {
+            opacity: 0.3;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Checkout Screen Styles */
+        .checkout-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            display: none;
+        }
+
+        .checkout-screen.visible {
+            display: block;
+        }
+
+        .checkout-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .checkout-container {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 480px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+        }
+
+        .checkout-close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #666666;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+
+        .checkout-close-btn:hover {
+            background: #f5f5f5;
+            color: #333333;
+        }
+
+        .checkout-content {
+            text-align: center;
+        }
+
+        .checkout-header {
+            margin-bottom: 32px;
+        }
+
+        .checkout-icon {
+            margin-bottom: 20px;
+        }
+
+        .checkout-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #333333;
+            margin: 0 0 12px 0;
+            line-height: 1.2;
+        }
+
+        .checkout-subtitle {
+            font-size: 16px;
+            color: #666666;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .checkout-order-summary {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 32px;
+            text-align: left;
+        }
+
+        .order-summary-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333333;
+            margin: 0 0 16px 0;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .order-item-details {
+            flex: 1;
+        }
+
+        .order-item-name {
+            display: block;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333333;
+            margin-bottom: 4px;
+        }
+
+        .order-item-description {
+            display: block;
+            font-size: 14px;
+            color: #666666;
+        }
+
+        .order-item-price {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333333;
+        }
+
+        .order-divider {
+            height: 1px;
+            background: #e9ecef;
+            margin: 16px 0;
+        }
+
+        .order-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 8px;
+        }
+
+        .order-total-label {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333333;
+        }
+
+        .order-total-price {
+            font-size: 20px;
+            font-weight: 700;
+            color: #6C47B4;
+        }
+
+        .checkout-loading {
+            margin-bottom: 32px;
+        }
+
+        .checkout-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #6C47B4;
+            border-radius: 50%;
+            animation: checkout-spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes checkout-spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .checkout-loading-text {
+            font-size: 16px;
+            color: #666666;
+            margin: 0;
+        }
+
+        .checkout-security {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #666666;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .checkout-container {
+                padding: 32px 24px;
+                margin: 10px;
+                max-width: none;
+            }
+
+            .checkout-title {
+                font-size: 28px;
+            }
+
+            .checkout-subtitle {
+                font-size: 14px;
+            }
+
+            .checkout-order-summary {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .checkout-container {
+                padding: 24px 20px;
+            }
+
+            .checkout-title {
+                font-size: 24px;
+            }
+
+            .order-summary-title {
+                font-size: 16px;
+            }
+
+            .order-item-name {
+                font-size: 14px;
+            }
+
+            .order-total-label {
+                font-size: 16px;
+            }
+
+            .order-total-price {
+                font-size: 18px;
+            }
+        }
+
+        /* Milestone Sidebar Styles */
+        .milestone-sidebar {
+            width: 50%;
+            flex-shrink: 0;
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 16px;
+            height: calc(100vh - 145px);
+            margin-top: 10px;
+            position: relative;
+            display: none;
+            flex-direction: column;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+        }
+
+        .milestone-sidebar.visible {
+            display: flex;
+        }
+
+        .milestone-sidebar-content {
+            flex: 1;
+            padding: 40px 32px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .milestone-close-btn {
+            display: none !important; /* Hidden in logo flow */
+        }
+
+        .milestone-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .milestone-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #333333;
+            margin: 0 0 12px 0;
+            line-height: 1.2;
+        }
+
+        .milestone-subtitle {
+            font-size: 18px;
+            color: #666666;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .milestone-logo-display {
+            position: relative;
+            background: transparent;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .milestone-logo-container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .milestone-logo-container img {
+            max-width: 150px;
+            max-height: 150px;
+            width: auto;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .milestone-confetti {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .confetti-piece {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #FFD700;
+            border-radius: 50%;
+            animation: confetti-fall 3s ease-in-out infinite;
+        }
+
+        .confetti-piece:nth-child(1) {
+            left: 20%;
+            animation-delay: 0s;
+            background: #FF6B6B;
+        }
+
+        .confetti-piece:nth-child(2) {
+            left: 40%;
+            animation-delay: 0.5s;
+            background: #4ECDC4;
+        }
+
+        .confetti-piece:nth-child(3) {
+            left: 60%;
+            animation-delay: 1s;
+            background: #45B7D1;
+        }
+
+        .confetti-piece:nth-child(4) {
+            left: 80%;
+            animation-delay: 1.5s;
+            background: #96CEB4;
+        }
+
+        .confetti-piece:nth-child(5) {
+            left: 30%;
+            animation-delay: 2s;
+            background: #FFEAA7;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(200px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .milestone-actions {
+            text-align: center;
+        }
+
+        .milestone-btn {
+            background: #333333;
+            color: #ffffff;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 16px;
+            width: auto;
+            min-width: 200px;
+        }
+
+        .milestone-btn:hover {
+            background: #222222;
+            transform: translateY(-1px);
+        }
+
+        .access-logos-link {
+            margin-bottom: 32px;
+        }
+
+        .access-logos-link a {
+            color: #333333;
+            text-decoration: underline;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .access-logos-link a:hover {
+            color: #666666;
+        }
+
+        .milestone-suggestions {
+            display: flex;
+            flex-direction: row;
+            gap: 16px;
+        }
+
+        .suggestion-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 12px;
+
+        .action-buttons-row:last-child {
+            margin-left: 50px !important;
+            position: relative;
+            left: 50px;
+
+        .action-buttons-container .action-buttons-row:last-child {
+            margin-left: 50px !important;
+            position: relative;
+            left: 50px;
+        }        }            padding: 20px;
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            background: #ffffff;
+            transition: all 0.2s ease;
+            flex: 1;
+        }
+
+        .suggestion-card:hover {
+            border-color: #333333;
+            box-shadow: 0 4px 12px rgba(51, 51, 51, 0.1);
+        }
+
+        .suggestion-icon {
+            flex-shrink: 0;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .suggestion-content {
+            flex: 1;
+        }
+
+        .suggestion-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333333;
+            margin: 0 0 12px 0;
+            line-height: 1.3;
+        }
+
+        .suggestion-btn {
+            background: transparent;
+            color: #333333;
+            border: 1px solid #333333;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .suggestion-btn:hover {
+            background: #333333;
+            color: #ffffff;
+        }
+
+        /* Mobile responsiveness for milestone sidebar */
+        @media (max-width: 768px) {
+            .milestone-sidebar {
+                width: calc(100% - 48px);
+                margin: 24px;
+                border-radius: 16px;
+                height: calc(100vh - 48px);
+            }
+
+            .milestone-sidebar-content {
+                padding: 32px 24px;
+            }
+
+            .milestone-title {
+                font-size: 28px;
+            }
+
+            .milestone-subtitle {
+                font-size: 16px;
+            }
+
+            .milestone-logo-display {
+                padding: 32px 24px;
+            }
+
+            .milestone-logo-container img {
+                max-width: 150px;
+                max-height: 150px;
+            }
+
+            .milestone-suggestions {
+                flex-direction: column;
+                gap: 12px;
+
+        .action-buttons-row:last-child {
+            margin-left: 50px !important;
+            position: relative;
+            left: 50px;
+
+        .action-buttons-container .action-buttons-row:last-child {
+            margin-left: 50px !important;
+            position: relative;
+            left: 50px;
+        }        }            }
+
+            .suggestion-card {
+                flex-direction: row;
+                align-items: flex-start;
+                text-align: left;
+                gap: 16px;
+            }
+
+            .suggestion-content {
+                flex: 1;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .milestone-sidebar {
+                width: calc(100% - 24px);
+                margin: 12px;
+                height: calc(100vh - 24px);
+            }
+
+            .milestone-sidebar-content {
+                padding: 24px 20px;
+            }
+
+            .milestone-title {
+                font-size: 24px;
+            }
+
+            .milestone-logo-display {
+                padding: 24px 20px;
+            }
+
+            .milestone-logo-container img {
+                max-width: 120px;
+                max-height: 120px;
+            }
+
+            .milestone-suggestions {
+                flex-direction: column;
+                gap: 12px;
+
+        .action-buttons-row:last-child {
+            margin-left: 50px !important;
+            position: relative;
+            left: 50px;
+
+        .action-buttons-container .action-buttons-row:last-child {
+            margin-left: 50px !important;
+            position: relative;
+            left: 50px;
+        }        }            }
+
+            .suggestion-card {
+                padding: 16px;
+                flex-direction: row;
+                align-items: flex-start;
+                text-align: left;
+                gap: 12px;
+
+        .action-buttons-row:last-child {
+            margin-left: 50px !important;
+            position: relative;
+            left: 50px;
+
+        .action-buttons-container .action-buttons-row:last-child {
+            margin-left: 50px !important;
+            position: relative;
+            left: 50px;
+        }        }            }
+
+            .suggestion-title {
+                font-size: 14px;
+            }
+        }
+
+        .logo-sidebar-header {
+            padding: 24px 24px 16px;
+            border-bottom: 1px solid #e5e5e5;
+            position: relative;
+        }
+
+        .close-sidebar-btn {
+            display: none !important; /* Hidden in logo flow */
+        }
+
+        .logo-sidebar-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333333;
+            margin: 0 0 16px 0;
+        }
+
+        .logo-tabs {
+            display: flex;
+            gap: 8px;
+        }
+
+        .tab-btn {
+            padding: 8px 16px;
+            border: none;
+            background: transparent;
+            color: #666666;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            position: relative;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab-btn.active {
+            color: #333333;
+            border-bottom: 2px solid #6C47B4;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .logo-sidebar-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto; /* Handle own scrolling within sidebar */
+            overflow-x: hidden; /* Prevent horizontal overflow */
+            position: relative; /* Ensure proper containment */
+        }
+
+        .logo-description {
+            font-size: 14px;
+            color: #666666;
+            margin: 0 0 24px 0;
+            line-height: 1.5;
+        }
+
+        .logo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+
+        .logo-option {
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .logo-option:hover {
+            transform: translateY(-2px);
+        }
+
+        .logo-option.selected .logo-image {
+            border: 2px solid #6C47B4;
+        }
+
+        .logo-image {
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 140px;
+            position: relative;
+        }
+        
+        .logo-generated-image {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            object-position: center;
+            border-radius: 8px;
+        }
+
+        .logo-selection-indicator {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 20px;
+            height: 20px;
+            background: #ffffff;
+            border: 1px solid #d0d0d0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+
+        .logo-option.selected .logo-selection-indicator {
+            border: 2px solid #6C47B4;
+            background: #ffffff;
+        }
+
+        .logo-selection-indicator .checkmark {
+            display: none;
+            width: 12px;
+            height: 12px;
+        }
+
+        .logo-option.selected .logo-selection-indicator .checkmark {
+            display: block;
+        }
+
+        .logo-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #333333;
+        }
+
+        .logo-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+                .logo-action-btn {
+            padding: 10px 16px;
+            border: 1px solid #6C47B4;
+            background: transparent;
+            color: #6C47B4;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .logo-action-btn:hover {
+            background: #D3C1F7;
+            color: #6C47B4;
+            border-color: #6C47B4;
+        }
+
+        .write-response {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #666666;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .write-icon {
+            font-size: 16px;
+        }
+
+        .logo-sidebar-footer {
+            padding: 16px 24px;
+            border-top: 1px solid #e5e5e5;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+
+        .action-buttons-row:last-child {
+            margin-left: 50px !important;
+            position: relative;
+            left: 50px;
+
+        .action-buttons-container .action-buttons-row:last-child {
+            margin-left: 50px !important;
+            position: relative;
+            left: 50px;
+        }        }        }
+
+        .footer-btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid #d0d0d0;
+        }
+
+        .footer-btn.secondary {
+            background: #ffffff;
+            color: #666666;
+        }
+
+        .footer-btn.secondary:hover {
+            background: #f8f9fa;
+        }
+
+        .footer-btn.primary {
+            background: #666666;
+            color: #ffffff;
+            border: 1px solid #666666;
+        }
+
+        .footer-btn.primary:hover {
+            background: #555555;
+        }
+
+        .footer-btn.primary:disabled {
+            background: #cccccc;
+            color: #888888;
+            border: 1px solid #cccccc;
+            cursor: not-allowed;
+        }
+
+        /* Dark styling when logo is selected */
+        .logo-sidebar-footer.logo-selected .footer-btn.secondary {
+            background: #ffffff;
+            color: #333333;
+            border: 1px solid #333333;
+        }
+
+        .logo-sidebar-footer.logo-selected .footer-btn.primary {
+            background: #333333;
+            color: #ffffff;
+            border: 1px solid #333333;
+        }
+
+        .logo-sidebar-footer.logo-selected .footer-btn.primary:hover {
+            background: #222222;
+        }
+
+        .logo-sidebar-footer.logo-selected .footer-btn.primary:disabled {
+            background: #cccccc;
+            color: #888888;
+            border: 1px solid #cccccc;
+            cursor: not-allowed;
+        }
+
+
+
+        /* Airo Plus Upgrade Screen */
+        .airo-plus-upgrade {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #ffffff;
+            display: none;
+            z-index: 1000;
+        }
+
+        .airo-plus-upgrade.visible {
+            display: block;
+        }
+
+        .upgrade-modal {
+            background: #ffffff;
+            border-radius: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upgrade-logo-section {
+            flex: 1;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 64px;
+        }
+
+        .upgrade-logo-display {
+            background: transparent;
+            padding: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: auto;
+        }
+        
+        .upgrade-logo-display .logo-generated-image {
+            width: auto;
+            height: auto;
+            max-width: 380px;
+            max-height: 380px;
+            object-fit: contain;
+            object-position: center;
+            border-radius: 12px;
+        }
+
+        .upgrade-content-section {
+            flex: 1;
+            padding: 48px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow-y: auto;
+            max-height: 100vh;
+        }
+
+        .upgrade-close-btn {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666666;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .upgrade-close-btn:hover {
+            color: #333333;
+        }
+
+        .upgrade-header {
+            margin-bottom: 24px;
+        }
+
+        .upgrade-airo-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .upgrade-airo-logo svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        .upgrade-airo-text {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333333;
+        }
+
+        .upgrade-airo-text .airo-purple {
+            color: #666;
+        }
+
+        .upgrade-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #333333;
+            line-height: 1.2;
+            margin-bottom: 16px;
+        }
+
+        .upgrade-subtitle {
+            font-size: 16px;
+            color: #666666;
+            line-height: 1.4;
+            margin-bottom: 32px;
+        }
+
+        .upgrade-features {
+            margin-bottom: 32px;
+        }
+
+        .upgrade-features h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333333;
+            margin-bottom: 16px;
+        }
+
+        .upgrade-feature {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+
+        .action-buttons-row:last-child {
+            margin-left: 50px !important;
+            position: relative;
+            left: 50px;
+
+        .action-buttons-container .action-buttons-row:last-child {
+            margin-left: 50px !important;
+            position: relative;
+            left: 50px;
+        }        }            margin-bottom: 12px;
+        }
+
+        .upgrade-feature-icon {
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        .upgrade-feature-text {
+            font-size: 14px;
+            color: #333333;
+            line-height: 1.4;
+        }
+
+        .upgrade-pricing {
+            margin-bottom: 32px;
+        }
+
+        .upgrade-price-option {
+            border: 2px solid #e5e5e5;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .upgrade-price-option:hover {
+            border-color: #666;
+        }
+
+        .upgrade-price-option.selected {
+            border-color: #666;
+            background: #f8f5ff;
+        }
+
+        .upgrade-price-option.highlighted {
+            border-color: #00D4AA;
+            background: #f0fffe;
+        }
+
+        .upgrade-price-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+        .action-buttons-row:last-child {
+            margin-left: 50px !important;
+            position: relative;
+            left: 50px;
+
+        .action-buttons-container .action-buttons-row:last-child {
+            margin-left: 50px !important;
+            position: relative;
+            left: 50px;
+        }        }            margin-bottom: 8px;
+        }
+
+        .upgrade-radio {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #d0d0d0;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .upgrade-price-option.selected .upgrade-radio {
+            border-color: #666;
+        }
+
+        .upgrade-price-option.selected .upgrade-radio::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 10px;
+            height: 10px;
+            background: #666;
+            border-radius: 50%;
+        }
+
+        .upgrade-price-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333333;
+        }
+
+        .upgrade-price-details {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .upgrade-price-old {
+            font-size: 14px;
+            color: #999999;
+            text-decoration: line-through;
+        }
+
+        .upgrade-price-new {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333333;
+        }
+
+        .upgrade-price-period {
+            font-size: 16px;
+            color: #666666;
+        }
+
+        .upgrade-price-note {
+            font-size: 12px;
+            color: #666666;
+        }
+
+        .upgrade-buy-btn {
+            background: #333333;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            padding: 16px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: auto;
+        }
+
+        .upgrade-buy-btn:hover {
+            background: #222222;
+        }
+
+        /* Preference Editing Sidebar */
+        .preference-editing-sidebar {
+            width: 50%;
+            flex-shrink: 0; /* Don't shrink in flex container */
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 16px;
+            display: none;
+            flex-direction: column;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+            overflow-y: auto; /* Allow vertical scrolling */
+            overflow-x: hidden; /* Prevent horizontal overflow */
+            height: calc(100vh - 145px); /* From near header to control bar bottom */
+            margin-top: 10px; /* Small gap from header */
+            z-index: 200; /* Ensure sidebar stays above logo selection sidebar */
+            position: absolute; /* Position over logo selection sidebar */
+            right: 0; /* Align to right side of container */
+        }
+
+        .preference-editing-sidebar.visible {
+            display: flex;
+        }
+
+        .preference-editing-header {
+            padding: 24px 24px 16px;
+            border-bottom: 1px solid #e5e5e5;
+            position: relative;
+        }
+
+        .preference-editing-close-btn {
+            display: none !important; /* Hidden in logo flow */
+        }
+
+        .preference-editing-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333333;
+            margin: 0;
+        }
+
+        .preference-editing-content {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        .preference-editing-section {
+            margin-bottom: 24px;
+        }
+
+        .preference-editing-category {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333333;
+            margin: 0 0 8px 0;
+        }
+
+        .preference-editing-description {
+            font-size: 14px;
+            color: #666666;
+            margin: 0 0 16px 0;
+            line-height: 1.5;
+        }
+
+        .preference-editing-textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 12px;
+            border: 1px solid #d0d0d0;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            line-height: 1.5;
+            resize: vertical;
+            background: #ffffff;
+        }
+
+        .preference-editing-textarea:focus {
+            outline: none;
+            border-color: #666;
+            box-shadow: 0 0 0 3px rgba(123, 44, 191, 0.1);
+        }
+
+        .preference-editing-footer {
+            padding: 16px 24px;
+            border-top: 1px solid #e5e5e5;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+
+        .action-buttons-row:last-child {
+            margin-left: 50px !important;
+            position: relative;
+            left: 50px;
+
+        .action-buttons-container .action-buttons-row:last-child {
+            margin-left: 50px !important;
+            position: relative;
+            left: 50px;
+        }        }        }
+
+        .preference-editing-btn {
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid #d0d0d0;
+        }
+
+        .preference-editing-btn.secondary {
+            background: #ffffff;
+            color: #666666;
+        }
+
+        .preference-editing-btn.secondary:hover {
+            background: #f8f9fa;
+        }
+
+        .preference-editing-btn.primary {
+            background: #333333;
+            color: #ffffff;
+            border: 1px solid #333333;
+        }
+
+        .preference-editing-btn.primary:hover {
+            background: #222222;
+        }
+
+        /* Chat interface remains unchanged when preference editing sidebar is visible 
+           - preference editing sidebar overlays logo sidebar instead of adjusting chat layout */
+
+        /* Control bar remains in default position when preference editing is open 
+           since chat interface doesn't move */
+
+        /* Hang Tight Sidebar - matches logo-selection-sidebar positioning */
+        .hang-tight-sidebar {
+            width: 50%;
+            flex-shrink: 0;
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 16px;
+            display: none;
+            flex-direction: column;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+            overflow-y: auto;
+            overflow-x: hidden;
+            height: calc(100vh - 145px);
+            margin-top: 10px;
+            z-index: 100;
+            position: relative;
+        }
+
+        .hang-tight-sidebar.visible {
+            display: flex;
+        }
+
+        .hang-tight-content {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .hang-tight-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .hang-tight-content h3 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333333;
+            margin: 0 0 8px 0;
+        }
+
+        .hang-tight-content p {
+            font-size: 16px;
+            color: #666666;
+            margin: 0;
+        }
+
+        /* No margin adjustments needed - hang tight sidebar replaces logo sidebar space */
+
+
+
+        .preferences-header {
+            padding: 24px 24px 16px 24px;
+            border-bottom: 1px solid #e5e5e5;
+            position: relative;
+        }
+
+        .preferences-close-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #666666;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .preferences-close-btn:hover {
+            color: #333333;
+        }
+
+        .preferences-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333333;
+            margin: 0 0 16px 0;
+        }
+
+        .preferences-tabs {
+            display: flex;
+            gap: 0;
+        }
+
+        .preferences-tabs .tab-btn {
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            padding: 8px 0;
+            font-size: 14px;
+            font-weight: 500;
+            color: #666666;
+            cursor: pointer;
+            margin-right: 24px;
+        }
+
+        .preferences-tabs .tab-btn.active {
+            color: #333333;
+            border-bottom: 2px solid #6C47B4;
+        }
+
+        .preferences-content {
+            flex: 1;
+            padding: 16px 24px;
+            overflow-y: auto;
+        }
+
+        .preference-category {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 0;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .preference-category:hover {
+            background: #f8f9fa;
+            margin: 0 -16px;
+            padding: 16px;
+            border-radius: 8px;
+        }
+
+        .preference-category:last-child {
+            border-bottom: none;
+        }
+
+        .preference-info {
+            flex: 1;
+        }
+
+        .preference-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333333;
+            margin: 0 0 4px 0;
+        }
+
+        .preference-subtitle {
+            font-size: 14px;
+            color: #666666;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .preference-chevron {
+            flex-shrink: 0;
+            margin-left: 12px;
+        }
+
+        .preferences-footer {
+            padding: 16px 24px;
+            border-top: 1px solid #e5e5e5;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+
+        .action-buttons-row:last-child {
+            margin-left: 50px !important;
+            position: relative;
+            left: 50px;
+
+        .action-buttons-container .action-buttons-row:last-child {
+            margin-left: 50px !important;
+            position: relative;
+            left: 50px;
+        }        }        }
+
+        .preferences-footer .footer-btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid #d0d0d0;
+        }
+
+        .preferences-footer .footer-btn.secondary {
+            background: #ffffff;
+            color: #666666;
+        }
+
+        .preferences-footer .footer-btn.secondary:hover {
+            background: #f8f9fa;
+        }
+
+        .preferences-footer .footer-btn.primary {
+            background: #333333;
+            color: #ffffff;
+            border: 1px solid #333333;
+        }
+
+        .preferences-footer .footer-btn.primary:hover {
+            background: #222222;
+        }
+
+
+
+        body.preferences-sidebar-open .control-bar {
+            left: max(24px, calc((100vw - 1200px) / 2 + 24px)) !important; /* Align with left boundary + padding */
+            right: auto !important;
+            transform: translateX(0) !important;
+            width: calc((min(1200px, 100vw - 48px) / 2 - 12px) * 0.9) !important; /* 90% of chat area for better coverage */
+            max-width: none !important;
+        }
+
+        @media (max-width: 768px) {
+            .preference-editing-sidebar {
+                width: calc(100% - 48px) !important;
+                height: calc(100vh - 140px) !important;
+                margin-top: 20px !important;
+                margin-bottom: 20px !important;
+            }
+
+            /* No hang tight sidebar mobile adjustments needed - uses same space as logo sidebar */
+
+            body.preference-editing-open .control-bar {
+                left: calc(20vw - 12px);
+            }
+
+            body.preferences-sidebar-open .control-bar {
+                left: calc(20vw - 12px);
+            }
+            
+            /* Mobile disclaimer positioning for logo page states (768px) */
+            body.preference-editing-open .disclaimer,
+            body.preferences-sidebar-open .disclaimer {
+                left: calc(20vw - 12px) !important;
+                transform: translateX(-50%) !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .preference-editing-sidebar {
+                width: calc(100% - 24px) !important;
+                height: calc(100vh - 120px) !important;
+                margin-top: 10px !important;
+                margin-bottom: 10px !important;
+            }
+
+            .hang-tight-sidebar {
+                top: 80px;
+                bottom: 12px;
+                width: calc(70% - 24px);
+            }
+
+
+
+            .preference-editing-header {
+                padding: 16px 16px 12px 16px;
+            }
+
+            .preference-editing-content {
+                padding: 16px;
+            }
+
+            .preference-editing-footer {
+                padding: 12px 16px;
+            }
+
+            .preference-editing-title {
+                font-size: 18px;
+            }
+
+            .preferences-header {
+                padding: 16px 16px 12px 16px;
+            }
+
+            .preferences-content {
+                padding: 12px 16px;
+            }
+
+            .preferences-footer {
+                padding: 12px 16px;
+            }
+
+            .preferences-title {
+                font-size: 18px;
+            }
+
+            body.preference-editing-open .control-bar {
+                left: calc(15vw - 12px);
+            }
+
+            body.hang-tight-sidebar-open .control-bar {
+                left: calc(15vw - 12px);
+            }
+
+            body.preferences-sidebar-open .control-bar {
+                left: calc(15vw - 12px);
+            }
+            
+            /* Mobile disclaimer positioning for logo page states (480px) */
+            body.hang-tight-sidebar-open .disclaimer,
+            body.preference-editing-open .disclaimer,
+            body.preferences-sidebar-open .disclaimer {
+                left: calc(15vw - 12px) !important;
+                transform: translateX(-50%) !important;
+            }
+
+            /* No margin adjustment for small mobile - preference editing sidebar overlays logo sidebar */
+
+            .chat-interface.with-hang-tight-sidebar {
+                margin-right: 70%;
+            }
+        }
+
+        /* Hide control bar when upgrade screen is visible */
+        body.upgrade-screen-open .control-bar {
+            display: none;
+        }
+
+        /* Loading spinner animation for "Generate My Logo" */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .upgrade-modal {
+                flex-direction: column;
+            }
+
+            .upgrade-logo-section {
+                padding: 32px;
+                min-height: 300px;
+            }
+
+            .upgrade-content-section {
+                padding: 24px;
+            }
+
+            .upgrade-title {
+                font-size: 24px;
+            }
+
+            .upgrade-logo-display {
+                width: 350px;
+                height: 350px;
+                padding: 24px;
+                border-radius: 12px;
+            }
+            
+            .upgrade-logo-display .logo-generated-image {
+                width: 280px !important;
+                height: 280px !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .upgrade-logo-section {
+                padding: 24px;
+                min-height: 280px;
+            }
+
+            .upgrade-logo-display {
+                width: 250px;
+                height: 250px;
+                padding: 16px;
+                border-radius: 12px;
+            }
+            
+            .upgrade-logo-display .logo-generated-image {
+                width: 200px !important;
+                height: 200px !important;
+            }
+        }
+
+        /* Large sidebar control bar - align with chat interface boundaries with 90% width */
+        body.logo-sidebar-open .control-bar {
+            left: max(24px, calc((100vw - 1200px) / 2 + 24px)) !important; /* Align with left boundary + padding */
+            right: auto !important;
+            transform: translateX(0) !important;
+            width: calc((min(1200px, 100vw - 48px) / 2 - 12px) * 0.9) !important; /* 90% of chat area for better coverage */
+            max-width: none !important;
+        }
+
+        /* Milestone sidebar control bar - same alignment as other large sidebars */
+        body.milestone-sidebar-open .control-bar {
+            left: max(24px, calc((100vw - 1200px) / 2 + 24px)) !important; /* Align with left boundary + padding */
+            right: auto !important;
+            transform: translateX(0) !important;
+            width: calc((min(1200px, 100vw - 48px) / 2 - 12px) * 0.9) !important; /* 90% of chat area for better coverage */
+            max-width: none !important;
+        }
+
+        /* ==================== DISCLAIMER POSITIONING FOR LOGO PAGE ==================== */
+        
+        /* Large sidebar states - disclaimer follows control bar */
+        body.logo-sidebar-open .disclaimer,
+        body.milestone-sidebar-open .disclaimer,
+        body.preferences-sidebar-open .disclaimer {
+            left: max(24px, calc((100vw - 1200px) / 2 + 24px)) !important;
+            right: auto !important;
+            transform: translateX(0) !important;
+            width: calc((min(1200px, 100vw - 48px) / 2 - 12px) * 0.9) !important;
+            max-width: none !important;
+        }
+        
+        /* Preference editing state - disclaimer follows control bar */
+        body.preference-editing-open .disclaimer {
+            left: calc(25vw - 12px) !important;
+            transform: translateX(-50%) !important;
+        }
+        
+        /* Hide disclaimer when upgrade screen is visible */
+        body.upgrade-screen-open .disclaimer {
+            display: none !important;
+        }
+        
+        /* Using global styles.css for control bar - no custom overrides */
+
+        @media (max-width: 768px) {
+
+            .chat-interface {
+                padding: 24px 16px 120px;
+                max-height: calc(100vh - 120px);
+            }
+            
+            .user-message, .airo-message {
+                max-width: 90%;
+            }
+
+            .logo-selection-sidebar {
+                width: calc(100% - 48px) !important;
+                height: calc(100vh - 140px) !important;
+                margin-top: 20px !important;
+                margin-bottom: 20px !important;
+            }
+
+            /* Using global styles.css for responsive control bar */
+
+            .user-bubble, .airo-bubble {
+                padding: 14px 18px;
+                font-size: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .chat-interface {
+                padding: 20px 12px 120px;
+                max-height: calc(100vh - 100px);
+            }
+            
+            .user-message, .airo-message {
+                max-width: 95%;
+            }
+
+            .logo-selection-sidebar {
+                width: calc(100% - 24px) !important;
+                height: calc(100vh - 120px) !important;
+                margin-top: 10px !important;
+                margin-bottom: 10px !important;
+            }
+
+            .logo-sidebar-content {
+                padding: 16px;
+            }
+
+            .logo-grid {
+                gap: 12px;
+
+        .action-buttons-row:last-child {
+            margin-left: 50px !important;
+            position: relative;
+            left: 50px;
+
+        .action-buttons-container .action-buttons-row:last-child {
+            margin-left: 50px !important;
+            position: relative;
+            left: 50px;
+        }        }            }
+
+            .logo-image {
+                min-height: 100px;
+                padding: 12px;
+            }
+
+            .logo-image svg {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .logo-generated-image {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                object-position :center;
+                border-radius: 8px;
+            }
+
+
+
+            /* Using global styles.css for responsive grid panel */
+
+            .user-bubble, .airo-bubble {
+                padding: 12px 16px;
+                font-size: 14px;
+            }
+        }
+        
+        /* Sidebar Loading Screen */
+        .sidebar-loading-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 20px;
+            text-align: center;
+            height: 100%;
+        }
+        
+        .sidebar-loading-inner {
+            max-width: 280px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .sidebar-loading-icon {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 24px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        .sidebar-loading-icon svg {
+            width: 48px;
+            height: 48px;
+        }
+        
+        .sidebar-loading-content h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin: 0 0 12px 0;
+            letter-spacing: -0.01em;
+        }
+        
+        .sidebar-loading-content p {
+            font-size: 15px;
+            color: #666666;
+            margin: 0;
+            line-height: 1.4;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.7;
+                transform: scale(1.1);
+            }
+        }
+        
+        /* Logo Artifact Styling */
+        .logo-artifact {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+        .action-buttons-row:last-child {
+            margin-left: 50px !important;
+            position: relative;
+            left: 50px;
+
+        .action-buttons-container .action-buttons-row:last-child {
+            margin-left: 50px !important;
+            position: relative;
+            left: 50px;
+        }        }            padding: 16px;
+            background: #ffffff;
+            border: 1px solid #6C47B4;
+            border-radius: 12px;
+            margin: 16px 0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            max-width: 400px;
+        }
+        
+        .logo-artifact:hover {
+            border-color: #6C47B4;
+            box-shadow: 0 2px 8px rgba(108, 71, 180, 0.1);
+        }
+        
+        .artifact-icon {
+            width: 48px;
+            height: 48px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .artifact-content {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .artifact-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin: 0 0 4px 0;
+            line-height: 1.3;
+        }
+        
+        .artifact-subtitle {
+            font-size: 14px;
+            color: #666666;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        /* ==================== LOADING ANIMATION STYLING ==================== */
+        /* Exact match with privacy policy flow typing indicator */
+        .typing-indicator {
+            align-self: flex-start !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 12px !important;
+            margin-top: 16px !important;
+        }
+        
+        .typing-dots {
+            display: flex !important;
+            gap: 4px !important;
+        }
+        
+        .typing-dot {
+            width: 8px !important;
+            height: 8px !important;
+            background: #6C47B4 !important;
+            border-radius: 50% !important;
+            animation: typingPulse 1.4s infinite !important;
+        }
+        
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s !important;
+        }
+        
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s !important;
+        }
+        
+        .typing-text {
+            color: #666666 !important;
+            font-size: 14px !important;
+            font-style: italic !important;
+        }
+        
+        @keyframes typingPulse {
+            0%, 60%, 100% {
+                opacity: 0.3;
+                transform: scale(0.8);
+            }
+            30% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* ==================== SHARED LOADING STYLES ==================== */
+        .sidebar-loading-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .loading-icon {
+            margin-bottom: 24px;
+        }
+
+        .loading-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333333;
+            margin-bottom: 8px;
+        }
+
+        .loading-subtitle {
+            font-size: 14px;
+            color: #666666;
+        }
+
+        /* Logo page button color override - match privacy policy styling */
+        body .action-btn,
+        body .outline-btn,
+        body .logo-action-btn,
+        body .standalone-btn {
+            border-color: #6C47B4 !important;
+            color: #6C47B4 !important;
+        }
+
+        body .action-btn:hover,
+        body .outline-btn:hover,
+        body .logo-action-btn:hover,
+        body .standalone-btn:hover {
+            background: #D3C1F7 !important;
+            border-color: #6C47B4 !important;
+            color: #6C47B4 !important;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo" onclick="navigateToPage('index')" style="cursor: pointer;">
+                <img src="../assets/images/logo.svg" alt="GoDaddy Airo" class="logo-icon" />
+            </div>
+            <div class="header-actions">
+                <button class="upgrade-btn" onclick="navigateToPage('upgrade')">Upgrade to Airo Plus™</button>
+                <button class="close-btn" onclick="navigateToPage('index')">×</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Wrapper -->
+    <div class="main-content-wrapper">
+        <!-- Chat Interface -->
+        <main class="chat-interface" id="chatInterface">
+        <div class="chat-messages">
+            <!-- Initial content will be added by JavaScript -->
+        </div>
+    </main>
+    
+    <!-- Logo Selection Sidebar -->
+    <div class="logo-selection-sidebar" id="logoSelectionSidebar">
+        <div class="logo-sidebar-header">
+            <h2 class="logo-sidebar-title">Logos for Eugene's Cafe</h2>
+            <div class="logo-tabs">
+                <button class="tab-btn active" onclick="switchLogoTab('preferences')">Preferences</button>
+                <button class="tab-btn" onclick="switchLogoTab('preview')">Preview</button>
+            </div>
+        </div>
+        
+        <div class="logo-sidebar-content">
+            <p class="logo-description">Select a logo to keep refining or move forward with a current design.</p>
+            
+            <div class="logo-grid">
+                <div class="logo-option" onclick="selectLogo(this, '1A')">
+                    <div class="logo-image">
+                        <div class="logo-selection-indicator">
+                            <svg class="checkmark" viewBox="0 0 12 12" fill="none">
+                                <path d="M2 6L5 9L10 3" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <img src="../assets/images/a.png" alt="Logo 1A" class="logo-generated-image">
+                    </div>
+                    <div class="logo-label">Logo 1A</div>
+                </div>
+                
+                <div class="logo-option" onclick="selectLogo(this, '1B')">
+                    <div class="logo-image">
+                        <div class="logo-selection-indicator">
+                            <svg class="checkmark" viewBox="0 0 12 12" fill="none">
+                                <path d="M2 6L5 9L10 3" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <img src="../assets/images/b.png" alt="Logo 1B" class="logo-generated-image">
+                    </div>
+                    <div class="logo-label">Logo 1B</div>
+                </div>
+                
+                <div class="logo-option" onclick="selectLogo(this, '1C')">
+                    <div class="logo-image">
+                        <div class="logo-selection-indicator">
+                            <svg class="checkmark" viewBox="0 0 12 12" fill="none">
+                                <path d="M2 6L5 9L10 3" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <img src="../assets/images/c.png" alt="Logo 1C" class="logo-generated-image">
+                    </div>
+                    <div class="logo-label">Logo 1C</div>
+                </div>
+                
+                <div class="logo-option" onclick="selectLogo(this, '1D')">
+                    <div class="logo-image">
+                        <div class="logo-selection-indicator">
+                            <svg class="checkmark" viewBox="0 0 12 12" fill="none">
+                                <path d="M2 6L5 9L10 3" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <img src="../assets/images/d.png" alt="Logo 1D" class="logo-generated-image">
+                    </div>
+                    <div class="logo-label">Logo 1D</div>
+                </div>
+            </div>
+            
+
+        </div>
+        
+        <div class="logo-sidebar-footer" id="logoSidebarFooter">
+            <!-- Footer buttons will be dynamically generated based on current tab and state -->
+        </div>
+    </div>
+    
+
+    </div> <!-- End main-content-wrapper -->
+
+    <!-- Milestone Sidebar -->
+    <div class="milestone-sidebar" id="milestoneSidebar">
+        <div class="milestone-sidebar-content">
+            <div class="milestone-header">
+                <h2 class="milestone-title">Congrats!</h2>
+                <p class="milestone-subtitle">Your logo is yours to use anywhere.</p>
+            </div>
+            
+            <div class="milestone-logo-display">
+                <div class="milestone-logo-container" id="milestoneLogoContainer">
+                    <!-- Selected logo will be displayed here -->
+                </div>
+                <div class="milestone-confetti">
+                    <!-- Confetti elements -->
+                    <div class="confetti-piece"></div>
+                    <div class="confetti-piece"></div>
+                    <div class="confetti-piece"></div>
+                    <div class="confetti-piece"></div>
+                    <div class="confetti-piece"></div>
+                </div>
+            </div>
+            
+            <div class="milestone-actions">
+                <button class="milestone-btn primary">Download Logo Kit</button>
+                <div class="access-logos-link">
+                    <a href="#" onclick="handleAccessLogos()">Access your logos</a>
+                </div>
+                
+                <div class="milestone-suggestions">
+                    <div class="suggestion-card">
+                        <div class="suggestion-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+                                <rect x="3" y="3" width="7" height="7" rx="1" stroke="#333333" stroke-width="2" fill="none"/>
+                                <rect x="14" y="3" width="7" height="7" rx="1" stroke="#333333" stroke-width="2" fill="none"/>
+                                <rect x="14" y="14" width="7" height="7" rx="1" stroke="#333333" stroke-width="2" fill="none"/>
+                                <rect x="3" y="14" width="7" height="7" rx="1" stroke="#333333" stroke-width="2" fill="none"/>
+                            </svg>
+                        </div>
+                        <div class="suggestion-content">
+                            <h3 class="suggestion-title">Add your new logo to your website</h3>
+                            <button class="suggestion-btn" onclick="handleAddToWebsite()">Add to my site</button>
+                        </div>
+                    </div>
+                    
+                    <div class="suggestion-card">
+                        <div class="suggestion-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+                                <rect x="2" y="3" width="20" height="14" rx="2" stroke="#333333" stroke-width="2" fill="none"/>
+                                <path d="M8 21l4-7 4 7" stroke="#333333" stroke-width="2" fill="none"/>
+                            </svg>
+                        </div>
+                        <div class="suggestion-content">
+                            <h3 class="suggestion-title">Share your new logo with a custom social post</h3>
+                            <button class="suggestion-btn" onclick="handleSocialPost()">See Post Options</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Control Bar -->
+    <div class="control-bar">
+        <div class="control-main">
+            <button class="home-btn" onclick="navigateToPage('home')">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M3 7l7-4 7 4v11a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M9 17V11h2v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            <div class="input-container">
+                <input type="text" placeholder="Start typing..." class="chat-input" id="chatInput">
+                <button class="attach-btn">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M7 3a3 3 0 013 3v7a1 1 0 01-2 0V6a1 1 0 00-2 0v7a3 3 0 01-6 0V6a5 5 0 0110 0v7a1 1 0 102 0V6a7 7 0 00-14 0v7a5 5 0 0010 0V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+            <button class="send-btn" id="sendBtn">
+                <img src="../assets/images/sendicon.png" alt="Send" class="send-icon-img">
+            </button>
+        </div>
+        
+        <!-- Expanded Grid Panel (shows between input and buttons) -->
+        <div class="airo-grid-panel" id="airoGridPanel">
+            <div class="grid-item" onclick="navigateToPage('generate-privacy-policy')">
+                <div class="grid-item-icon">
+                    <img src="../assets/images/privacypolicyicon.png" alt="Privacy Policy" width="20" height="20">
+                </div>
+                <div class="grid-item-content">
+                    <div class="grid-item-title">Create a privacy policy</div>
+                    <div class="grid-item-desc">Build a policy to create trust with your customers</div>
+                </div>
+            </div>
+            <div class="grid-item" onclick="navigateToPage('generate-marketing-strategy')">
+                <div class="grid-item-icon">
+                    <img src="../assets/images/marketingicon.png" alt="Marketing" width="20" height="20">
+                </div>
+                <div class="grid-item-content">
+                    <div class="grid-item-title">Market my business</div>
+                    <div class="grid-item-desc">Get tailored insights to help grow your business</div>
+                </div>
+            </div>
+            <div class="grid-item" onclick="alert('Generate Images - Coming Soon!')">
+                <div class="grid-item-icon">
+                    <img src="../assets/images/imagesicon.png" alt="Generate Images" width="20" height="20">
+                </div>
+                <div class="grid-item-content">
+                    <div class="grid-item-title">Generate images</div>
+                    <div class="grid-item-desc">Explore how Airo™ can help you create images that match your brand</div>
+                </div>
+            </div>
+            <div class="grid-item" onclick="navigateToPage('generate-logo')">
+                <div class="grid-item-icon">
+                    <img src="../assets/images/logoicon.png" alt="Design Logo" width="20" height="20">
+                </div>
+                <div class="grid-item-content">
+                    <div class="grid-item-title">Design a logo</div>
+                    <div class="grid-item-desc">See how a logo designed by the best AI could look</div>
+                </div>
+            </div>
+            <div class="grid-item" onclick="navigateToPage('optimize-site')">
+                <div class="grid-item-icon">
+                    <img src="../assets/images/optimizeicon.png" alt="Optimize Site" width="20" height="20">
+                </div>
+                <div class="grid-item-content">
+                    <div class="grid-item-title">Optimize my site</div>
+                    <div class="grid-item-desc">Find ways to boost your website</div>
+                </div>
+            </div>
+            <div class="grid-item" onclick="navigateToPage('setup-llc')">
+                <div class="grid-item-icon">
+                    <img src="../assets/images/LLCicon.png" alt="Set up LLC" width="20" height="20">
+                </div>
+                <div class="grid-item-content">
+                    <div class="grid-item-title">Set up my LLC</div>
+                    <div class="grid-item-desc">Set up your business, LLC, and more</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="control-dropdowns">
+            <div class="dropdown-container dropdown-left">
+                <button class="dropdown-btn" id="askAiroBtn">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M8 1v6m0 0l3-3m-3 3L5 4M1 9h14l-1 6H2L1 9z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Ask Airo to...
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="dropdown-arrow">
+                        <path d="M3 4.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="dropdown-container dropdown-right">
+                <button class="dropdown-btn" id="recentChatsBtn">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M8 5v3l2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                    Recent Chats
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="dropdown-arrow">
+                        <path d="M3 4.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                <div class="dropdown-menu" id="recentChatsDropdown">
+                    <a href="#" onclick="navigateToPage('privacy-policy')">Privacy Policy</a>
+                    <a href="#" onclick="navigateToPage('carpet-logo')">Carpet Logo</a>
+                    <a href="#" onclick="navigateToPage('rug-warehouse')">Image of a Rug Warehouse</a>
+                    <a href="#" onclick="navigateToPage('business-goals')">Set Business Goals</a>
+                    <a href="#" onclick="navigateToPage('set-up-llc')">Set Up LLC</a>
+                    <a href="#" onclick="navigateToPage('coming-soon')">Coming Soon Page</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Shared loading duration constant for synchronized timing
+        const LOADING_DURATION = 40000; // 40 seconds for both chat and sidebar loading
+        
+        let currentStep = 'initial';
+        let currentUserMessageElement = null;
+
+        // Initialize dropdowns
+        function initializeDropdowns() {
+            const askAiroBtn = document.getElementById('askAiroBtn');
+            const gridPanel = document.getElementById('airoGridPanel');
+
+            if (askAiroBtn && !askAiroBtn.hasAttribute('data-dropdown-initialized')) {
+                askAiroBtn.setAttribute('data-dropdown-initialized', 'true');
+                askAiroBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const isVisible = gridPanel.classList.contains('visible');
+                    
+                    if (isVisible) {
+                        gridPanel.classList.remove('visible');
+                        askAiroBtn.classList.remove('active');
+                    } else {
+                        gridPanel.classList.add('visible');
+                        askAiroBtn.classList.add('active');
+                    }
+                });
+            }
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!gridPanel.contains(e.target) && !askAiroBtn.contains(e.target)) {
+                    gridPanel.classList.remove('visible');
+                    askAiroBtn.classList.remove('active');
+                }
+            });
+        }
+
+        // Navigation function - using global script.js version
+
+        // Handle Start Generating button (legacy - now handled by initial flow)
+        function handleStartGenerating() {
+            console.log('Legacy handleStartGenerating called - redirecting to CTA flow');
+            
+            // If somehow the old flow is triggered, just show the CTA button
+            addLogoBusinessDetailsCTA();
+        }
+
+        // Update your auto-population function to only populate on click:
+        function addLogoBusinessDetailsCTA() {
+            if (hasAutoPopulated) {
+                return;
+            }
+            
+            const chatInput = document.getElementById('chatInput');
+            
+            if (chatInput) {
+                // Add click event listener to populate text only when user clicks into input
+                chatInput.addEventListener('focus', function() {
+                    if (!this.hasAttribute('data-populated')) {
+                        this.value = "Eugene's Cafe is all about creating a surf-inspired, remote-work friendly coffee experience in New York City. I run the shop locally and focus on serving great coffee in a relaxed, creative environment. I grew up near the coast and brought that laid-back energy to NYC, but want to keep that classic New York vibe with coffee as the focus. I'm looking for something simple and classic.";
+                        this.setAttribute('data-populated', 'true');
+                        hasAutoPopulated = true;
+                        currentStep = 'awaiting_business_details';
+                    }
+                });
+            }
+        }
+        
+        // Legacy function - no longer needed since we use input field auto-population
+        // Keeping for compatibility but should not be called
+        function handleLogoBusinessDetailsCTA() {
+            console.log('Legacy handleLogoBusinessDetailsCTA called - should use input field instead');
+            // This function is deprecated - flow now uses auto-populated input field
+        }
+        
+        // Show loading screen
+        function showLoadingScreen() {
+            console.log('Showing loading animation');
+            
+            const chatMessages = document.querySelector('.chat-messages');
+            const typingMessage = document.createElement('div');
+            typingMessage.className = 'airo-message typing-indicator';
+            typingMessage.innerHTML = `
+                <div class="typing-indicator">
+                    <div class="typing-dots">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                    <div class="typing-text">Hang tight! This will only take a moment</div>
+                </div>
+            `;
+            
+            chatMessages.appendChild(typingMessage);
+            scrollToLatestMessage();
+            
+            // Show sidebar loading screen simultaneously
+            showHangTightSidebar();
+        }
+        
+        // Hide loading screen  
+        function hideLoadingScreen() {
+            console.log('Hiding loading animation');
+            
+            // Remove all possible loading indicators
+            const indicators = document.querySelectorAll('.typing-indicator, .typing-indicator-hang-tight, .airo-message.typing-indicator');
+            indicators.forEach(indicator => indicator.remove());
+            
+            // Hide sidebar loading screen
+            hideHangTightSidebar();
+        }
+
+        // Show "Hang tight" sidebar loading screen
+        function showHangTightSidebar() {
+            console.log('🔄 showHangTightSidebar called - creating hang tight loading sidebar');
+            const mainContentWrapper = document.querySelector('.main-content-wrapper');
+            
+            if (!mainContentWrapper) {
+                console.error('❌ Main content wrapper not found for hang tight sidebar');
+                return;
+            }
+            
+            // Remove any existing hang tight sidebar
+            const existingHangTightSidebar = document.getElementById('hangTightSidebar');
+            if (existingHangTightSidebar) {
+                existingHangTightSidebar.remove();
+            }
+            
+            // Create hang tight sidebar
+            const hangTightSidebar = document.createElement('div');
+            hangTightSidebar.id = 'hangTightSidebar';
+            hangTightSidebar.className = 'hang-tight-sidebar visible';
+            hangTightSidebar.innerHTML = `
+                <div class="sidebar-loading-content">
+                    <div class="loading-video-container">
+                        <video width="192" height="192" autoplay muted loop playsinline style="border-radius: 8px;">
+                            <source src="../assets/videos/loadinganimation.mp4" type="video/mp4">
+                            <!-- Fallback to spinner if video fails to load -->
+                            <div class="loading-icon">
+                                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="animation: spin 1s linear infinite;">
+                                    <path d="M16 2L20 10L28 6L24 14L32 16L24 18L28 26L20 22L16 30L12 22L4 26L8 18L0 16L8 14L4 6L12 10L16 2Z" fill="#6C47B4"/>
+                                </svg>
+                            </div>
+                        </video>
+                    </div>
+                    <div class="loading-title">Hang tight!</div>
+                    <div class="loading-subtitle">This will only take a moment...</div>
+                    <style>
+                    @keyframes spin {
+                        0% { transform: rotate(0deg); }
+                        100% { transform: rotate(360deg); }
+                    }
+                    </style>
+                </div>
+            `;
+            
+            // Insert hang tight sidebar into main content wrapper (replaces logo sidebar space)
+            mainContentWrapper.appendChild(hangTightSidebar);
+            
+            // Add body classes to position chat interface correctly (like logo sidebar)
+            document.body.classList.add('logo-sidebar-open');
+            const chatInterface = document.querySelector('.chat-interface');
+            if (chatInterface) {
+                chatInterface.classList.add('with-large-sidebar');
+            }
+            
+            console.log('✅ Hang tight sidebar displayed with proper positioning');
+        }
+
+        // Hide hang tight sidebar
+        function hideHangTightSidebar() {
+            console.log('🔄 hideHangTightSidebar called');
+            
+            const hangTightSidebar = document.getElementById('hangTightSidebar');
+            if (hangTightSidebar) {
+                hangTightSidebar.remove();
+                console.log('✅ Hang tight sidebar removed');
+            }
+            
+            // Remove body classes and chat interface classes
+            document.body.classList.remove('logo-sidebar-open');
+            const chatInterface = document.querySelector('.chat-interface');
+            if (chatInterface) {
+                chatInterface.classList.remove('with-large-sidebar');
+            }
+        }
+        
+        // Show logos with updated AI message and action buttons
+        function showLogosWithUpdatedAI() {
+            console.log('Showing logos with updated AI message');
+            
+            // First show the logo sidebar on Preview tab
+            showLogoSelectionSidebar();
+            
+            // Switch to preview tab (default)
+            setTimeout(() => {
+                switchLogoTab('preview');
+            }, 100);
+            
+            // Then add AI message, artifact, and action buttons in sequence
+            setTimeout(() => {
+                // 1. Add AI message first
+                addAIMessage('Sounds great! Take a look and let me know what you\'d like to do next.');
+                
+                // 2. Logo artifact removed - sidebar handles display
+                
+                // 3. Add action buttons last
+                setTimeout(() => {
+                    const actionButtons = [
+                        { text: 'Generate more logos', onclick: 'handleGenerateMoreLogos()' },
+                        { text: 'Make changes', onclick: 'handleMakeChanges()' },
+                        { text: 'Edit logo preferences', onclick: 'handleEditLogoPreferences()' }
+                    ];
+                    
+                    addUserActionButtons(actionButtons);
+                }, 400);
+                
+            }, 500);
+        }
+        
+        // Handle Generate More Logos button
+        function handleGenerateMoreLogos() {
+            console.log('Generate more logos clicked');
+            
+            // Replace button with user message
+            replaceActionButtonWithUserMessage('Generate more logos');
+            
+            // Show loading and generate new logos
+            setTimeout(() => {
+                addAIMessage("Creating additional logo concepts for you...");
+                addTypingIndicator();
+                
+                setTimeout(() => {
+                    removeTypingIndicator();
+                    addAIMessage("Here are 4 new logo concepts with different styles and approaches. Each design explores various combinations of typography, symbols, and layouts.");
+                }, 2500);
+            }, 500);
+        }
+        
+        // Handle Edit Logo Preferences button (navigate to customize tab)
+        function handleEditLogoPreferences() {
+            console.log('Edit logo preferences clicked');
+            
+            // Replace button with user message
+            replaceActionButtonWithUserMessage('Edit logo preferences');
+            
+            // Switch to preferences tab
+            setTimeout(() => {
+                switchLogoTab('preferences');
+                addAIMessage("Let's do it! Add your preferences for any categories that are important to you. You can also ask me questions while you work.");
+            }, 500);
+        }
+        
+        // Helper function to replace action button with user message
+        function replaceActionButtonWithUserMessage(messageText) {
+            const actionButtons = document.querySelector('.user-action-buttons');
+            if (actionButtons) {
+                // Since we removed the user-bubble wrapper, update the action buttons container directly
+                actionButtons.innerHTML = `
+                    <div class="user-bubble">
+                        ${messageText}
+                    </div>
+                `;
+                actionButtons.classList.remove('user-action-buttons');
+                // Update currentUserMessageElement
+                currentUserMessageElement = actionButtons;
+            }
+        }
+
+        // Handle Update Info button
+        function handleUpdateInfo() {
+            // Hide the action buttons
+            const userActionButtons = document.querySelector('.user-action-buttons');
+            if (userActionButtons) {
+                userActionButtons.style.display = 'none';
+            }
+
+            // Add user message
+            addUserMessage('Let me update info');
+            
+            // Show AI message after a delay
+            setTimeout(() => {
+                addAIMessage("Let's do it! Add your preferences for any categories that are important to you. You can also ask me questions while you work.");
+                
+                // Show logo selection sidebar with customize tab after message (without action buttons)
+                setTimeout(() => {
+                    showLogoSelectionSidebarOnly();
+                    switchLogoTab('preferences');
+                }, 300);
+            }, 500);
+        }
+
+        // Show logo generation results
+        function showLogoGeneration() {
+            const logoButtons = [
+                { text: 'Show me the logos', onclick: 'handleSelectLogo()' },
+                { text: 'I\'d like revisions', onclick: 'handleRevisions()' }
+            ];
+            
+            addAIMessageWithButtons(`Excellent! I've created 4 logo concepts for Eugene's Cafe. Each design captures the unique blend of surf culture and urban creativity with typography and elements that evoke coastal freedom, warmth, and the energy of remote work.
+
+Which logo style resonates most with your brand vision?
+
+🎨 **Concept 1:** Wave-inspired circular logo with coffee bean accents
+🎨 **Concept 2:** Modern minimalist with surf-meets-city elements  
+🎨 **Concept 3:** Coastal-vintage typography with urban edge
+🎨 **Concept 4:** Contemporary wordmark with wave-flow lettering`, logoButtons);
+        }
+
+        // Show business info update form
+        function showUpdateBusinessInfo() {
+            const updateButtons = [
+                { text: 'Change business type', onclick: 'handleBusinessTypeUpdate()' },
+                { text: 'Update logo text', onclick: 'handleLogoTextUpdate()' }
+            ];
+            
+            addAIMessageWithButtons(`I'd be happy to update your business information. Please let me know what details you'd like to change:
+
+**Current Information:**
+• Business: You sell NY-style bagels
+• Logo text: Brad's Bagels
+
+What would you like to update?`, updateButtons);
+        }
+
+        // Utility functions for adding messages
+        function addUserMessage(text) {
+            console.log('👤 addUserMessage called with:', text);
+            
+            const chatMessages = document.querySelector('.chat-messages');
+            if (!chatMessages) {
+                console.error('❌ Chat messages container not found!');
+                return;
+            }
+            
+            const userMessage = document.createElement('div');
+            userMessage.className = 'user-message';
+            userMessage.innerHTML = `<div class="user-bubble sent">${text}</div>`; // Add 'sent' class
+            
+            chatMessages.appendChild(userMessage);
+            currentUserMessageElement = userMessage;
+            
+            console.log('✅ User message added to DOM');
+            scrollToLatestMessage();
+            return userMessage;
+        }
+
+        function addAIMessage(text) {
+            const chatMessages = document.querySelector('.chat-messages');
+            const aiMessage = document.createElement('div');
+            aiMessage.className = 'airo-message';
+            aiMessage.innerHTML = `
+                <div class="airo-bubble">
+                    ${text}
+                </div>
+            `;
+            
+            chatMessages.appendChild(aiMessage);
+            currentUserMessageElement = aiMessage;
+            
+            scrollToLatestMessage();
+        }
+
+        function addUserActionButtons(buttons) {
+            const chatMessages = document.querySelector('.chat-messages');
+            
+            const userActionButtons = document.createElement('div');
+            userActionButtons.className = 'user-message user-action-buttons';
+            
+            // Create two-row layout for logo action buttons
+            if (buttons.length === 3 && buttons.some(btn => btn.text === 'Edit logo preferences')) {
+                userActionButtons.innerHTML = `
+                    <div class="action-buttons-container">
+                        <div class="action-buttons-row">
+                            <button class="standalone-btn outline-btn" onclick="${buttons[0].onclick}">${buttons[0].text}</button>
+                            <button class="standalone-btn outline-btn" onclick="${buttons[1].onclick}">${buttons[1].text}</button>
+                        </div>
+                        <div class="action-buttons-row" style="margin-left: calc(100% - 180px);">
+                            <button class="standalone-btn outline-btn" style="width: auto; min-width: 180px; white-space: nowrap;" onclick="${buttons[2].onclick}">${buttons[2].text}</button>
+                        </div>
+                        <div class="helper-text">
+                        <div class="helper-message">
+                            <span class="helper-icon">↰</span>
+                            Write your own response
+                        </div>
+                    </div>
+                    </div>
+                `;
+            } else if (buttons.length === 2 && buttons.some(btn => btn.text === 'Yes lets do it!')) {
+                // Horizontal layout for milestone buttons
+                userActionButtons.innerHTML = `
+                    <div class="action-buttons-container">
+                        <div class="action-buttons-row horizontal-layout">
+                            <button class="standalone-btn outline-btn" onclick="${buttons[0].onclick}">${buttons[0].text}</button>
+                            <button class="standalone-btn outline-btn" onclick="${buttons[1].onclick}">${buttons[1].text}</button>
+                        </div>
+                        <div class="helper-text">
+                        <div class="helper-message">
+                            <span class="helper-icon">↰</span>
+                            Write your own response
+                        </div>
+                    </div>
+                    </div>
+                `;
+            } else {
+                // Default layout for other button configurations
+                userActionButtons.innerHTML = `
+                    <div class="action-buttons-container">
+                        ${buttons.map(btn => `<button class="standalone-btn outline-btn" onclick="${btn.onclick}">${btn.text}</button>`).join('')}
+                        <div class="helper-text">
+                        <div class="helper-message">
+                            <span class="helper-icon">↰</span>
+                            Write your own response
+                        </div>
+                    </div>
+                    </div>
+                `;
+            }
+            
+            chatMessages.appendChild(userActionButtons);
+            scrollToLatestMessage();
+        }
+
+        function addAIMessageWithButtons(text, buttons) {
+            console.log('addAIMessageWithButtons called with buttons:', buttons);
+            const chatMessages = document.querySelector('.chat-messages');
+            
+            // Add AI message
+            const aiMessage = document.createElement('div');
+            aiMessage.className = 'airo-message';
+            aiMessage.innerHTML = `
+                <div class="airo-bubble">
+                    ${text}
+                </div>
+            `;
+            chatMessages.appendChild(aiMessage);
+            
+            // Add user action buttons with delay
+            setTimeout(() => {
+                const userActionButtons = document.createElement('div');
+                userActionButtons.className = 'user-action-buttons user-message';
+                
+                // Create two-row layout for logo action buttons
+                if (buttons.length === 3 && buttons.some(btn => btn.text === 'Edit logo preferences')) {
+                    userActionButtons.innerHTML = `
+                        <div class="action-buttons-container">
+                            <div class="action-buttons-row">
+                                <button class="standalone-btn outline-btn" onclick="${buttons[0].onclick}">${buttons[0].text}</button>
+                                <button class="standalone-btn outline-btn" onclick="${buttons[1].onclick}">${buttons[1].text}</button>
+                            </div>
+                            <div class="action-buttons-row" style="margin-left: calc(100% - 180px);">
+                                <button class="standalone-btn outline-btn" style="width: auto; min-width: 180px; white-space: nowrap;" onclick="${buttons[2].onclick}">${buttons[2].text}</button>
+                            </div>
+                            <div class="helper-text">
+                        <div class="helper-message">
+                            <span class="helper-icon">↰</span>
+                            Write your own response
+                        </div>
+                    </div>
+                        </div>
+                    `;
+                } else {
+                    // Default layout for other button configurations
+                    const buttonHTML = buttons.map(btn => {
+                        const isUpdateInfo = btn.text.toLowerCase().includes('update') || btn.text.toLowerCase().includes('info');
+                        const additionalClass = isUpdateInfo ? ' update-info' : '';
+                        const buttonHtml = `<button class="standalone-btn${additionalClass}" onclick="${btn.onclick}">${btn.text}</button>`;
+                        console.log('🔥 CRITICAL: Creating button:', btn.text, 'with onclick:', btn.onclick);
+                        
+                        // Special debugging for Change color button
+                        if (btn.text === 'Change color') {
+                            console.log('🔥 CHANGE COLOR BUTTON DETECTED!');
+                            console.log('🔥 Button HTML will be:', buttonHtml);
+                            console.log('🔥 Expected onclick:', btn.onclick);
+                        }
+                        
+                        return buttonHtml;
+                    }).join('');
+                    
+                    userActionButtons.innerHTML = `
+                        <div class="action-buttons-container">
+                            ${buttonHTML}
+                            <div class="helper-text">
+                        <div class="helper-message">
+                            <span class="helper-icon">↰</span>
+                            Write your own response
+                        </div>
+                    </div>
+                        </div>
+                    `;
+                }
+                
+                chatMessages.appendChild(userActionButtons);
+                scrollToLatestMessage();
+            }, 500);
+            
+            scrollToLatestMessage();
+        }
+
+        function addTypingIndicator(text) {
+            const chatMessages = document.querySelector('.chat-messages');
+            const typingMessage = document.createElement('div');
+            typingMessage.className = 'airo-message typing-indicator';
+            typingMessage.innerHTML = `
+                <div class="airo-bubble">
+                    <div class="typing-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            `;
+            
+            chatMessages.appendChild(typingMessage);
+            scrollToLatestMessage();
+        }
+
+        function removeTypingIndicator() {
+            const typingIndicator = document.querySelector('.typing-indicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+
+        function scrollToLatestMessage() {
+            const chatInterface = document.getElementById('chatInterface');
+            chatInterface.scrollTop = chatInterface.scrollHeight;
+        }
+
+        // Universal phrase detection for global navigation
+        function detectGlobalNavigationPhrase(inputText) {
+            const text = inputText.toLowerCase().trim();
+            console.log('Logo page detectGlobalNavigationPhrase called with:', inputText, 'normalized:', text);
+            
+            // Check for logo creation phrases
+            if (text.includes('create a logo') || text.includes('generate a logo') || text.includes('make a logo')) {
+                console.log('Logo page: Logo phrase detected, navigating to generate-logo');
+                navigateToPage('generate-logo');
+                return true;
+            }
+            
+            // Check for privacy policy creation phrases
+            if (text.includes('create a privacy policy') || text.includes('generate a privacy policy') || text.includes('make a privacy policy')) {
+                console.log('Logo page: Privacy phrase detected, navigating to generate-privacy-policy');
+                navigateToPage('generate-privacy-policy');
+                return true;
+            }
+            
+            // Check for marketing plan creation phrases
+            if (text.includes('create a marketing plan') || text.includes('generate a marketing plan') || text.includes('make a marketing plan')) {
+                console.log('Logo page: Marketing phrase detected, navigating to generate-marketing-strategy');
+                navigateToPage('generate-marketing-strategy');
+                return true;
+            }
+            
+            console.log('Logo page: No navigation phrases detected');
+            return false;
+        }
+
+        // MANUAL TEST FUNCTION - Call from console to test navigation
+        function testManualNavigation(phrase) {
+            console.log('🧪 MANUAL TEST: Testing navigation with phrase:', phrase);
+            const result = detectGlobalNavigationPhrase(phrase);
+            console.log('🧪 MANUAL TEST: Navigation result:', result);
+            return result;
+        }
+
+        // MANUAL TEST FUNCTION - Test basic navigation without phrase detection
+        function testBasicNavigation(page) {
+            console.log('🧪 BASIC TEST: Testing direct navigation to:', page);
+            try {
+                window.location.href = page;
+                return true;
+            } catch (error) {
+                console.error('🚨 BASIC TEST ERROR:', error);
+                return false;
+            }
+        }
+
+        // Original handleChatMessage function removed - using new version at end of script
+
+
+
+        // Show logo selection sidebar with action buttons (for generation flow)
+        function showLogoSelectionSidebar() {
+            const sidebar = document.getElementById('logoSelectionSidebar');
+            
+            // Check if sidebar is already visible to prevent duplicating content
+            const isAlreadyVisible = sidebar.classList.contains('visible');
+            
+            // Show sidebar
+            sidebar.classList.add('visible');
+            
+            // Add body class to move control bar
+            document.body.classList.add('logo-sidebar-open');
+            
+            // Fill preferences tab with Eugene's Cafe information
+            fillPreferencesTab();
+            
+            // Action buttons will be added by showLogosWithUpdatedAI() function
+            // Removing duplicate call to prevent double buttons
+            
+            // Update current step
+            currentStep = 'logo_selection';
+        }
+
+        // Show logo selection sidebar without action buttons (for editing flow)
+        function showLogoSelectionSidebarOnly() {
+            const sidebar = document.getElementById('logoSelectionSidebar');
+            
+            // Show sidebar
+            sidebar.classList.add('visible');
+            
+            // Add body class to move control bar
+            document.body.classList.add('logo-sidebar-open');
+            
+            // Fill preferences tab with Eugene's Cafe information
+            fillPreferencesTab();
+            
+            // Update current step
+            currentStep = 'logo_selection';
+        }
+
+        function fillPreferencesTab() {
+            // Ensure the header with tabs exists
+            const sidebar = document.getElementById('logoSelectionSidebar');
+            const existingHeader = sidebar.querySelector('.logo-sidebar-header');
+            
+            if (!existingHeader) {
+                // Recreate the header if it's missing
+                const headerHTML = `
+                    <div class="logo-sidebar-header">
+                        <h2 class="logo-sidebar-title">Logos for Eugene's Cafe</h2>
+                        <div class="logo-tabs">
+                            <button class="tab-btn active" onclick="switchLogoTab('preferences')">Preferences</button>
+                            <button class="tab-btn" onclick="switchLogoTab('preview')">Preview</button>
+                        </div>
+                    </div>
+                `;
+                sidebar.insertAdjacentHTML('afterbegin', headerHTML);
+            } else {
+                // Make sure the existing header is visible
+                existingHeader.style.display = 'block';
+            }
+            
+            // Get the logo sidebar content
+            const sidebarContent = document.querySelector('#logoSelectionSidebar .logo-sidebar-content');
+            
+            // Extract just the logo grid without the description
+            const logoGrid = sidebarContent.querySelector('.logo-grid');
+            const logoGridHTML = logoGrid ? logoGrid.outerHTML : '';
+            
+            // Create customize tab content to match the Logo's Preferences screen exactly
+            const customizeContent = `
+                <div id="customizeTabContent" class="tab-content active">
+                    <div class="preference-category" onclick="openPreferenceCategory('business')">
+                        <div class="preference-info">
+                            <h3 class="preference-title">Business Description</h3>
+                            <p class="preference-subtitle">Eugene's Cafe is a remote-work friendly coffee shop in New York City, blending surf culture with creative energy</p>
+                        </div>
+                        <svg class="preference-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M6 4L10 8L6 12" stroke="#666666" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    
+                    <div class="preference-category" onclick="openPreferenceCategory('logo-text')">
+                        <div class="preference-info">
+                            <h3 class="preference-title">Logo Text</h3>
+                            <p class="preference-subtitle">Eugene's Cafe</p>
+                        </div>
+                        <svg class="preference-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M6 4L10 8L6 12" stroke="#666666" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    
+                    <div class="preference-category" onclick="openPreferenceCategory('target-audience')">
+                        <div class="preference-info">
+                            <h3 class="preference-title">Target Audience</h3>
+                            <p class="preference-subtitle">Remote workers, creative professionals, coffee enthusiasts in NYC</p>
+                        </div>
+                        <svg class="preference-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M6 4L10 8L6 12" stroke="#666666" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    
+                    <div class="preference-category" onclick="openPreferenceCategory('brand-vibe')">
+                        <div class="preference-info">
+                            <h3 class="preference-title">Brand Vibe</h3>
+                            <p class="preference-subtitle">Surf culture, creative energy, remote-work friendly</p>
+                        </div>
+                        <svg class="preference-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M6 4L10 8L6 12" stroke="#666666" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    
+                    <div class="preference-category" onclick="openPreferenceCategory('symbol')">
+                        <div class="preference-info">
+                            <h3 class="preference-title">Symbol</h3>
+                            <p class="preference-subtitle">Coffee cup</p>
+                        </div>
+                        <svg class="preference-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M6 4L10 8L6 12" stroke="#666666" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    
+                    <div class="preference-category" onclick="openPreferenceCategory('style')">
+                        <div class="preference-info">
+                            <h3 class="preference-title">Style</h3>
+                            <p class="preference-subtitle">Clean, modern, approachable</p>
+                        </div>
+                        <svg class="preference-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M6 4L10 8L6 12" stroke="#666666" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    
+                    <div class="preference-category" onclick="openPreferenceCategory('color-palette')">
+                        <div class="preference-info">
+                            <h3 class="preference-title">Color Palette</h3>
+                            <p class="preference-subtitle">Warm browns, ocean blues, cream tones</p>
+                        </div>
+                        <svg class="preference-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M6 4L10 8L6 12" stroke="#666666" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                </div>
+            `;
+            
+            // Create preview tab content (only logos, single description)
+            const previewContent = `
+                <div id="previewTabContent" class="tab-content" style="display: none;">
+                    <p class="logo-description">Select a logo to keep refining or move forward with a current design.</p>
+                    ${logoGridHTML}
+                </div>
+            `;
+            
+            // Replace sidebar content with tab system
+            sidebarContent.innerHTML = customizeContent + previewContent;
+            
+            // Set initial footer buttons for preferences tab (default)
+            updateFooterButtonsForPreferencesTab();
+        }
+
+        function switchToPreviewTab() {
+            // Switch tab buttons
+            const tabs = document.querySelectorAll('#logoSelectionSidebar .tab-btn');
+            tabs[0].classList.remove('active');  // Customize
+            tabs[1].classList.add('active');     // Preview Designs
+            
+            // Switch tab content
+            const customizeContent = document.getElementById('customizeTabContent');
+            const previewContent = document.getElementById('previewTabContent');
+            
+            if (customizeContent && previewContent) {
+                customizeContent.style.display = 'none';
+                customizeContent.classList.remove('active');
+                previewContent.style.display = 'block';
+                previewContent.classList.add('active');
+            }
+        }
+
+        function switchLogoTab(tabName) {
+            const tabs = document.querySelectorAll('#logoSelectionSidebar .tab-btn');
+            const customizeContent = document.getElementById('customizeTabContent');
+            const previewContent = document.getElementById('previewTabContent');
+            
+            if (tabName === 'preferences' || tabName === 'customize') {
+                tabs[0].classList.add('active');
+                tabs[1].classList.remove('active');
+                if (customizeContent && previewContent) {
+                    customizeContent.style.display = 'block';
+                    customizeContent.classList.add('active');
+                    previewContent.style.display = 'none';
+                    previewContent.classList.remove('active');
+                }
+                // Update footer buttons for preferences tab
+                updateFooterButtonsForPreferencesTab();
+            } else if (tabName === 'preview') {
+                tabs[0].classList.remove('active');
+                tabs[1].classList.add('active');
+                if (customizeContent && previewContent) {
+                    customizeContent.style.display = 'none';
+                    customizeContent.classList.remove('active');
+                    previewContent.style.display = 'block';
+                    previewContent.classList.add('active');
+                }
+                // Update footer buttons for preview tab
+                updateFooterButtonsForPreviewTab();
+            }
+        }
+
+        // Footer Button Management System
+        function updateFooterButtonsForPreferencesTab() {
+            const footer = document.getElementById('logoSidebarFooter');
+            footer.innerHTML = `
+                <button class="footer-btn primary" onclick="handleGenerateMyLogo()">Generate My Logo</button>
+            `;
+            footer.classList.remove('logo-selected');
+        }
+
+        function updateFooterButtonsForPreviewTab() {
+            const footer = document.getElementById('logoSidebarFooter');
+            const isLogoSelected = window.selectedLogoId ? true : false;
+            
+            footer.innerHTML = `
+                <button class="footer-btn secondary" onclick="handleMakeChanges()">Make Changes</button>
+                <button class="footer-btn primary" id="makeLogoBtn" onclick="handleMakeThisMyLogo()" ${!isLogoSelected ? 'disabled' : ''}>Make This My Logo</button>
+            `;
+            
+            if (isLogoSelected) {
+                footer.classList.add('logo-selected');
+            } else {
+                footer.classList.remove('logo-selected');
+            }
+        }
+
+        function updateFooterButtonsForPreferenceEditing(category) {
+            const footer = document.getElementById('logoSidebarFooter');
+            footer.innerHTML = `
+                <button class="footer-btn secondary" onclick="cancelPreferenceEditing()">Cancel</button>
+                <button class="footer-btn primary" onclick="applyPreferenceEditing('${category}')">Apply</button>
+            `;
+            footer.classList.remove('logo-selected');
+        }
+
+        // Button Action Handlers
+        function handleGenerateMyLogo() {
+            console.log('Generating V2 logos from customize tab');
+            // Show loading in sidebar, then switch to preview tab with V2 generated logos
+            showGenerationLoadingInSidebar();
+        }
+
+        // Logo Version Management
+        window.logoVersions = {
+            current: 1,
+            versions: {
+                1: { title: "Logos for Eugene's Cafe", timestamp: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }) },
+                2: { title: "Logos for Eugene's Cafe V2", timestamp: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }) }
+            }
+        };
+
+        function handleMakeChanges() {
+            console.log('🔥 CRITICAL: handleMakeChanges function called');
+            alert('DEBUG: handleMakeChanges called - about to show change buttons');
+            
+            // Start conversational workflow for making changes
+            addUserMessage("Make changes to logos");
+            
+            setTimeout(() => {
+                const changeButtons = [
+                    { text: 'Change style', onclick: 'handleChangeType("style")' },
+                    { text: 'Change color', onclick: 'handleChangeType("color")' },
+                    { text: 'Change text', onclick: 'handleChangeType("text")' }
+                ];
+                
+                console.log('🔥 CRITICAL: About to create change buttons:', changeButtons);
+                console.log('🔥 CHANGE COLOR BUTTON CONFIG:', changeButtons[1]);
+                addAIMessageWithButtons("What kind of changes do you want?", changeButtons);
+            }, 1000);
+        }
+        
+        // Test function to verify color change workflow - can be called from browser console
+        function testColorChangeWorkflow() {
+            console.log('=== TESTING COLOR CHANGE WORKFLOW ===');
+            console.log('Step 1: Calling handleMakeChanges()');
+            handleMakeChanges();
+            
+            setTimeout(() => {
+                console.log('Step 2: Simulating click on Change color button');
+                handleChangeType('color');
+                
+                setTimeout(() => {
+                    console.log('Step 3: Simulating user typing "red" in chat');
+                    // Simulate user input
+                    window.waitingForLogoChange = { type: 'color', userInputType: 'color' };
+                    processLogoChangeInput('red');
+                }, 3000);
+            }, 2000);
+        }
+
+        function handleChangeType(changeType) {
+            console.log('🔥 CRITICAL DEBUG: handleChangeType called with changeType:', changeType);
+            console.log('🔥 BUTTON CLICK DETECTED - Function is being called!');
+            
+            // Force immediate visual feedback
+            alert('DEBUG: handleChangeType called with: ' + changeType);
+            
+            let promptMessage = "";
+            let userInputType = "";
+            
+            switch(changeType) {
+                case 'style':
+                    promptMessage = "What style would you like the logo to be? (e.g., modern, vintage, minimalist, bold)";
+                    userInputType = "style";
+                    break;
+                case 'color':
+                    promptMessage = "What color would you like the logo to be? (e.g., red, blue, green, purple)";
+                    userInputType = "color";
+                    console.log('🔥 Processing color change request - prompt will be:', promptMessage);
+                    break;
+                case 'text':
+                    promptMessage = "What text would you like the logo to say?";
+                    userInputType = "text";
+                    break;
+                default:
+                    console.error('🔥 Unknown changeType:', changeType);
+                    return;
+            }
+            
+            console.log('🔥 Adding user message:', `Change ${changeType}`);
+            // Add user message showing their choice
+            addUserMessage(`Change ${changeType}`);
+            
+            setTimeout(() => {
+                console.log('🔥 Adding AI message:', promptMessage);
+                addAIMessage(promptMessage);
+                
+                // Set up listener for user input
+                window.waitingForLogoChange = {
+                    type: changeType,
+                    userInputType: userInputType
+                };
+                console.log('🔥 Set waitingForLogoChange state:', window.waitingForLogoChange);
+            }, 1000);
+        }
+        
+        // EMERGENCY BUTTON TEST FUNCTION - Call this directly to verify button works
+        function emergencyTestColorButton() {
+            console.log('🚨 EMERGENCY TEST: Testing color button functionality');
+            alert('Emergency test: About to call handleChangeType("color")');
+            handleChangeType('color');
+        }
+        
+        // EMERGENCY DIRECT COLOR CHANGE - Bypasses all other systems
+        function emergencyColorChange() {
+            console.log('🚨 EMERGENCY: Direct color change triggered');
+            alert('EMERGENCY: Starting direct color change workflow');
+            
+            // Add user message
+            addUserMessage('Change color');
+            
+            // Add AI response immediately
+            setTimeout(() => {
+                addAIMessage("What color would you like the logo to be?");
+                
+                // Set state for chat input processing
+                window.waitingForLogoChange = {
+                    type: 'color',
+                    userInputType: 'color'
+                };
+                
+                console.log('🚨 Emergency state set:', window.waitingForLogoChange);
+                alert('EMERGENCY: Now type a color like "red" in the chat input and press Enter');
+            }, 500);
+        }
+        
+        // Function to inspect the actual DOM for Change color button
+        function inspectChangeColorButton() {
+            console.log('🔍 INSPECTING CHANGE COLOR BUTTON IN DOM:');
+            
+            const buttons = document.querySelectorAll('button');
+            let found = false;
+            
+            buttons.forEach((btn, index) => {
+                if (btn.textContent.includes('Change color')) {
+                    console.log('🔍 FOUND Change color button at index:', index);
+                    console.log('🔍 Button element:', btn);
+                    console.log('🔍 Button onclick:', btn.getAttribute('onclick'));
+                    console.log('🔍 Button innerHTML:', btn.innerHTML);
+                    console.log('🔍 Button outerHTML:', btn.outerHTML);
+                    found = true;
+                }
+            });
+            
+            if (!found) {
+                console.log('🔍 NO Change color button found in DOM!');
+                console.log('🔍 All buttons found:');
+                buttons.forEach((btn, index) => {
+                    console.log(`🔍 Button ${index}: "${btn.textContent}" onclick="${btn.getAttribute('onclick')}"`);
+                });
+            }
+            
+            return found;
+        }
+
+        function processLogoChangeInput(userInput) {
+            console.log('processLogoChangeInput called with:', userInput);
+            console.log('waitingForLogoChange state:', window.waitingForLogoChange);
+            
+            if (!window.waitingForLogoChange) {
+                console.log('Not waiting for logo change, returning false');
+                return false;
+            }
+            
+            const changeType = window.waitingForLogoChange.type;
+            console.log('Processing change type:', changeType, 'with input:', userInput);
+            
+            // Add user's input as a message (moved this before setTimeout to ensure it appears)
+            addUserMessage(userInput);
+            
+            setTimeout(() => {
+                addAIMessage("Hang tight! This will only take a moment.");
+                
+                // Show loading and then generate new logos
+                setTimeout(() => {
+                    console.log('Generating new logo version...');
+                    generateNewLogoVersion(changeType, userInput);
+                }, LOADING_DURATION);
+            }, 1000);
+            
+            // Clear the waiting state
+            window.waitingForLogoChange = null;
+            console.log('Cleared waitingForLogoChange state');
+            return true;
+        }
+
+        function generateNewLogoVersion(changeType, userInput) {
+            // Increment version
+            window.logoVersions.current = 2;
+            
+            // Update sidebar with new designs and switch to preview tab
+            updateLogoSidebarWithNewVersion(2);
+            switchLogoTab('preview');
+            
+            // Show new chat bubble instead of artifact
+            setTimeout(() => {
+                addAIMessage("Here's your preview! If you'd like to make changes, edit your inputs in the Preferences tab.");
+                
+                // Add action buttons after the message
+                setTimeout(() => {
+                    const actionButtons = [
+                        { text: 'Generate more logos', onclick: 'handleGenerateMoreLogos()' },
+                        { text: 'Make changes', onclick: 'handleMakeChanges()' },
+                        { text: 'Edit logo preferences', onclick: 'handleEditLogoPreferences()' }
+                    ];
+                    
+                    addUserActionButtons(actionButtons);
+                }, 400);
+            }, 500);
+        }
+
+        function addLogoArtifact(version) {
+            const chatMessages = document.querySelector('.chat-messages');
+            const versionInfo = window.logoVersions.versions[version];
+            
+            const logoArtifact = document.createElement('div');
+            logoArtifact.className = 'airo-message';
+            logoArtifact.innerHTML = `
+                <div class="logo-artifact" onclick="switchToLogoVersion(${version})">
+                    <div class="artifact-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <rect x="3" y="3" width="18" height="18" rx="2" stroke="#6C47B4" stroke-width="1.5" fill="none"/>
+                            <circle cx="8.5" cy="8.5" r="1.5" fill="#6C47B4"/>
+                            <path d="M21 15l-5-5L5 21l5-5" stroke="#6C47B4" stroke-width="1.5" fill="none"/>
+                        </svg>
+                    </div>
+                    <div class="artifact-content">
+                        <div class="artifact-title">${versionInfo.title}</div>
+                        <div class="artifact-subtitle">Created today at ${versionInfo.timestamp}</div>
+                    </div>
+                </div>
+            `;
+            chatMessages.appendChild(logoArtifact);
+            
+            // Scroll to latest message
+            scrollToLatestMessage();
+        }
+
+        function switchToLogoVersion(version) {
+            window.logoVersions.current = version;
+            updateLogoSidebarWithNewVersion(version);
+            
+            // Show sidebar if not visible
+            const sidebar = document.getElementById('logoSelectionSidebar');
+            if (!sidebar.classList.contains('visible')) {
+                showLogoSelectionSidebarOnly();
+            }
+            
+            // Switch to preview tab
+            switchLogoTab('preview');
+        }
+
+        function updateLogoSidebarWithNewVersion(version) {
+            // Update logo grid with version-specific designs
+            const logoGrid = document.querySelector('#previewTabContent .logo-grid');
+            if (!logoGrid) return;
+            
+            let logoImages = [];
+            if (version === 1) {
+                logoImages = [
+                    '../assets/images/a.png',
+                    '../assets/images/b.png', 
+                    '../assets/images/c.png',
+                    '../assets/images/d.png'
+                ];
+            } else if (version === 2) {
+                // Use V2 logo images from assets folder
+                logoImages = [
+                    '../assets/images/a2.png',
+                    '../assets/images/b2.png',
+                    '../assets/images/c2.png',
+                    '../assets/images/d2.png'
+                ];
+            }
+            
+            // Update logo grid HTML
+            logoGrid.innerHTML = logoImages.map((src, index) => {
+                const logoId = version === 1 ? `1${String.fromCharCode(65 + index)}` : `2${String.fromCharCode(65 + index)}`;
+                return `
+                    <div class="logo-option" onclick="selectLogo(this, '${logoId}')">
+                        <div class="logo-image">
+                            <div class="logo-selection-indicator">
+                                <svg class="checkmark" viewBox="0 0 12 12" fill="none">
+                                    <path d="M2 6L5 9L10 3" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+                            <img src="${src}" alt="Logo ${logoId}" class="logo-generated-image">
+                        </div>
+                        <div class="logo-label">Logo ${logoId}</div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Clear previous selection
+            window.selectedLogoId = null;
+            window.selectedLogoElement = null;
+            
+            // Update footer buttons
+            updateFooterButtonsForPreviewTab();
+        }
+
+        function showGenerationLoadingInSidebar() {
+            const sidebarContent = document.querySelector('#logoSelectionSidebar .logo-sidebar-content');
+            const footer = document.getElementById('logoSidebarFooter');
+            const sidebarHeader = document.querySelector('#logoSelectionSidebar .logo-sidebar-header');
+            
+            if (sidebarContent && footer) {
+                // Hide current content, footer, and header
+                sidebarContent.style.display = 'none';
+                footer.style.display = 'none';
+                if (sidebarHeader) {
+                    sidebarHeader.style.display = 'none';
+                }
+                
+                // Create loading content with hang tight design
+                const loadingContent = document.createElement('div');
+                loadingContent.className = 'sidebar-loading-content';
+                loadingContent.innerHTML = `
+                    <div class="loading-video-container">
+                        <video width="192" height="192" autoplay muted loop playsinline style="border-radius: 8px;">
+                            <source src="../assets/videos/loadinganimation.mp4" type="video/mp4">
+                            <!-- Fallback to spinner if video fails to load -->
+                            <div class="loading-icon">
+                                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="animation: spin 1s linear infinite;">
+                                    <path d="M16 2L20 10L28 6L24 14L32 16L24 18L28 26L20 22L16 30L12 22L4 26L8 18L0 16L8 14L4 6L12 10L16 2Z" fill="#6C47B4"/>
+                                </svg>
+                            </div>
+                        </video>
+                    </div>
+                    <div class="loading-title">Hang tight!</div>
+                    <div class="loading-subtitle">This will only take a moment...</div>
+                    <style>
+                    @keyframes spin {
+                        0% { transform: rotate(0deg); }
+                        100% { transform: rotate(360deg); }
+                    }
+                    </style>
+                `;
+                
+                // Insert loading content into sidebar
+                const sidebar = document.getElementById('logoSelectionSidebar');
+                sidebar.appendChild(loadingContent);
+                
+                // After loading, show preview tab with V2 generated logos
+                setTimeout(() => {
+                    // Remove loading content
+                    loadingContent.remove();
+                    
+                    // Restore original content, footer, and header with tabs
+                    sidebarContent.style.display = 'block';
+                    footer.style.display = 'flex';
+                    if (sidebarHeader) {
+                        sidebarHeader.style.display = 'block';
+                    }
+                    
+                    // Update to V2 logos (new versions from customize tab)
+                    updateLogoSidebarWithNewVersion(2);
+                    
+                    // Show preview message with action buttons instead of artifact
+                    addAIMessage("Here's your preview! If you'd like to make changes, edit your inputs in the Preferences tab.");
+                    
+                    setTimeout(() => {
+                        const actionButtons = [
+                            { text: 'Generate more logos', onclick: 'handleGenerateMoreLogos()' },
+                            { text: 'Make changes', onclick: 'handleMakeChanges()' },
+                            { text: 'Edit logo preferences', onclick: 'handleEditLogoPreferences()' }
+                        ];
+                        
+                        addUserActionButtons(actionButtons);
+                    }, 400);
+                    
+                    // Switch to preview tab
+                    switchLogoTab('preview');
+                    
+                    // Show success notification
+                    showNotification('New logo versions generated successfully!');
+                }, LOADING_DURATION);
+            }
+        }
+
+        // Add logo action buttons to chat area
+        function addLogoActionButtons() {
+            const chatMessages = document.querySelector('.chat-messages');
+            
+            // First, add the logo artifact on AI's side
+            const logoArtifact = document.createElement('div');
+            logoArtifact.className = 'airo-message';
+            logoArtifact.innerHTML = `
+                <div class="logo-artifact" onclick="showLogoPreviewTab()">
+                    <div class="artifact-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <rect x="3" y="3" width="18" height="18" rx="2" stroke="#6C47B4" stroke-width="1.5" fill="none"/>
+                            <circle cx="8.5" cy="8.5" r="1.5" fill="#6C47B4"/>
+                            <path d="M21 15l-5-5L5 21l5-5" stroke="#6C47B4" stroke-width="1.5" fill="none"/>
+                        </svg>
+                    </div>
+                    <div class="artifact-content">
+                        <div class="artifact-title">Logos for Eugene's Cafe</div>
+                        <div class="artifact-subtitle">Created today at ${new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}</div>
+                    </div>
+                </div>
+            `;
+            chatMessages.appendChild(logoArtifact);
+            
+            // Then add the action buttons on user's side
+            const actionButtons = document.createElement('div');
+            actionButtons.className = 'user-action-buttons logo-actions-chat user-message';
+            actionButtons.innerHTML = `
+                <div class="action-buttons-container">
+                    <div class="action-buttons-row">
+                        <button class="standalone-btn outline-btn" onclick="handleGenerateMyLogo()">Generate more logos</button>
+                        <button class="standalone-btn outline-btn" onclick="handleMakeChanges()">Make changes</button>
+                    </div>
+                    <div class="action-buttons-row" style="margin-left: calc(100% - 180px);">
+                        <button class="standalone-btn outline-btn" style="width: auto; min-width: 180px; white-space: nowrap;" onclick="handleEditLogoPreferences()">Edit logo preferences</button>
+                    </div>
+                    <div class="helper-text">
+                        <div class="helper-message">
+                            <span class="helper-icon">↰</span>
+                            Write your own response
+                        </div>
+                    </div>
+                </div>
+            `;
+            chatMessages.appendChild(actionButtons);
+            scrollToLatestMessage();
+        }
+        
+        // Handle logo artifact click to show preview tab
+        function showLogoPreviewTab() {
+            // Show logo selection sidebar if not already visible
+            const sidebar = document.getElementById('logoSelectionSidebar');
+            if (!sidebar.classList.contains('visible')) {
+                showLogoSelectionSidebar();
+            }
+            // Switch to preview designs tab
+            switchLogoTab('preview');
+        }
+
+        // Duplicate function removed - using the one above that handles chat bubble replacement
+
+        // Hide logo selection sidebar
+        function hideLogoSelectionSidebar() {
+            const sidebar = document.getElementById('logoSelectionSidebar');
+            
+            // Hide sidebar
+            sidebar.classList.remove('visible');
+            
+            // Remove body class to reset control bar
+            document.body.classList.remove('logo-sidebar-open');
+        }
+
+        // Handle logo selection
+        function selectLogo(element, logoId) {
+            // Remove selected class from all logo options
+            const allLogos = document.querySelectorAll('.logo-option');
+            allLogos.forEach(logo => logo.classList.remove('selected'));
+            
+            // Add selected class to clicked logo
+            element.classList.add('selected');
+            
+            // Store selected logo and element (could be used later)
+            window.selectedLogoId = logoId;
+            window.selectedLogoElement = element;
+            
+            // Update footer buttons to reflect logo selection (if on preview tab)
+            const previewContent = document.getElementById('previewTabContent');
+            if (previewContent && previewContent.classList.contains('active')) {
+                updateFooterButtonsForPreviewTab();
+            }
+        }
+
+        // Handle "Make This My Logo" button click
+        function handleMakeThisMyLogo() {
+            if (!window.selectedLogoId || !window.selectedLogoElement) {
+                showNotification('Please select a logo first');
+                return;
+            }
+            
+            // Get the selected logo image
+            const logoImage = window.selectedLogoElement.querySelector('.logo-generated-image');
+            if (logoImage) {
+                const clonedImage = logoImage.cloneNode(true);
+                clonedImage.className = 'logo-generated-image'; // Ensure proper styling
+                
+                const logoDisplay = document.getElementById('upgradeLogoDisplay');
+                logoDisplay.innerHTML = '';
+                logoDisplay.appendChild(clonedImage);
+            }
+            
+            // Show the upgrade screen
+            const upgradeScreen = document.getElementById('airoUpgradeScreen');
+            upgradeScreen.classList.add('visible');
+            
+            // Hide control bar
+            document.body.classList.add('upgrade-screen-open');
+        }
+
+        // Close upgrade screen and return to chat
+        function closeUpgradeScreen() {
+            const upgradeScreen = document.getElementById('airoUpgradeScreen');
+            upgradeScreen.classList.remove('visible');
+            
+            // Show control bar again
+            document.body.classList.remove('upgrade-screen-open');
+        }
+
+        // Handle price option selection
+        function selectPriceOption(element, planType) {
+            // Remove selected class from all price options
+            const allOptions = document.querySelectorAll('.upgrade-price-option');
+            allOptions.forEach(option => option.classList.remove('selected'));
+            
+            // Add selected class to clicked option
+            element.classList.add('selected');
+            
+            // Store selected plan type
+            window.selectedPlanType = planType;
+        }
+
+        // Handle buy now button
+        function handleBuyNow() {
+            const planType = window.selectedPlanType || 'monthly';
+            showCheckoutScreen(planType);
+            
+            // After 3 seconds, complete the purchase flow
+            setTimeout(() => {
+                closeCheckoutScreen();
+                closeUpgradeScreen();
+                showMilestoneSidebar();
+            }, 3000);
+        }
+        
+        // Show checkout screen
+        function showCheckoutScreen(planType) {
+            // Set global purchased state and remove upgrade button when checkout begins
+            localStorage.setItem('airo_purchased', 'true');
+            
+            // Remove upgrade button from current page immediately when checkout starts
+            const upgradeButton = document.querySelector('.upgrade-btn');
+            if (upgradeButton) {
+                upgradeButton.remove();
+            }
+            
+            const checkoutScreen = document.getElementById('checkoutScreen');
+            const checkoutPlanType = document.getElementById('checkoutPlanType');
+            const checkoutPrice = document.getElementById('checkoutPrice');
+            const checkoutTotal = document.getElementById('checkoutTotal');
+            
+            // Update plan details based on selection
+            if (planType === 'yearly') {
+                checkoutPlanType.textContent = 'Annual subscription (save 62%)';
+                checkoutPrice.textContent = '$5.59/month';
+                checkoutTotal.textContent = '$67.08/year';
+            } else {
+                checkoutPlanType.textContent = 'Monthly subscription';
+                checkoutPrice.textContent = '$14.99';
+                checkoutTotal.textContent = '$14.99';
+            }
+            
+            // Show the checkout screen
+            checkoutScreen.classList.add('visible');
+            
+            // Optional: Auto-close after simulation period (remove in production)
+            // setTimeout(() => {
+            //     closeCheckoutScreen();
+            //     alert('Payment processed successfully! (Demo)');
+            // }, 5000);
+        }
+        
+        // Close checkout screen
+        function closeCheckoutScreen() {
+            const checkoutScreen = document.getElementById('checkoutScreen');
+            checkoutScreen.classList.remove('visible');
+        }
+        
+        // Show milestone sidebar
+        function showMilestoneSidebar() {
+            // Hide any existing sidebars first
+            hideLogoSelectionSidebar();
+            hideLogoPreferencesSidebar();
+            
+            // Get the milestone sidebar and main content wrapper
+            const milestoneSidebar = document.getElementById('milestoneSidebar');
+            const mainContentWrapper = document.querySelector('.main-content-wrapper');
+            const milestoneLogoContainer = document.getElementById('milestoneLogoContainer');
+            
+            // Move milestone sidebar to main content wrapper if not already there
+            if (milestoneSidebar && mainContentWrapper && !mainContentWrapper.contains(milestoneSidebar)) {
+                mainContentWrapper.appendChild(milestoneSidebar);
+            }
+            
+            // Display the selected logo in the milestone sidebar
+            if (window.selectedLogoElement) {
+                const logoImage = window.selectedLogoElement.querySelector('.logo-generated-image');
+                if (logoImage) {
+                    const clonedImage = logoImage.cloneNode(true);
+                    clonedImage.style.borderRadius = '12px';
+                    clonedImage.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.2)';
+                    milestoneLogoContainer.innerHTML = '';
+                    milestoneLogoContainer.appendChild(clonedImage);
+                }
+            }
+            
+            // Add two AI chat bubbles with action buttons
+            setTimeout(() => {
+                // Hide existing action buttons and helper text before sending the milestone message
+                const existingActionButtons = document.querySelector('.user-action-buttons');
+                if (existingActionButtons) {
+                    existingActionButtons.style.display = 'none';
+                }
+                
+                addAIMessage("Nice job on your logo!");
+                
+                setTimeout(() => {
+                    addAIMessage("Would you like to see how your logo could influence your website design or marketing materials?");
+                    
+                    // Add action buttons after the second message
+                    setTimeout(() => {
+                        const actionButtons = [
+                            { text: 'Yes lets do it!', onclick: 'handleMilestoneYes()' },
+                            { text: 'No, Im good for now', onclick: 'handleMilestoneNo()' }
+                        ];
+                        
+                        addUserActionButtons(actionButtons);
+                    }, 400);
+                }, 800);
+            }, 1000);
+            
+            // Show the milestone sidebar
+            milestoneSidebar.classList.add('visible');
+            
+            // Add body class for any necessary styling adjustments
+            document.body.classList.add('milestone-sidebar-open');
+                }
+
+        // Handle milestone action button clicks
+        function handleMilestoneYes() {
+            console.log('Milestone Yes clicked');
+            replaceActionButtonWithUserMessage('Yes lets do it!');
+            
+            setTimeout(() => {
+                addAIMessage("Great! Let me show you how your logo can be applied to different marketing materials and website designs.");
+            }, 500);
+        }
+
+        function handleMilestoneNo() {
+            console.log('Milestone No clicked');
+            replaceActionButtonWithUserMessage('No, Im good for now');
+            
+            setTimeout(() => {
+                addAIMessage("No problem! Your logo is ready to use. You can download it anytime or come back to explore more options later.");
+            }, 500);
+        }
+
+        // Hide milestone sidebar
+        function hideMilestoneSidebar() {
+            const milestoneSidebar = document.getElementById('milestoneSidebar');
+            milestoneSidebar.classList.remove('visible');
+            
+            // Remove body class
+            document.body.classList.remove('milestone-sidebar-open');
+        }
+        
+        // Handle "Add to my site" button
+        function handleAddToWebsite() {
+            // Placeholder function - could navigate to website integration
+            alert('Add to website functionality - Coming soon!');
+        }
+        
+        // Handle "See Post Options" button
+        function handleSocialPost() {
+            // Placeholder function - could navigate to social media post creation
+            alert('Social post options - Coming soon!');
+        }
+
+        // Show logo preferences sidebar (legacy function - no longer used)
+        function showLogoPreferencesSidebar() {
+            // This function is kept for compatibility but the sidebar element no longer exists
+            console.log('showLogoPreferencesSidebar called but sidebar element no longer exists');
+        }
+
+        // Hide logo preferences sidebar (legacy function - no longer used)
+        function hideLogoPreferencesSidebar() {
+            // This function is kept for compatibility but the sidebar element no longer exists
+            console.log('hideLogoPreferencesSidebar called but sidebar element no longer exists');
+        }
+
+        // Handle preference category clicks
+        // Store preference values
+        window.logoPreferences = {
+            business: '',
+            'logo-text': 'Eugene\'s Cafe',
+            'target-audience': '',
+            'brand-vibe': '',
+            symbol: 'Bagel',
+            style: '',
+            'color-palette': ''
+        };
+
+        function openPreferenceCategory(category) {
+            showPreferenceEditingSidebar(category);
+        }
+
+        // Handle Go Back button in preferences
+        function goBackFromPreferences() {
+            hideLogoPreferencesSidebar();
+            
+            // Show the action buttons again
+            const actionButtons = document.querySelector('.action-buttons-container');
+            if (actionButtons) {
+                actionButtons.style.display = 'flex';
+            }
+        }
+
+        // Handle Generate My Logo button from preferences
+        function generateLogoFromPreferences() {
+            // Don't hide the preferences sidebar, instead show loading screen within sidebar
+            showSidebarLoadingScreen();
+        }
+        
+        // Show loading screen within the sidebar only
+        function showSidebarLoadingScreen() {
+            const sidebarContent = document.querySelector('#logoPreferencesSidebar .preferences-content');
+            const sidebarFooter = document.querySelector('#logoPreferencesSidebar .preferences-footer');
+            
+            if (sidebarContent && sidebarFooter) {
+                // Hide the current content and footer
+                sidebarContent.style.display = 'none';
+                sidebarFooter.style.display = 'none';
+                
+                // Create loading content with consistent hang tight design
+                const loadingContent = document.createElement('div');
+                loadingContent.className = 'sidebar-loading-content';
+                loadingContent.innerHTML = `
+                    <div class="loading-video-container">
+                        <video width="192" height="192" autoplay muted loop playsinline style="border-radius: 8px;">
+                            <source src="../assets/videos/loadinganimation.mp4" type="video/mp4">
+                            <!-- Fallback to spinner if video fails to load -->
+                            <div class="loading-icon">
+                                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="animation: spin 1s linear infinite;">
+                                    <path d="M16 2L20 10L28 6L24 14L32 16L24 18L28 26L20 22L16 30L12 22L4 26L8 18L0 16L8 14L4 6L12 10L16 2Z" fill="#6C47B4"/>
+                                </svg>
+                            </div>
+                        </video>
+                    </div>
+                    <div class="loading-title">Hang tight!</div>
+                    <div class="loading-subtitle">This will only take a moment...</div>
+                    <style>
+                    @keyframes spin {
+                        0% { transform: rotate(0deg); }
+                        100% { transform: rotate(360deg); }
+                    }
+                    </style>
+                `;
+                
+                // Insert loading content into sidebar
+                const sidebar = document.getElementById('logoPreferencesSidebar');
+                sidebar.appendChild(loadingContent);
+                
+                // After 3 seconds, show logo selection in the sidebar
+                setTimeout(() => {
+                    hideSidebarLoadingScreen();
+                    showLogoSelectionSidebar();
+                }, LOADING_DURATION);
+            }
+        }
+        
+        // Hide sidebar loading screen
+        function hideSidebarLoadingScreen() {
+            const loadingContent = document.querySelector('.sidebar-loading-content');
+            if (loadingContent) {
+                loadingContent.remove();
+            }
+            
+            // Restore original sidebar content
+            const sidebarContent = document.querySelector('#logoPreferencesSidebar .preferences-content');
+            const sidebarFooter = document.querySelector('#logoPreferencesSidebar .preferences-footer');
+            
+            if (sidebarContent && sidebarFooter) {
+                sidebarContent.style.display = 'block';
+                sidebarFooter.style.display = 'flex';
+            }
+        }
+
+        // Show hang tight screen
+        function showHangTightScreen() {
+            // Add hang tight sidebar
+            const hangTightSidebar = document.createElement('div');
+            hangTightSidebar.className = 'hang-tight-sidebar visible';
+            hangTightSidebar.id = 'hangTightSidebar';
+            hangTightSidebar.innerHTML = `
+                <div class="hang-tight-content">
+                    <div class="hang-tight-icon">⏳</div>
+                    <div class="loading-title">Hang tight!</div>
+                    <div class="loading-subtitle">This will only take a moment...</div>
+                </div>
+            `;
+            
+            document.body.appendChild(hangTightSidebar);
+            document.body.classList.add('hang-tight-sidebar-open');
+            document.querySelector('.chat-interface').classList.add('with-hang-tight-sidebar');
+            
+            // After 3 seconds, show logo selection
+            setTimeout(() => {
+                hideHangTightScreen();
+                showLogoSelectionSidebar();
+            }, LOADING_DURATION);
+        }
+
+        function hideHangTightScreen() {
+            const hangTightSidebar = document.getElementById('hangTightSidebar');
+            if (hangTightSidebar) {
+                hangTightSidebar.remove();
+            }
+            document.body.classList.remove('hang-tight-sidebar-open');
+            document.querySelector('.chat-interface').classList.remove('with-hang-tight-sidebar');
+        }
+
+        // Preference editing functions
+        function showPreferenceEditingSidebar(category) {
+            const categoryData = getPreferenceCategoryData(category);
+            const currentValue = window.logoPreferences[category] || '';
+            
+            // Remove any existing preference editing sidebar to prevent duplicates
+            const existingEditingSidebar = document.getElementById('preferenceEditingSidebar');
+            if (existingEditingSidebar) {
+                existingEditingSidebar.remove();
+            }
+            
+            // Hide logo selection sidebar (not preferences sidebar - user came from customize tab)
+            const logoSelectionSidebar = document.getElementById('logoSelectionSidebar');
+            if (logoSelectionSidebar) {
+                logoSelectionSidebar.classList.add('hidden-for-editing');
+            }
+            
+            // Create editing sidebar
+            const editingSidebar = document.createElement('div');
+            editingSidebar.className = 'preference-editing-sidebar visible';
+            editingSidebar.id = 'preferenceEditingSidebar';
+            editingSidebar.innerHTML = `
+                <div class="preference-editing-header">
+                    <h2 class="preference-editing-title">Logo Preferences</h2>
+                </div>
+                
+                <div class="preference-editing-content">
+                    <div class="preference-editing-section">
+                        <h3 class="preference-editing-category">${categoryData.title}</h3>
+                        <p class="preference-editing-description">${categoryData.description}</p>
+                        <textarea 
+                            class="preference-editing-textarea" 
+                            id="preferenceEditingTextarea"
+                            placeholder="${categoryData.placeholder}"
+                            rows="4"
+                        >${currentValue}</textarea>
+                    </div>
+                </div>
+                
+                <div class="preference-editing-footer">
+                    <button class="preference-editing-btn secondary" onclick="cancelPreferenceEditing()">Cancel</button>
+                    <button class="preference-editing-btn primary" onclick="applyPreferenceEditing('${category}')">Apply</button>
+                </div>
+            `;
+            
+            // Insert editing sidebar into main content wrapper for proper flex layout
+            const mainContentWrapper = document.querySelector('.main-content-wrapper');
+            if (mainContentWrapper) {
+                mainContentWrapper.appendChild(editingSidebar);
+            } else {
+                document.body.appendChild(editingSidebar);
+            }
+            
+            document.querySelector('.chat-interface').classList.add('with-preference-editing');
+            
+            // Update footer buttons for preference editing mode
+            updateFooterButtonsForPreferenceEditing(category);
+        }
+
+        function getPreferenceCategoryData(category) {
+            const categoryMap = {
+                'business': {
+                    title: 'Business Description',
+                    description: 'What can you tell me about your business?',
+                    placeholder: 'Tell me about your business...'
+                },
+                'logo-text': {
+                    title: 'Logo Text',
+                    description: 'What text should appear in your logo?',
+                    placeholder: 'Enter logo text...'
+                },
+                'target-audience': {
+                    title: 'Target Audience',
+                    description: 'Who are you trying to reach?',
+                    placeholder: 'Describe your target audience...'
+                },
+                'brand-vibe': {
+                    title: 'Brand Vibe',
+                    description: 'What feeling should your brand evoke?',
+                    placeholder: 'Describe your brand vibe...'
+                },
+                'symbol': {
+                    title: 'Symbol',
+                    description: 'What imagery represents your brand?',
+                    placeholder: 'Describe symbols or imagery...'
+                },
+                'style': {
+                    title: 'Style',
+                    description: 'What aesthetic are you going for?',
+                    placeholder: 'Describe your preferred style...'
+                },
+                'color-palette': {
+                    title: 'Color Palette',
+                    description: 'What colors represent your brand?',
+                    placeholder: 'Describe your color preferences...'
+                }
+            };
+            return categoryMap[category] || { title: 'Preference', description: '', placeholder: '' };
+        }
+
+        function closePreferenceEditing() {
+            const editingSidebar = document.getElementById('preferenceEditingSidebar');
+            if (editingSidebar) {
+                editingSidebar.remove();
+            }
+            document.querySelector('.chat-interface').classList.remove('with-preference-editing');
+            
+            // Show logo selection sidebar again with customize tab (user came from customize tab, not preferences sidebar)
+            const logoSelectionSidebar = document.getElementById('logoSelectionSidebar');
+            if (logoSelectionSidebar) {
+                logoSelectionSidebar.classList.remove('hidden-for-editing');
+            }
+        }
+
+        function cancelPreferenceEditing() {
+            closePreferenceEditing();
+            
+            // Ensure we stay on the customize tab and restore proper footer buttons
+            switchLogoTab('customize');
+        }
+
+        function applyPreferenceEditing(category) {
+            const textarea = document.getElementById('preferenceEditingTextarea');
+            const value = textarea.value.trim();
+            
+            // Update stored preference
+            window.logoPreferences[category] = value;
+            
+            // Update the preference text in the customize tab UI
+            updatePreferenceInUI(category, value);
+            
+            // Close editing sidebar
+            closePreferenceEditing();
+            
+            // Ensure we stay on the preferences tab and restore proper footer buttons
+            switchLogoTab('preferences');
+            
+            // Show success message
+            showNotification('Preference updated successfully!');
+        }
+
+        // Update preference text in the preferences tab UI after applying changes
+        function updatePreferenceInUI(category, newValue) {
+            const customizeTabContent = document.getElementById('customizeTabContent');
+            if (!customizeTabContent) return;
+
+            // Find the preference category element
+            const preferenceCategories = customizeTabContent.querySelectorAll('.preference-category');
+            
+            preferenceCategories.forEach(categoryElement => {
+                const onclick = categoryElement.getAttribute('onclick');
+                if (onclick && onclick.includes(`'${category}'`)) {
+                    const subtitleElement = categoryElement.querySelector('.preference-subtitle');
+                    if (subtitleElement && newValue.trim()) {
+                        // Update with the new value, truncating if too long
+                        const displayValue = newValue.length > 80 ? newValue.substring(0, 80) + '...' : newValue;
+                        subtitleElement.textContent = displayValue;
+                    }
+                }
+            });
+        }
+
+
+
+
+
+        // Placeholder functions for additional buttons
+        function handleSelectLogo() {
+            // Hide action buttons
+            const userActionButtons = document.querySelector('.user-action-buttons');
+            if (userActionButtons) {
+                userActionButtons.style.display = 'none';
+            }
+            
+            addUserMessage('Show me the logos');
+            setTimeout(() => {
+                addAIMessage("Perfect! I'll display the 4 logo concepts for Eugene's Cafe. This feature is in development and will show interactive logo previews with download and customization options.");
+            }, 1000);
+        }
+
+        function handleRevisions() {
+            // Hide action buttons
+            const userActionButtons = document.querySelector('.user-action-buttons');
+            if (userActionButtons) {
+                userActionButtons.style.display = 'none';
+            }
+            
+            addUserMessage("I'd like revisions");
+            setTimeout(() => {
+                addAIMessage("Of course! I'd be happy to revise the logo concepts. What specific changes would you like to see? For example: different colors, font styles, layouts, or visual elements?");
+            }, 1000);
+        }
+
+        function handleBusinessTypeUpdate() {
+            // Hide action buttons
+            const userActionButtons = document.querySelector('.user-action-buttons');
+            if (userActionButtons) {
+                userActionButtons.style.display = 'none';
+            }
+            
+            addUserMessage('Change business type');
+            setTimeout(() => {
+                addAIMessage("What type of business should I update this to? Please describe your business in a few words (e.g., 'coffee shop', 'bakery', 'restaurant', etc.)");
+            }, 1000);
+        }
+
+        function handleLogoTextUpdate() {
+            // Hide action buttons
+            const userActionButtons = document.querySelector('.user-action-buttons');
+            if (userActionButtons) {
+                userActionButtons.style.display = 'none';
+            }
+            
+            addUserMessage('Update logo text');
+            setTimeout(() => {
+                addAIMessage("What would you like the logo text to say? Please provide the exact text you'd like to appear in your logo.");
+            }, 1000);
+        }
+
+        // Initialize chat input handling - OVERRIDE GLOBAL HANDLERS
+        function initializeChatInput() {
+            const chatInput = document.getElementById('chatInput');
+            const sendBtn = document.getElementById('sendBtn');
+            
+            // Remove ALL existing event listeners by replacing elements
+            if (sendBtn) {
+                const newSendBtn = sendBtn.cloneNode(true);
+                sendBtn.parentNode.replaceChild(newSendBtn, sendBtn);
+                
+                newSendBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const currentInput = document.getElementById('chatInput');
+                    const message = currentInput.value.trim();
+                    if (message) {
+                        currentInput.value = ''; // Clear IMMEDIATELY
+                        setTimeout(() => {
+                            handleChatMessage(message);
+                        }, 10);
+                    }
+                });
+            }
+            
+            if (chatInput) {
+                const newChatInput = chatInput.cloneNode(true);
+                chatInput.parentNode.replaceChild(newChatInput, chatInput);
+                
+                newChatInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        const currentInput = document.getElementById('chatInput');
+                        const message = currentInput.value.trim();
+                        if (message) {
+                            currentInput.value = ''; // Clear IMMEDIATELY
+                            setTimeout(() => {
+                                handleChatMessage(message);
+                            }, 10);
+                        }
+                    }
+                });
+            }
+        }
+
+        // Override global function to prevent interference
+        function overrideGlobalHandlers() {
+            console.log('🔧 Overriding global chat handlers');
+            
+            // Override the global handleChatSubmission function
+            if (window.handleChatSubmission) {
+                window.originalHandleChatSubmission = window.handleChatSubmission;
+                window.handleChatSubmission = function(inputText) {
+                    console.log('🔧 Global handleChatSubmission intercepted, redirecting to logo page handler');
+                    return handleChatMessage(inputText);
+                };
+                console.log('✅ Global handleChatSubmission overridden');
+            }
+            
+            // Override global initializeChatInput if it exists
+            if (window.initializeChatInput && window.initializeChatInput !== initializeChatInput) {
+                window.originalInitializeChatInput = window.initializeChatInput;
+                window.initializeChatInput = initializeChatInput;
+                console.log('✅ Global initializeChatInput overridden');
+            }
+        }
+
+        // Original DOMContentLoaded removed - using new version at end of script
+        
+        // Show initial logo flow on page load
+        function showInitialLogoFlow() {
+            console.log('Showing initial logo flow');
+            
+            // Add the new welcome message
+            setTimeout(() => {
+                addAIMessage("Hi, I'm Airo, your AI-powered assistant. Ready to explore some logo designs? Let's start with your business name, and a bit about what you do. Feel free to add any logo ideas you have in mind!");
+                
+                // Add CTA button immediately after message
+                setTimeout(() => {
+                    addLogoBusinessDetailsCTA();
+                }, 500);
+            }, 800);
+        }
+        
+        // Initialize dropdown functionality - copied exactly from global script.js
+        function initializeDropdowns() {
+            // Airo Grid Panel (new functionality)
+            const askAiroBtn = document.getElementById('askAiroBtn');
+            const airoGridPanel = document.getElementById('airoGridPanel');
+            
+            // Recent Chats Dropdown (traditional dropdown)
+            const recentChatsBtn = document.getElementById('recentChatsBtn');
+            const recentChatsDropdown = document.getElementById('recentChatsDropdown');
+            
+            // Remove any existing event listeners to prevent duplicates
+            if (askAiroBtn && askAiroBtn.hasAttribute('data-dropdown-initialized')) {
+                return; // Already initialized
+            }
+            
+            // Handle Ask Airo grid panel toggle
+            if (askAiroBtn && airoGridPanel) {
+                askAiroBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    
+                    // Close recent chats dropdown if open
+                    if (recentChatsDropdown && recentChatsDropdown.classList.contains('show')) {
+                        recentChatsDropdown.classList.remove('show');
+                        recentChatsBtn.classList.remove('active');
+                    }
+                    
+                    // Toggle grid panel
+                    const isOpen = airoGridPanel.classList.contains('show');
+                    if (isOpen) {
+                        airoGridPanel.classList.remove('show');
+                        askAiroBtn.classList.remove('active');
+                    } else {
+                        airoGridPanel.classList.add('show');
+                        askAiroBtn.classList.add('active');
+                    }
+                });
+                
+                // Close grid panel when clicking on a grid item
+                airoGridPanel.addEventListener('click', function(e) {
+                    if (e.target.closest('.grid-item')) {
+                        airoGridPanel.classList.remove('show');
+                        askAiroBtn.classList.remove('active');
+                    }
+                });
+                
+                askAiroBtn.setAttribute('data-dropdown-initialized', 'true');
+            }
+            
+            // Handle Recent Chats dropdown (traditional dropdown)
+            if (recentChatsBtn && recentChatsDropdown) {
+                recentChatsBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    
+                    // Close grid panel if open
+                    if (airoGridPanel && airoGridPanel.classList.contains('show')) {
+                        airoGridPanel.classList.remove('show');
+                        askAiroBtn.classList.remove('active');
+                    }
+                    
+                    // Toggle dropdown
+                    const isOpen = recentChatsDropdown.classList.contains('show');
+                    if (isOpen) {
+                        recentChatsDropdown.classList.remove('show');
+                        recentChatsBtn.classList.remove('active');
+                    } else {
+                        recentChatsDropdown.classList.add('show');
+                        recentChatsBtn.classList.add('active');
+                    }
+                });
+                
+                // Close dropdown when clicking on a link
+                recentChatsDropdown.addEventListener('click', function(e) {
+                    if (e.target.tagName === 'A') {
+                        recentChatsDropdown.classList.remove('show');
+                        recentChatsBtn.classList.remove('active');
+                    }
+                });
+            }
+            
+            // Close everything when clicking outside
+            document.addEventListener('click', function(e) {
+                const isClickInsideAiro = askAiroBtn?.contains(e.target) || airoGridPanel?.contains(e.target);
+                const isClickInsideChats = recentChatsBtn?.contains(e.target) || recentChatsDropdown?.contains(e.target);
+                
+                if (!isClickInsideAiro && !isClickInsideChats) {
+                    // Close grid panel
+                    if (airoGridPanel && airoGridPanel.classList.contains('show')) {
+                        airoGridPanel.classList.remove('show');
+                        askAiroBtn.classList.remove('active');
+                    }
+                    
+                    // Close dropdown
+                    if (recentChatsDropdown && recentChatsDropdown.classList.contains('show')) {
+                        recentChatsDropdown.classList.remove('show');
+                        recentChatsBtn.classList.remove('active');
+                    }
+                }
+            });
+        }
+
+        // Make functions globally available
+        // window.navigateToPage - using global version from script.js
+        window.handleStartGenerating = handleStartGenerating;
+        window.handleUpdateInfo = handleUpdateInfo;
+        window.handleChatMessage = handleChatMessage;
+        window.initializeDropdowns = initializeDropdowns;
+        window.showLogoSelectionSidebar = showLogoSelectionSidebar;
+        window.testManualNavigation = testManualNavigation;
+        window.testBasicNavigation = testBasicNavigation;
+        window.showLogoSelectionSidebarOnly = showLogoSelectionSidebarOnly;
+        window.hideLogoSelectionSidebar = hideLogoSelectionSidebar;
+        window.addLogoActionButtons = addLogoActionButtons;
+        window.selectLogo = selectLogo;
+        window.handleMakeThisMyLogo = handleMakeThisMyLogo;
+        window.closeUpgradeScreen = closeUpgradeScreen;
+        window.selectPriceOption = selectPriceOption;
+        window.handleBuyNow = handleBuyNow;
+        window.showCheckoutScreen = showCheckoutScreen;
+        window.closeCheckoutScreen = closeCheckoutScreen;
+        window.showMilestoneSidebar = showMilestoneSidebar;
+        window.hideMilestoneSidebar = hideMilestoneSidebar;
+        window.handleAddToWebsite = handleAddToWebsite;
+        window.handleSocialPost = handleSocialPost;
+        window.handleMakeChanges = handleMakeChanges;
+        window.handleChangeType = handleChangeType;
+        window.switchToLogoVersion = switchToLogoVersion;
+        window.showLogoPreferencesSidebar = showLogoPreferencesSidebar;
+        window.hideLogoPreferencesSidebar = hideLogoPreferencesSidebar;
+        window.openPreferenceCategory = openPreferenceCategory;
+        window.goBackFromPreferences = goBackFromPreferences;
+        window.generateLogoFromPreferences = generateLogoFromPreferences;
+        window.closePreferenceEditing = closePreferenceEditing;
+        window.cancelPreferenceEditing = cancelPreferenceEditing;
+        window.applyPreferenceEditing = applyPreferenceEditing;
+        window.switchLogoTab = switchLogoTab;
+        window.showLogoPreviewTab = showLogoPreviewTab;
+        window.showHangTightSidebar = showHangTightSidebar;
+        window.hideHangTightSidebar = hideHangTightSidebar;
+        window.handleMilestoneYes = handleMilestoneYes;
+        window.handleMilestoneNo = handleMilestoneNo;
+    </script>
+    
+    
+    <!-- Airo Plus Upgrade Screen -->
+    <div class="airo-plus-upgrade" id="airoUpgradeScreen">
+        <div class="upgrade-modal">
+            <button class="upgrade-close-btn" onclick="closeUpgradeScreen()">&times;</button>
+            
+            <div class="upgrade-logo-section" id="upgradeLogoSection">
+                <div class="upgrade-logo-display" id="upgradeLogoDisplay">
+                    <!-- Selected logo will be inserted here -->
+                </div>
+            </div>
+            
+            <div class="upgrade-content-section">
+                <div class="upgrade-header">
+                    <div class="upgrade-airo-logo">
+                        <svg viewBox="0 0 32 32" fill="none">
+                            <circle cx="16" cy="16" r="12" fill="#666"/>
+                            <path d="M12 16L14 18L20 12" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <div class="upgrade-airo-text">GoDaddy <span class="airo-purple">Airo</span></div>
+                    </div>
+                    
+                    <h1 class="upgrade-title">Get GoDaddy Airo Plus™ to access your logo and build your brand</h1>
+                    <p class="upgrade-subtitle">Your logo comes as part of a subscription designed to help you build your brand in no time and always keep it fresh.</p>
+                </div>
+                
+                <div class="upgrade-features">
+                    <h3>Airo Plus™ includes:</h3>
+                    
+                    <div class="upgrade-feature">
+                        <svg class="upgrade-feature-icon" viewBox="0 0 20 20" fill="none">
+                            <path d="M10 2L12.5 7.5L18 8L14 12L15 18L10 15L5 18L6 12L2 8L7.5 7.5L10 2Z" fill="#666"/>
+                        </svg>
+                        <div class="upgrade-feature-text">Unlimited AI-generated logos and editing capabilities with Airo Plus™ Logo</div>
+                    </div>
+                    
+                    <div class="upgrade-feature">
+                        <svg class="upgrade-feature-icon" viewBox="0 0 20 20" fill="none">
+                            <circle cx="10" cy="10" r="8" fill="#666"/>
+                            <path d="M7 10L9 12L13 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <div class="upgrade-feature-text">Your logo in multiple colors and sizes to use on social media, in print and email signatures, or as a favicon</div>
+                    </div>
+                    
+                    <div class="upgrade-feature">
+                        <svg class="upgrade-feature-icon" viewBox="0 0 20 20" fill="none">
+                            <rect x="2" y="2" width="16" height="16" rx="2" fill="#666"/>
+                            <path d="M6 10L8 12L14 6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <div class="upgrade-feature-text">Professional AI-generated images with Airo Plus™ Images</div>
+                    </div>
+                </div>
+                
+                <div class="upgrade-pricing">
+                    <div class="upgrade-price-option" onclick="selectPriceOption(this, 'yearly')">
+                        <div class="upgrade-price-header">
+                            <div class="upgrade-radio"></div>
+                            <div class="upgrade-price-title">Your Logo + A year of Airo Plus™</div>
+                        </div>
+                        <div class="upgrade-price-details">
+                            <span class="upgrade-price-old">$9.99</span>
+                            <span class="upgrade-price-new">$4.99</span>
+                            <span class="upgrade-price-period">/mo x 12 months</span>
+                        </div>
+                        <div class="upgrade-price-note">You pay $59.88 today. Auto-renews at $119.88</div>
+                    </div>
+                    
+                    <div class="upgrade-price-option highlighted selected" onclick="selectPriceOption(this, 'monthly')">
+                        <div class="upgrade-price-header">
+                            <div class="upgrade-radio"></div>
+                            <div class="upgrade-price-title">Your Logo + A month of Airo Plus™</div>
+                        </div>
+                        <div class="upgrade-price-details">
+                            <span class="upgrade-price-old">$16.99</span>
+                            <span class="upgrade-price-new">$14.99</span>
+                            <span class="upgrade-price-period">one time</span>
+                        </div>
+                        <div class="upgrade-price-note">You pay $14.99 today. Doesn't auto-renew</div>
+                    </div>
+                </div>
+                
+                <button class="upgrade-buy-btn" onclick="handleBuyNow()">Buy now</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Checkout Screen -->
+    <div class="checkout-screen" id="checkoutScreen">
+        <div class="checkout-overlay">
+            <div class="checkout-container">
+                <button class="checkout-close-btn" onclick="closeCheckoutScreen()">&times;</button>
+                
+                <div class="checkout-content">
+                    <div class="checkout-header">
+                        <div class="checkout-icon">
+                            <svg width="64" height="64" viewBox="0 0 24 24" fill="none">
+                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="#6C47B4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <h1 class="checkout-title">Checking out</h1>
+                        <p class="checkout-subtitle">Please wait while we process your order...</p>
+                    </div>
+                    
+                    <div class="checkout-order-summary">
+                        <h3 class="order-summary-title">Order Summary</h3>
+                        <div class="order-item">
+                            <div class="order-item-details">
+                                <span class="order-item-name">GoDaddy Airo Plus™</span>
+                                <span class="order-item-description" id="checkoutPlanType">Monthly subscription</span>
+                            </div>
+                            <span class="order-item-price" id="checkoutPrice">$14.99</span>
+                        </div>
+                        <div class="order-divider"></div>
+                        <div class="order-total">
+                            <span class="order-total-label">Total</span>
+                            <span class="order-total-price" id="checkoutTotal">$14.99</span>
+                        </div>
+                    </div>
+                    
+                    <div class="checkout-loading">
+                        <div class="checkout-spinner"></div>
+                        <p class="checkout-loading-text">Processing your payment...</p>
+                    </div>
+                    
+                    <div class="checkout-security">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span>Secure 256-bit SSL encryption</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="../script.js"></script>
+    <script>
+        // AUTOMATIC DEBUG SYSTEM - Runs when page loads
+        window.addEventListener('DOMContentLoaded', function() {
+            console.log('🔥 PAGE LOADED - Running automatic debug checks');
+            
+            // Make debug functions globally available
+            window.emergencyTestColorButton = emergencyTestColorButton;
+            window.emergencyColorChange = emergencyColorChange;
+            window.inspectChangeColorButton = inspectChangeColorButton;
+            window.handleMakeChanges = handleMakeChanges;
+            window.handleChangeType = handleChangeType;
+            window.showCheckoutScreen = showCheckoutScreen;
+            window.closeCheckoutScreen = closeCheckoutScreen;
+            window.showMilestoneSidebar = showMilestoneSidebar;
+            window.hideMilestoneSidebar = hideMilestoneSidebar;
+            
+            console.log('🔥 DEBUG FUNCTIONS MADE GLOBAL:');
+            console.log('🔥 - emergencyTestColorButton()');
+            console.log('🔥 - emergencyColorChange()');
+            console.log('🔥 - inspectChangeColorButton()');
+            console.log('🔥 - handleMakeChanges()');
+            console.log('🔥 - handleChangeType()');
+            console.log('🔥 - showCheckoutScreen("monthly") or showCheckoutScreen("yearly")');
+            console.log('🔥 - closeCheckoutScreen()');
+            console.log('🔥 - showMilestoneSidebar()');
+            console.log('🔥 - hideMilestoneSidebar()');
+            
+            // Auto-inspect after 3 seconds to see if buttons exist
+            setTimeout(() => {
+                console.log('🔥 AUTO-INSPECTING DOM FOR BUTTONS...');
+                inspectChangeColorButton();
+            }, 3000);
+        });
+
+        // Add this at the very top of your script section to disable notifications
+        function showNotification(message) {
+            console.log('Notification blocked:', message);
+            // Do nothing - prevent notifications from showing
+            return false;
+        }
+
+        // Override any global notification functions
+        window.showNotification = showNotification;
+        window.showToast = showNotification;
+        window.displayNotification = showNotification;
+
+        // Make sure your handleChatMessage is working correctly
+        function handleChatMessage(message) {
+            console.log('🔥 handleChatMessage called with:', message);
+            
+            // Prevent duplicate processing
+            if (window.processingMessage) {
+                console.log('Already processing message, skipping');
+                return;
+            }
+            
+            window.processingMessage = true;
+            
+            // Clear the input immediately
+            const chatInput = document.getElementById('chatInput');
+            if (chatInput) {
+                chatInput.value = '';
+                console.log('Input cleared');
+            }
+            
+            setTimeout(() => {
+                window.processingMessage = false;
+            }, 1000);
+            
+            const originalText = message;
+            const inputText = message.toLowerCase().trim();
+            
+            if (inputText === '') {
+                return;
+            }
+            
+            console.log('Processing message:', originalText);
+            
+            // Check for global navigation phrases first - BUT SKIP FOR BUSINESS DETAILS
+            if (currentStep !== 'awaiting_business_details' && detectGlobalNavigationPhrase(message)) {
+                console.log('Navigation detected, redirecting...');
+                return;
+            }
+            
+            // Check if waiting for logo change input first
+            if (window.waitingForLogoChange) {
+                console.log('Processing logo change input:', originalText);
+                processLogoChangeInput(originalText);
+                return;
+            }
+            
+            // Hide any visible action buttons
+            const userActionButtons = document.querySelector('.user-action-buttons');
+            if (userActionButtons) {
+                userActionButtons.style.display = 'none';
+            }
+            
+            // Add user message to chat
+            console.log('Adding user message:', originalText);
+            addUserMessage(originalText);
+            
+            // Handle different steps in the flow
+            if (currentStep === 'awaiting_business_details') {
+                console.log('Processing business details step');
+                
+                const allUserMessages = document.querySelectorAll('.user-message');
+                if (allUserMessages.length > 0) {
+                    currentUserMessageElement = allUserMessages[allUserMessages.length - 1];
+                }
+                
+                setTimeout(() => {
+                    showLoadingScreen();
+                    
+                    setTimeout(() => {
+                        hideLoadingScreen();
+                        showLogosWithUpdatedAI();
+                    }, LOADING_DURATION);
+                }, 500);
+                
+                currentStep = 'logo_generation';
+                console.log('Step updated to logo_generation');
+            } else {
+                console.log('Processing other step');
+                if (inputText.includes('start generating') || inputText.includes('start') || inputText.includes('generating')) {
+                    setTimeout(() => {
+                        showLogoSelectionSidebar();
+                    }, 500);
+                } else if (inputText.includes('update info') || inputText.includes('update') || inputText.includes('change')) {
+                    setTimeout(() => {
+                        showLogoSelectionSidebarOnly();
+                        switchLogoTab('preferences');
+                    }, 500);
+                }
+            }
+        }
+
+        // Ensure your functions are globally available
+        window.handleChatMessage = handleChatMessage;
+
+        // Also check if there's a global chat submission handler interfering
+        if (window.handleChatSubmission) {
+            console.log('Overriding global handleChatSubmission');
+            window.handleChatSubmission = function(message) {
+                console.log('Global handler intercepted, routing to local handler');
+                return handleChatMessage(message);
+            };
+        }
+
+        // Simple DOMContentLoaded setup
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🔥 Logo page DOM loaded');
+            
+            // Initialize dropdowns
+            initializeDropdowns();
+            
+            // Make sure our handler is set up
+            window.handleChatMessage = handleChatMessage;
+            
+            // Show initial logo flow
+            showInitialLogoFlow();
+            
+            // Debug current step
+            console.log('Initial currentStep:', currentStep);
+        });
+
+        // Add this variable at the top
+        let preventDuplicateSubmission = false;
+        let hasAutoPopulated = false;
+        
+        // DEVELOPMENT: Only reset purchased state on manual page refresh (not navigation)
+        const isRefresh = performance.getEntriesByType('navigation')[0].type === 'reload';
+        if (isRefresh) {
+            localStorage.removeItem('airo_purchased');
+        }
+        
+        // Check if user has already purchased and remove upgrade button immediately
+        if (localStorage.getItem('airo_purchased') === 'true') {
+            const upgradeButton = document.querySelector('.upgrade-btn');
+            if (upgradeButton) {
+                upgradeButton.remove();
+            }
+        }
+        
+    </script>
+
+    <!-- Disclaimer Text -->
+    <div class="disclaimer">
+        <p class="disclaimer-text">Airo can make mistakes, so double check its responses.</p>
+    </div>
+</body>
+</html>

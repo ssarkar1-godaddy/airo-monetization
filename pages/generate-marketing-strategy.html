@@ -1,0 +1,3692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Marketing Strategy - GoDaddy Airo</title>
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        body {
+            background-color: transparent;
+        }
+        
+        .header {
+            background-color: transparent !important;
+            border-bottom: none !important;
+            backdrop-filter: none;
+        }
+        
+        /* Clean flexbox layout - chat interface is flex container */
+        .chat-interface {
+            flex: 1;
+            min-width: 0; /* Allow flex shrinking */
+            height: calc(100vh - 160px); /* Fixed height for proper scroll */
+            display: flex;
+            flex-direction: column;
+            background-color: transparent;
+        }
+
+        /* Main wrapper - clean flex container */
+        #mainContentWrapper {
+            display: flex;
+            gap: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 24px 120px;
+            align-items: flex-start;
+        }
+        
+        /* Chat messages container - this is the scroll container */
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            margin-bottom: 40px;
+            padding-bottom: 140px; /* Add this - space for control bar */
+        }
+        
+        .user-message {
+            align-self: flex-end;
+            max-width: 70%;
+        }
+        
+        .user-bubble {
+            background: #F5F7F8 !important;
+            color: #333333;
+            padding: 16px 20px;
+            border-radius: 20px;
+            border-bottom-right-radius: 6px;
+            font-size: 16px;
+            line-height: 1.4;
+            border: 1px solid #e5e5e5;
+        }
+        
+        .airo-message {
+            align-self: flex-start;
+            max-width: 80%;
+        }
+        
+        .airo-bubble {
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            color: #333333;
+            padding: 20px 24px;
+            border-radius: 20px;
+            border-bottom-left-radius: 6px;
+            font-size: 16px;
+            line-height: 1.5;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .typing-indicator {
+            align-self: flex-start;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 16px;
+        }
+        
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+        
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: #7B2CBF;
+            border-radius: 50%;
+            animation: typingPulse 1.4s infinite;
+        }
+        
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        .typing-text {
+            color: #666666;
+            font-size: 14px;
+            font-style: italic;
+        }
+        
+        @keyframes typingPulse {
+            0%, 60%, 100% {
+                opacity: 0.3;
+            }
+            30% {
+                opacity: 1;
+            }
+        }
+        
+        /* Business Information Sidebar - flex positioning */
+        .business-info-sidebar {
+            width: 400px;
+            flex-shrink: 0;
+            height: calc(100vh - 185px);
+            margin-top: 10px;
+            position: relative;
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 16px;
+            padding: 24px;
+            overflow-y: auto;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            display: none; /* Initially hidden */
+        }
+        
+        .business-info-sidebar.visible {
+            transform: translateX(0);
+            display: block; /* Show when visible class is added */
+        }
+        
+        .sidebar-header {
+            margin-bottom: 24px;
+        }
+        
+        .sidebar-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333333;
+            margin-bottom: 8px;
+        }
+        
+        .sidebar-subtitle {
+            font-size: 14px;
+            color: #666666;
+        }
+        
+        .business-field {
+            margin-bottom: 20px;
+        }
+        
+        .field-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #333333;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .edit-icon {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .field-value {
+            font-size: 14px;
+            color: #666666;
+            line-height: 1.4;
+        }
+        
+        .field-list {
+            margin: 0;
+            padding-left: 16px;
+            font-size: 14px;
+            color: #666666;
+        }
+        
+        .field-list li {
+            margin-bottom: 4px;
+        }
+        
+        /* Removed fixed positioning - using clean flexbox instead */
+        
+        /* Action buttons for user messages */
+        .user-action-buttons {
+            display: flex;
+            gap: 12px;
+            padding: 16px 20px;
+        }
+        
+        .action-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+        }
+        
+        .primary-btn {
+            background: #6C47B4;
+            color: white;
+        }
+        
+        .primary-btn:hover {
+            background: #D3C1F7;
+            color: #6C47B4;
+        }
+        
+        .secondary-btn {
+            background: #f8f9fa;
+            color: #333333;
+            border: 1px solid #e5e5e5;
+        }
+        
+        .secondary-btn:hover {
+            background: #e9ecef;
+        }
+        
+        /* Helper text */
+        .helper-text {
+            margin-top: 16px;
+            text-align: right;
+            align-self: flex-end;
+        }
+        
+        .helper-message {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #999999;
+        }
+        
+        .helper-icon {
+            font-size: 16px;
+            color: #cccccc;
+        }
+        
+        /* Standalone Looks Good button styling */
+        .looks-good-standalone,
+        .approve-analysis-standalone {
+            align-self: flex-end;
+            margin: 16px 0;
+        }
+        
+        .standalone-btn {
+            background: transparent;
+            border: 1px solid #6C47B4;
+            color: #6C47B4;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .standalone-btn:hover {
+            background: #D3C1F7;
+            color: #6C47B4;
+        }
+        
+        /* Customer Analysis Sidebar - proper sidebar positioning */
+        .customer-analysis-sidebar {
+            width: 400px;
+            flex-shrink: 0;
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 16px;
+            display: none;
+            flex-direction: column;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+            overflow-y: auto;
+            height: calc(100vh - 185px); /* Align with control bar position */
+            margin-top: 10px;
+            margin-bottom: 0;
+            position: relative;
+            padding: 24px;
+        }
+        
+        .customer-analysis-sidebar.visible {
+            display: flex;
+        }
+        
+        .analysis-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+        
+        .analysis-icon {
+            font-size: 20px;
+        }
+        
+        .analysis-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333333;
+        }
+        
+        .analysis-subtitle {
+            font-size: 14px;
+            color: #666666;
+            margin-bottom: 24px;
+        }
+        
+        .customer-segment {
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            background: #ffffff;
+        }
+        
+        .segment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .segment-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333333;
+        }
+        
+        .segment-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .edit-btn, .delete-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: background 0.2s ease;
+        }
+        
+        .edit-btn:hover, .delete-btn:hover {
+            background: #f5f5f5;
+        }
+        
+        .edit-btn img {
+            width: 24px;
+            height: 24px;
+            display: block;
+        }
+        
+        .segment-details {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .segment-demographic {
+            margin-bottom: 12px;
+            color: #333333;
+        }
+        
+        .segment-description {
+            margin-bottom: 12px;
+            color: #666666;
+        }
+        
+        .segment-behavior {
+            color: #666666;
+        }
+        
+        /* Approve analysis button styling */
+        .approve-analysis-standalone {
+            align-self: flex-end;
+            margin: 16px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;        }
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .chat-interface {
+                padding: 24px 16px 120px;
+                max-height: calc(100vh - 120px);
+            }
+            
+            .user-message, .airo-message {
+                max-width: 90%;
+            }
+            
+            .business-info-sidebar {
+                width: calc(100% - 48px);
+                height: 60vh;
+                top: auto;
+                bottom: 24px;
+                left: 24px;
+                right: 24px;
+            }
+            
+            /* Mobile reset no longer needed with flexbox layout */
+        }
+        
+        @media (max-width: 480px) {
+            .chat-interface {
+                padding: 20px 12px 120px;
+                max-height: calc(100vh - 100px);
+            }
+            
+            .user-bubble, .airo-bubble {
+                padding: 14px 16px;
+                font-size: 15px;
+            }
+        }
+        
+        /* Marketing Plan Loading Screen */
+        .marketing-loading-screen {
+            position: fixed;
+            top: 80px; /* Account for header */
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: transparent;
+            background-image: url('../assets/images/purple-orbs.svg');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        
+        .marketing-loading-screen.visible {
+            display: flex;
+        }
+        
+        .marketing-loading-content {
+            text-align: center;
+            max-width: 400px;
+            position: relative;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .marketing-loading-spinner {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 24px;
+            border: 3px solid #e5e5e5;
+            border-top: 3px solid #7B2CBF;
+            border-radius: 50%;
+            animation: marketing-spin 1s linear infinite;
+        }
+        
+        .marketing-loading-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+        }
+        
+        .marketing-loading-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+        
+        @keyframes marketing-spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Marketing Action Buttons */
+        .marketing-actions {
+            align-self: flex-end;
+            margin: 16px 0;
+        }
+        
+        .marketing-action-buttons {
+            display: flex;
+            gap: 12px;
+            padding: 16px 0;
+            justify-content: center;
+        }
+        
+        .action-btn.outline-btn {
+            background: transparent;
+            border: 1px solid #6C47B4;
+            color: #6C47B4;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .action-btn.outline-btn:hover {
+            background: #D3C1F7;
+            color: #6C47B4;
+        }
+        
+        /* Disabled button states - remove hover and active effects */
+        .action-btn:disabled,
+        .outline-btn:disabled,
+        button:disabled.action-btn,
+        button:disabled.outline-btn {
+            cursor: not-allowed !important;
+        }
+        
+        .action-btn:disabled:hover,
+        .outline-btn:disabled:hover,
+        button:disabled.action-btn:hover,
+        button:disabled.outline-btn:hover {
+            background: transparent !important;
+            color: inherit !important;
+            border-color: inherit !important;
+            transform: none !important;
+        }
+        
+        .action-btn:disabled:active,
+        .outline-btn:disabled:active,
+        button:disabled.action-btn:active,
+        button:disabled.outline-btn:active {
+            background: transparent !important;
+            color: inherit !important;
+            border-color: inherit !important;
+            transform: none !important;
+        }
+        
+        /* Social card selection styling - internal border growth */
+        .social-card {
+            box-sizing: border-box !important;
+            border: 1px solid #e5e5e5 !important;
+            transition: border 0.2s ease !important;
+        }
+        
+        .social-card.selected {
+            border: 3px solid #7B2CBF !important;
+        }
+        
+        /* Custom tooltip styling for disabled buttons */
+        .action-btn:disabled[title],
+        .outline-btn:disabled[title] {
+            position: relative;
+        }
+        
+        .action-btn:disabled[title]:hover::after,
+        .outline-btn:disabled[title]:hover::after {
+            content: attr(title);
+            position: absolute;
+            bottom: 120%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #111111;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 400;
+            white-space: nowrap;
+            z-index: 1000;
+            pointer-events: none;
+            opacity: 1;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        
+        .action-btn:disabled[title]:hover::before,
+        .outline-btn:disabled[title]:hover::before {
+            content: '';
+            position: absolute;
+            bottom: 112%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 5px solid transparent;
+            border-top-color: #111111;
+            z-index: 1001;
+            pointer-events: none;
+        }
+        
+        /* Marketing Plan Sidebar - proper sidebar positioning */
+        .marketing-plan-sidebar {
+            width: 400px;
+            flex-shrink: 0;
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 16px;
+            display: none;
+            flex-direction: column;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+            overflow-y: auto;
+            height: calc(100vh - 185px); /* Align with control bar position */
+            margin-top: 10px;
+            margin-bottom: 0;
+            position: relative; /* NOT fixed/absolute */
+            padding: 0;
+        }
+        
+        .marketing-plan-sidebar.visible {
+            display: flex;
+        }
+        
+        .marketing-plan-header {
+            padding: 24px 32px;
+            border-bottom: 1px solid #e5e5e5;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .marketing-plan-icon {
+            width: 24px;
+            height: 24px;
+            font-size: 20px;
+        }
+        
+        .marketing-plan-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+        
+        .marketing-plan-tabs {
+            display: flex;
+            padding: 0 32px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+        
+        .marketing-plan-tab {
+            padding: 16px 0;
+            margin-right: 32px;
+            border: none;
+            background: none;
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+        
+        .marketing-plan-tab.active {
+            color: #333;
+            border-bottom-color: #00D4AA;
+        }
+        
+        .marketing-plan-content {
+            padding: 24px 32px;
+        }
+        
+        .marketing-section {
+            margin-bottom: 24px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .marketing-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .section-badge {
+            background: #E8F5E8;
+            color: #2D5A2D;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .section-description {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+            margin: 0 0 16px 0;
+        }
+        
+        .section-strategies {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .section-strategies li {
+            font-size: 14px;
+            line-height: 1.4;
+            color: #333;
+            margin-bottom: 8px;
+            padding-left: 16px;
+            position: relative;
+        }
+        
+        .section-strategies li:before {
+            content: "•";
+            color: #7B2CBF;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+        
+        .section-expand {
+            color: #666;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: background 0.2s ease;
+        }
+        
+        .section-expand:hover {
+            background: #f0f0f0;
+        }
+        
+        .section-expand svg {
+            width: 20px;
+            height: 20px;
+        }
+        
+        /* Removed - using consistent .with-sidebar class instead */
+        
+        /* Mobile responsive for marketing plan sidebar */
+        @media (max-width: 768px) {
+            .marketing-plan-sidebar {
+                width: calc(100% - 48px);
+                height: 60vh;
+                top: auto;
+                bottom: 24px;
+                left: 24px;
+                right: 24px;
+            }
+            
+            /* Removed - using consistent .with-sidebar class instead */
+            
+            .marketing-plan-header {
+                padding: 20px 24px;
+            }
+            
+            .marketing-plan-tabs {
+                padding: 0 24px;
+            }
+            
+            .marketing-plan-content {
+                padding: 20px 24px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            /* Mobile reset for smaller screens - no longer needed with flexbox */
+            
+            .marketing-action-buttons {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .action-btn.outline-btn,
+            .action-btn.primary-btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+        
+        /* Marketing Upgrade Modal */
+        .marketing-upgrade-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #ffffff;
+            display: none;
+            z-index: 1000;
+        }
+        
+        .marketing-upgrade-modal.visible {
+            display: block;
+        }
+        
+        .marketing-upgrade-modal .upgrade-modal {
+            background: #ffffff;
+            border-radius: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            position: relative;
+        }
+        
+        .marketing-upgrade-modal .upgrade-close-btn {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            background: none;
+            border: none;
+            font-size: 32px;
+            color: #666;
+            cursor: pointer;
+            z-index: 1001;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+        
+        .marketing-upgrade-modal .upgrade-close-btn:hover {
+            background: #f5f5f5;
+            color: #333;
+        }
+        
+        .upgrade-illustration-section {
+            flex: 0 0 50%;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 40px;
+        }
+        
+        .back-btn {
+            position: absolute;
+            top: 24px;
+            left: 24px;
+            background: none;
+            border: none;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.2s ease;
+        }
+        
+        .back-btn:hover {
+            transform: translateX(-2px);
+        }
+        
+        .back-btn svg {
+            color: #666;
+            width: 24px;
+            height: 24px;
+        }
+        
+        .marketing-image-container {
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .marketing-end-image {
+            width: 100%;
+            height: auto;
+            max-width: 480px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            object-fit: cover;
+        }
+        
+        .upgrade-content-section {
+            flex: 0 0 50%;
+            padding: 48px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .upgrade-header {
+            margin-bottom: 32px;
+        }
+        
+        .upgrade-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        
+        .upgrade-logo svg {
+            width: 32px;
+            height: 32px;
+        }
+        
+        .upgrade-logo-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+        
+        .airo-purple {
+            color: #7B2CBF;
+        }
+        
+        .upgrade-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin: 0 0 16px 0;
+            line-height: 1.2;
+        }
+        
+        .upgrade-subtitle {
+            font-size: 16px;
+            color: #666;
+            margin: 0;
+            line-height: 1.5;
+        }
+        
+        .upgrade-features {
+            margin-bottom: 32px;
+            padding: 24px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .feature-item svg {
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .feature-item span {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .upgrade-pricing {
+            margin-bottom: 24px;
+            padding: 24px;
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+        }
+        
+        .pricing-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        
+        .pricing-label {
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .discount-badge {
+            background: #FFD700;
+            color: #8B4513;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        
+        .pricing-details {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .old-price {
+            font-size: 16px;
+            color: #999;
+            text-decoration: line-through;
+        }
+        
+        .new-price {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+        
+        .pricing-period {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .pricing-terms {
+            font-size: 12px;
+            color: #666;
+            margin: 0;
+            line-height: 1.4;
+        }
+        
+        .add-to-cart-btn {
+            background: #1a1a1a;
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+        
+        .add-to-cart-btn:hover {
+            background: #333;
+        }
+        
+        /* Base positioning - centered on full viewport */
+        .control-bar {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 600px;
+            z-index: 1000;
+            transition: left 0.3s ease;
+        }
+
+        .disclaimer {
+            position: fixed;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 999;
+            transition: left 0.3s ease;
+        }
+
+        /* Hide control bar when upgrade screen is open */
+        body.upgrade-screen-open .control-bar {
+            display: none;
+        }
+
+        /* Small sidebar (350px) - shift left by half sidebar width */
+        body.marketing-sidebar-open .control-bar,
+        body.marketing-sidebar-open .disclaimer {
+            left: calc(50% - 175px) !important;
+        }
+
+        /* Large sidebars (400px) - center on remaining chat space */
+        body.large-sidebar-open .control-bar,
+        body.large-sidebar-open .disclaimer {
+            left: calc(50% - 200px) !important;
+        }
+
+        /* More specific rule to ensure control bar positioning takes precedence */
+        body.large-sidebar-open .control-bar {
+            left: calc(50% - 200px) !important;
+            transform: translateX(-50%) !important;
+        }
+
+        /* Removed redundant CSS - using consistent class names now */
+        
+        /* Responsive styles for marketing upgrade modal */
+        @media (max-width: 1024px) {
+            .marketing-upgrade-modal .upgrade-modal {
+                flex-direction: column;
+            }
+            
+            .upgrade-illustration-section {
+                flex: none;
+                min-height: 300px;
+                padding: 32px;
+            }
+            
+            .marketing-end-image {
+                max-width: 400px;
+            }
+            
+            .upgrade-content-section {
+                flex: none;
+                padding: 32px;
+            }
+            
+            .upgrade-title {
+                font-size: 28px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .upgrade-illustration-section {
+                flex: none;
+                min-height: 250px;
+                padding: 24px;
+            }
+            
+            .marketing-end-image {
+                max-width: 320px;
+            }
+            
+            .back-btn {
+                top: 16px;
+                left: 16px;
+                padding: 6px;
+            }
+            
+            .back-btn svg {
+                width: 20px;
+                height: 20px;
+            }
+            
+            .upgrade-content-section {
+                flex: none;
+                padding: 24px;
+            }
+            
+            .upgrade-title {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo" onclick="navigateToPage('index')" style="cursor: pointer;">
+                <img src="../assets/images/logo.svg" alt="GoDaddy Airo" class="logo-icon" />
+            </div>
+            <div class="header-actions">
+                <button class="upgrade-btn" onclick="navigateToPage('upgrade')">Upgrade to Airo Plus™</button>
+                <button class="close-btn" onclick="navigateToPage('index')">×</button>
+            </div>
+        </div>
+    </header>
+
+    <script>
+        // DEVELOPMENT: Only reset purchased state on manual page refresh (not navigation)
+        const isRefresh = performance.getEntriesByType('navigation')[0].type === 'reload';
+        if (isRefresh) {
+            localStorage.removeItem('airo_purchased');
+        }
+        
+        // Check if user has already purchased and remove upgrade button immediately
+        if (localStorage.getItem('airo_purchased') === 'true') {
+            const upgradeButton = document.querySelector('.upgrade-btn');
+            if (upgradeButton) {
+                upgradeButton.remove();
+            }
+        }
+    </script>
+
+    <!-- Main Content Wrapper -->
+    <main class="main-content" id="mainContentWrapper" style="display: flex; gap: 24px; max-width: 1200px; margin: 0 auto; padding: 40px 24px 120px;">
+        <!-- Chat Interface -->
+        <div class="chat-interface" id="chatInterface" style="flex: 1; min-height: calc(100vh - 160px); display: flex; flex-direction: column; overflow-y: auto; scroll-behavior: smooth;">
+            <div class="chat-messages" id="chatMessages">
+                <!-- Initial user message -->
+                <div class="user-message" id="initialUserMessage">
+                    <div class="user-bubble">Market my business</div>
+                </div>
+
+                <!-- AI response -->
+                <div class="airo-message" id="initialAiroMessage">
+                    <div class="airo-bubble">
+                        Let's get your business the attention it deserves.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </main>
+
+    <!-- Business Information Sidebar -->
+    <div class="business-info-sidebar" id="businessInfoSidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Your Business Information</div>
+        </div>
+        
+        <div class="business-field">
+            <div class="field-label">
+                Business Name
+                <span class="edit-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 17.7496C4.88901 17.7496 4.77941 17.725 4.67911 17.6775C4.5788 17.63 4.49028 17.5608 4.41994 17.4749C4.3496 17.3891 4.29918 17.2887 4.27233 17.181C4.24548 17.0733 4.24285 16.961 4.26465 16.8522L5.22465 12.0534C5.25335 11.908 5.32475 11.7746 5.42973 11.6701L14.3496 2.75064C14.6752 2.43952 15.1081 2.26581 15.5584 2.26563C16.0087 2.26544 16.4418 2.43879 16.7676 2.74964L19.25 5.23255C19.5699 5.5534 19.7495 5.98798 19.7495 6.44105C19.7495 6.89412 19.5699 7.32871 19.25 7.64955L10.3296 16.57C10.2248 16.6746 10.0915 16.7459 9.94629 16.775L5.14697 17.735C5.09858 17.7447 5.04935 17.7496 5 17.7496ZM6.65088 12.57L5.95605 16.0436L9.42969 15.3493L18.1894 6.58953C18.2286 6.55016 18.2506 6.49688 18.2506 6.44134C18.2506 6.3858 18.2286 6.33252 18.1894 6.29315L15.707 3.81064C15.6649 3.77691 15.6126 3.75848 15.5587 3.75839C15.5047 3.7583 15.4523 3.77655 15.4101 3.81015L6.65088 12.57Z" fill="#666666"/>
+                        <path d="M20 21.7496H4C3.80109 21.7496 3.61032 21.6706 3.46967 21.53C3.32902 21.3893 3.25 21.1986 3.25 20.9996C3.25 20.8007 3.32902 20.61 3.46967 20.4693C3.61032 20.3287 3.80109 20.2496 4 20.2496H20C20.1989 20.2496 20.3897 20.3287 20.5303 20.4693C20.671 20.61 20.75 20.8007 20.75 20.9996C20.75 21.1986 20.671 21.3893 20.5303 21.53C20.3897 21.6706 20.1989 21.7496 20 21.7496Z" fill="#666666"/>
+                    </svg>
+                </span>
+            </div>
+            <div class="field-value">Eugene's Coffee</div>
+        </div>
+        
+        <div class="business-field">
+            <div class="field-label">
+                Website URL
+                <span class="edit-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 17.7496C4.88901 17.7496 4.77941 17.725 4.67911 17.6775C4.5788 17.63 4.49028 17.5608 4.41994 17.4749C4.3496 17.3891 4.29918 17.2887 4.27233 17.181C4.24548 17.0733 4.24285 16.961 4.26465 16.8522L5.22465 12.0534C5.25335 11.908 5.32475 11.7746 5.42973 11.6701L14.3496 2.75064C14.6752 2.43952 15.1081 2.26581 15.5584 2.26563C16.0087 2.26544 16.4418 2.43879 16.7676 2.74964L19.25 5.23255C19.5699 5.5534 19.7495 5.98798 19.7495 6.44105C19.7495 6.89412 19.5699 7.32871 19.25 7.64955L10.3296 16.57C10.2248 16.6746 10.0915 16.7459 9.94629 16.775L5.14697 17.735C5.09858 17.7447 5.04935 17.7496 5 17.7496ZM6.65088 12.57L5.95605 16.0436L9.42969 15.3493L18.1894 6.58953C18.2286 6.55016 18.2506 6.49688 18.2506 6.44134C18.2506 6.3858 18.2286 6.33252 18.1894 6.29315L15.707 3.81064C15.6649 3.77691 15.6126 3.75848 15.5587 3.75839C15.5047 3.7583 15.4523 3.77655 15.4101 3.81015L6.65088 12.57Z" fill="#666666"/>
+                        <path d="M20 21.7496H4C3.80109 21.7496 3.61032 21.6706 3.46967 21.53C3.32902 21.3893 3.25 21.1986 3.25 20.9996C3.25 20.8007 3.32902 20.61 3.46967 20.4693C3.61032 20.3287 3.80109 20.2496 4 20.2496H20C20.1989 20.2496 20.3897 20.3287 20.5303 20.4693C20.671 20.61 20.75 20.8007 20.75 20.9996C20.75 21.1986 20.671 21.3893 20.5303 21.53C20.3897 21.6706 20.1989 21.7496 20 21.7496Z" fill="#666666"/>
+                    </svg>
+                </span>
+            </div>
+            <div class="field-value">eugenecafe.godaddysites.com</div>
+        </div>
+        
+        <div class="business-field">
+            <div class="field-label">
+                Industry
+                <span class="edit-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 17.7496C4.88901 17.7496 4.77941 17.725 4.67911 17.6775C4.5788 17.63 4.49028 17.5608 4.41994 17.4749C4.3496 17.3891 4.29918 17.2887 4.27233 17.181C4.24548 17.0733 4.24285 16.961 4.26465 16.8522L5.22465 12.0534C5.25335 11.908 5.32475 11.7746 5.42973 11.6701L14.3496 2.75064C14.6752 2.43952 15.1081 2.26581 15.5584 2.26563C16.0087 2.26544 16.4418 2.43879 16.7676 2.74964L19.25 5.23255C19.5699 5.5534 19.7495 5.98798 19.7495 6.44105C19.7495 6.89412 19.5699 7.32871 19.25 7.64955L10.3296 16.57C10.2248 16.6746 10.0915 16.7459 9.94629 16.775L5.14697 17.735C5.09858 17.7447 5.04935 17.7496 5 17.7496ZM6.65088 12.57L5.95605 16.0436L9.42969 15.3493L18.1894 6.58953C18.2286 6.55016 18.2506 6.49688 18.2506 6.44134C18.2506 6.3858 18.2286 6.33252 18.1894 6.29315L15.707 3.81064C15.6649 3.77691 15.6126 3.75848 15.5587 3.75839C15.5047 3.7583 15.4523 3.77655 15.4101 3.81015L6.65088 12.57Z" fill="#666666"/>
+                        <path d="M20 21.7496H4C3.80109 21.7496 3.61032 21.6706 3.46967 21.53C3.32902 21.3893 3.25 21.1986 3.25 20.9996C3.25 20.8007 3.32902 20.61 3.46967 20.4693C3.61032 20.3287 3.80109 20.2496 4 20.2496H20C20.1989 20.2496 20.3897 20.3287 20.5303 20.4693C20.671 20.61 20.75 20.8007 20.75 20.9996C20.75 21.1986 20.671 21.3893 20.5303 21.53C20.3897 21.6706 20.1989 21.7496 20 21.7496Z" fill="#666666"/>
+                    </svg>
+                </span>
+            </div>
+            <div class="field-value">Food Service</div>
+        </div>
+        
+        <div class="business-field">
+            <div class="field-label">
+                Products/Services Offered
+                <span class="edit-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 17.7496C4.88901 17.7496 4.77941 17.725 4.67911 17.6775C4.5788 17.63 4.49028 17.5608 4.41994 17.4749C4.3496 17.3891 4.29918 17.2887 4.27233 17.181C4.24548 17.0733 4.24285 16.961 4.26465 16.8522L5.22465 12.0534C5.25335 11.908 5.32475 11.7746 5.42973 11.6701L14.3496 2.75064C14.6752 2.43952 15.1081 2.26581 15.5584 2.26563C16.0087 2.26544 16.4418 2.43879 16.7676 2.74964L19.25 5.23255C19.5699 5.5534 19.7495 5.98798 19.7495 6.44105C19.7495 6.89412 19.5699 7.32871 19.25 7.64955L10.3296 16.57C10.2248 16.6746 10.0915 16.7459 9.94629 16.775L5.14697 17.735C5.09858 17.7447 5.04935 17.7496 5 17.7496ZM6.65088 12.57L5.95605 16.0436L9.42969 15.3493L18.1894 6.58953C18.2286 6.55016 18.2506 6.49688 18.2506 6.44134C18.2506 6.3858 18.2286 6.33252 18.1894 6.29315L15.707 3.81064C15.6649 3.77691 15.6126 3.75848 15.5587 3.75839C15.5047 3.7583 15.4523 3.77655 15.4101 3.81015L6.65088 12.57Z" fill="#666666"/>
+                        <path d="M20 21.7496H4C3.80109 21.7496 3.61032 21.6706 3.46967 21.53C3.32902 21.3893 3.25 21.1986 3.25 20.9996C3.25 20.8007 3.32902 20.61 3.46967 20.4693C3.61032 20.3287 3.80109 20.2496 4 20.2496H20C20.1989 20.2496 20.3897 20.3287 20.5303 20.4693C20.671 20.61 20.75 20.8007 20.75 20.9996C20.75 21.1986 20.671 21.3893 20.5303 21.53C20.3897 21.6706 20.1989 21.7496 20 21.7496Z" fill="#666666"/>
+                    </svg>
+                </span>
+            </div>
+            <div class="field-value">
+                <ul class="field-list">
+                    <li>Fresh Bagels</li>
+                    <li>Coffee</li>
+                    <li>Sandwiches</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="business-field">
+            <div class="field-label">
+                Market
+                <span class="edit-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 17.7496C4.88901 17.7496 4.77941 17.725 4.67911 17.6775C4.5788 17.63 4.49028 17.5608 4.41994 17.4749C4.3496 17.3891 4.29918 17.2887 4.27233 17.181C4.24548 17.0733 4.24285 16.961 4.26465 16.8522L5.22465 12.0534C5.25335 11.908 5.32475 11.7746 5.42973 11.6701L14.3496 2.75064C14.6752 2.43952 15.1081 2.26581 15.5584 2.26563C16.0087 2.26544 16.4418 2.43879 16.7676 2.74964L19.25 5.23255C19.5699 5.5534 19.7495 5.98798 19.7495 6.44105C19.7495 6.89412 19.5699 7.32871 19.25 7.64955L10.3296 16.57C10.2248 16.6746 10.0915 16.7459 9.94629 16.775L5.14697 17.735C5.09858 17.7447 5.04935 17.7496 5 17.7496ZM6.65088 12.57L5.95605 16.0436L9.42969 15.3493L18.1894 6.58953C18.2286 6.55016 18.2506 6.49688 18.2506 6.44134C18.2506 6.3858 18.2286 6.33252 18.1894 6.29315L15.707 3.81064C15.6649 3.77691 15.6126 3.75848 15.5587 3.75839C15.5047 3.7583 15.4523 3.77655 15.4101 3.81015L6.65088 12.57Z" fill="#666666"/>
+                        <path d="M20 21.7496H4C3.80109 21.7496 3.61032 21.6706 3.46967 21.53C3.32902 21.3893 3.25 21.1986 3.25 20.9996C3.25 20.8007 3.32902 20.61 3.46967 20.4693C3.61032 20.3287 3.80109 20.2496 4 20.2496H20C20.1989 20.2496 20.3897 20.3287 20.5303 20.4693C20.671 20.61 20.75 20.8007 20.75 20.9996C20.75 21.1986 20.671 21.3893 20.5303 21.53C20.3897 21.6706 20.1989 21.7496 20 21.7496Z" fill="#666666"/>
+                    </svg>
+                </span>
+            </div>
+            <div class="field-value">Local Business</div>
+        </div>
+        
+        <div class="business-field">
+            <div class="field-label">
+                Point of Sale
+                <span class="edit-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 17.7496C4.88901 17.7496 4.77941 17.725 4.67911 17.6775C4.5788 17.63 4.49028 17.5608 4.41994 17.4749C4.3496 17.3891 4.29918 17.2887 4.27233 17.181C4.24548 17.0733 4.24285 16.961 4.26465 16.8522L5.22465 12.0534C5.25335 11.908 5.32475 11.7746 5.42973 11.6701L14.3496 2.75064C14.6752 2.43952 15.1081 2.26581 15.5584 2.26563C16.0087 2.26544 16.4418 2.43879 16.7676 2.74964L19.25 5.23255C19.5699 5.5534 19.7495 5.98798 19.7495 6.44105C19.7495 6.89412 19.5699 7.32871 19.25 7.64955L10.3296 16.57C10.2248 16.6746 10.0915 16.7459 9.94629 16.775L5.14697 17.735C5.09858 17.7447 5.04935 17.7496 5 17.7496ZM6.65088 12.57L5.95605 16.0436L9.42969 15.3493L18.1894 6.58953C18.2286 6.55016 18.2506 6.49688 18.2506 6.44134C18.2506 6.3858 18.2286 6.33252 18.1894 6.29315L15.707 3.81064C15.6649 3.77691 15.6126 3.75848 15.5587 3.75839C15.5047 3.7583 15.4523 3.77655 15.4101 3.81015L6.65088 12.57Z" fill="#666666"/>
+                        <path d="M20 21.7496H4C3.80109 21.7496 3.61032 21.6706 3.46967 21.53C3.32902 21.3893 3.25 21.1986 3.25 20.9996C3.25 20.8007 3.32902 20.61 3.46967 20.4693C3.61032 20.3287 3.80109 20.2496 4 20.2496H20C20.1989 20.2496 20.3897 20.3287 20.5303 20.4693C20.671 20.61 20.75 20.8007 20.75 20.9996C20.75 21.1986 20.671 21.3893 20.5303 21.53C20.3897 21.6706 20.1989 21.7496 20 21.7496Z" fill="#666666"/>
+                    </svg>
+                </span>
+            </div>
+            <div class="field-value">At a storefront or retail space</div>
+        </div>
+    </div>
+
+
+
+    <!-- Control Bar -->
+    <div class="control-bar">
+        <div class="control-main">
+            <button class="home-btn" onclick="window.location.href='../index.html'">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M3 7l7-4 7 4v11a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M9 17V11h2v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            
+            <div class="input-container">
+                <input type="text" placeholder="Start typing..." class="chat-input" id="chatInput">
+                <button class="attach-btn">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M7 3a3 3 0 013 3v7a1 1 0 01-2 0V6a1 1 0 00-2 0v7a3 3 0 01-6 0V6a5 5 0 0110 0v7a1 1 0 102 0V6a7 7 0 00-14 0v7a5 5 0 0010 0V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+            <button class="send-btn" id="sendBtn">
+                <img src="../assets/images/sendicon.png" alt="Send" class="send-icon-img">
+            </button>
+        </div>
+        
+        <!-- Expanded Grid Panel (shows between input and buttons) -->
+        <div class="airo-grid-panel" id="airoGridPanel">
+            <div class="grid-item" onclick="navigateToPage('generate-privacy-policy')">
+                <div class="grid-item-icon">
+                    <img src="../assets/images/privacypolicyicon.png" alt="Privacy Policy" width="20" height="20">
+                </div>
+                <div class="grid-item-content">
+                    <div class="grid-item-title">Create a privacy policy</div>
+                    <div class="grid-item-desc">Build a policy to create trust with your customers</div>
+                </div>
+            </div>
+            <div class="grid-item" onclick="navigateToPage('generate-marketing-strategy')">
+                <div class="grid-item-icon">
+                    <img src="../assets/images/marketingicon.png" alt="Marketing" width="20" height="20">
+                </div>
+                <div class="grid-item-content">
+                    <div class="grid-item-title">Market my business</div>
+                    <div class="grid-item-desc">Get tailored insights to help grow your business</div>
+                </div>
+            </div>
+            <div class="grid-item" onclick="navigateToPage('generate-image')">
+                <div class="grid-item-icon">
+                    <img src="../assets/images/imagesicon.png" alt="Generate Images" width="20" height="20">
+                </div>
+                <div class="grid-item-content">
+                    <div class="grid-item-title">Generate images</div>
+                    <div class="grid-item-desc">Explore how Airo™ can help you create images that match your brand</div>
+                </div>
+            </div>
+            <div class="grid-item" onclick="navigateToPage('generate-logo')">
+                <div class="grid-item-icon">
+                    <img src="../assets/images/logoicon.png" alt="Design Logo" width="20" height="20">
+                </div>
+                <div class="grid-item-content">
+                    <div class="grid-item-title">Design a logo</div>
+                    <div class="grid-item-desc">See how a logo designed by the best AI could look</div>
+                </div>
+            </div>
+            <div class="grid-item" onclick="navigateToPage('optimize-site')">
+                <div class="grid-item-icon">
+                    <img src="../assets/images/optimizeicon.png" alt="Optimize Site" width="20" height="20">
+                </div>
+                <div class="grid-item-content">
+                    <div class="grid-item-title">Optimize my site</div>
+                    <div class="grid-item-desc">Find ways to boost your website</div>
+                </div>
+            </div>
+            <div class="grid-item" onclick="navigateToPage('setup-llc')">
+                <div class="grid-item-icon">
+                    <img src="../assets/images/LLCicon.png" alt="Set up LLC" width="20" height="20">
+                </div>
+                <div class="grid-item-content">
+                    <div class="grid-item-title">Set up my LLC</div>
+                    <div class="grid-item-desc">Set up your business, LLC, and more</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="control-dropdowns">
+            <div class="dropdown-container dropdown-left">
+                <button class="dropdown-btn" id="askAiroBtn">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M8 1v6m0 0l3-3m-3 3L5 4M1 9h14l-1 6H2L1 9z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Ask Airo to...
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="dropdown-arrow">
+                        <path d="M3 4.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="dropdown-container dropdown-right">
+                <button class="dropdown-btn" id="recentChatsBtn">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M8 5v3l2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                    Recent Chats
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="dropdown-arrow">
+                        <path d="M3 4.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Marketing Plan Loading Screen -->
+    <div class="marketing-loading-screen" id="marketingLoadingScreen">
+        <video class="marketing-loading-video" autoplay muted playsinline>
+            <source src="../assets/videos/APMC loading.mp4" type="video/mp4">
+            <!-- Fallback to spinner if video fails to load -->
+            <div class="marketing-loading-spinner"></div>
+        </video>
+
+    </div>
+
+
+
+    <!-- Include main script -->
+    <script src="../script.js"></script>
+    
+    <script>
+        // Page-specific functionality
+        // Navigation function - using global script.js version
+        
+        // Loading duration constant for marketing plan generation
+        const LOADING_DURATION = 40000; // 40 seconds for marketing plan loading
+        
+        // Global state for current step in the flow
+        let currentStep = 'initial'; // 'initial', 'business-info', 'review'
+        let currentUserMessageElement = null;
+        let selectedSocialCard = null; // Track the current user message for replies
+        
+        // Show business information request
+        function showBusinessInfoRequest() {
+            console.log('=== showBusinessInfoRequest called ===');
+            const chatMessages = document.getElementById('chatMessages');
+            
+            // Add typing indicator
+            const typingIndicator = document.createElement('div');
+            typingIndicator.className = 'typing-indicator';
+            typingIndicator.innerHTML = `
+                <div class="typing-dots">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+                <span class="typing-text">Airo is typing...</span>
+            `;
+            chatMessages.appendChild(typingIndicator);
+            
+            // Show AI message after delay
+            setTimeout(() => {
+                typingIndicator.remove();
+                
+                const airoMessage = document.createElement('div');
+                airoMessage.className = 'airo-message';
+                airoMessage.innerHTML = `
+                    <div class="airo-bubble">
+                        Here's what I know about Eugene's Cafe. Check your business info and see if everything looks good. Need to make a change? Use the edit panel in the sidebar.
+                    </div>
+                `;
+                chatMessages.appendChild(airoMessage);
+                
+                // Show sidebar and add "Looks good" button
+                console.log('=== showBusinessInfoRequest: About to call showBusinessInfoSidebar() ===');
+                showBusinessInfoSidebar();
+                console.log('=== showBusinessInfoRequest: About to call addLooksGoodButton() ===');
+                addLooksGoodButton();
+                currentStep = 'business-info';
+                
+                // Auto-scroll to show new content
+                setTimeout(() => scrollToLatestMessage(), 100);
+            }, 2000);
+        }
+        
+        // Show business information sidebar
+        function showBusinessInfoSidebar() {
+            console.log('=== showBusinessInfoSidebar called ===');
+            const sidebar = document.getElementById('businessInfoSidebar');
+            const mainContentWrapper = document.getElementById('mainContentWrapper');
+            
+            if (!sidebar) {
+                console.error('Business info sidebar element not found');
+                return;
+            }
+            
+            if (!mainContentWrapper) {
+                console.error('Main content wrapper not found');
+                return;
+            }
+            
+            console.log('Moving sidebar to main content wrapper');
+            
+            // Remove sidebar from current location and add to mainContentWrapper
+            if (sidebar.parentNode) {
+                sidebar.parentNode.removeChild(sidebar);
+            }
+            mainContentWrapper.appendChild(sidebar);
+            
+            // Show the sidebar
+            sidebar.classList.add('visible');
+            
+            // Use small sidebar class for business info (350px vs 400px for large sidebars)
+            document.body.classList.add('marketing-sidebar-open');
+            
+            console.log('Business info sidebar should now be visible');
+            
+            // Scroll after sidebar is positioned
+            setTimeout(() => scrollToLatestMessageEnhanced(), 150);
+        }
+        
+        // Add "Looks good" button
+        function addLooksGoodButton() {
+            const chatMessages = document.getElementById('chatMessages');
+            
+            const looksGoodElement = document.createElement('div');
+            looksGoodElement.className = 'user-message looks-good-standalone';
+            looksGoodElement.innerHTML = `
+                <button class="standalone-btn outline-btn" onclick="handleLooksGood()">Looks good</button>
+            `;
+            
+            const helperElement = document.createElement('div');
+            helperElement.className = 'helper-text';
+            helperElement.innerHTML = `
+                <div class="helper-message">
+                    <span class="helper-icon">↰</span>
+                    Or, write your own response below
+                </div>
+            `;
+            
+            chatMessages.appendChild(looksGoodElement);
+            chatMessages.appendChild(helperElement);
+            
+            // Set current user message for tracking
+            currentUserMessageElement = looksGoodElement;
+            
+            // Auto-scroll to show new button
+            setTimeout(() => scrollToLatestMessage(), 100);
+        }
+        
+        // Handle "Looks good" button click
+        function handleLooksGood() {
+            const chatMessages = document.getElementById('chatMessages');
+            const looksGoodButton = chatMessages.querySelector('.looks-good-standalone .standalone-btn');
+            
+            if (looksGoodButton) {
+                // Check if it's a standalone button or in a bubble
+                const standaloneContainer = looksGoodButton.closest('.looks-good-standalone');
+                const userBubble = looksGoodButton.closest('.user-bubble');
+                
+                if (standaloneContainer) {
+                    // Replace standalone button with user message bubble
+                    const userMessage = document.createElement('div');
+                    userMessage.className = 'user-message';
+                    userMessage.innerHTML = `
+                        <div class="user-bubble">Looks good</div>
+                    `;
+                    standaloneContainer.replaceWith(userMessage);
+                    // Set this as the current user message for subsequent AI responses
+                    currentUserMessageElement = userMessage;
+                } else if (userBubble) {
+                    // Legacy handling for bubble-based buttons
+                    userBubble.innerHTML = 'Looks good';
+                    userBubble.classList.remove('user-action-buttons');
+                    // Set this as the current user message for subsequent AI responses
+                    currentUserMessageElement = userBubble.closest('.user-message');
+                }
+            }
+            
+            // Remove helper text
+            const helperElements = chatMessages.querySelectorAll('.helper-text');
+            helperElements.forEach(element => {
+                element.remove();
+            });
+            
+            // Show next step in flow
+            setTimeout(() => {
+                showMarketingStrategyGeneration();
+            }, 500);
+        }
+        
+        // Show customer analysis step
+        function showMarketingStrategyGeneration() {
+            // Hide business info sidebar
+            console.log('=== showMarketingStrategyGeneration: About to call hideBusinessInfoSidebar() ===');
+            hideBusinessInfoSidebar();
+            
+            // Add first AI message
+            setTimeout(() => {
+                addAIMessage(`Got it. Now, let's focus on your customers.`);
+                
+                // Add customer analysis explanation
+                setTimeout(() => {
+                    addAIMessage(`Every great business knows who they're talking to. That's where a solid customer analysis comes in. It helps you identify and understand your target market, tailor your products and services, and craft the perfect content.`);
+                    
+                    // Show customer analysis sidebar
+                    setTimeout(() => {
+                        showCustomerAnalysisSidebar();
+                        
+                        // Add breakdown message
+                        setTimeout(() => {
+                            addAIMessage(`This breakdown shows your core customer segments. Look it over and make changes if you need to.`);
+                            
+                            // Add "Approve analysis" button
+                            setTimeout(() => {
+                                addApproveAnalysisButton();
+                                currentStep = 'customer-analysis';
+                            }, 800);
+                        }, 800);
+                    }, 1200);
+                }, 1200);
+            }, 500);
+        }
+        
+        // Hide business info sidebar  
+        function hideBusinessInfoSidebar() {
+            console.log('=== hideBusinessInfoSidebar called ===');
+            const sidebar = document.getElementById('businessInfoSidebar');
+            
+            if (sidebar) {
+                sidebar.classList.remove('visible');
+            }
+            
+            // Use consistent class naming
+            document.body.classList.remove('marketing-sidebar-open');
+            
+            console.log('Business info sidebar hidden');
+        }
+        
+        // Show customer analysis sidebar
+        function showCustomerAnalysisSidebar() {
+            // Store current scroll position BEFORE making changes
+            const chatMessages = document.getElementById('chatMessages');
+            const currentScrollPosition = chatMessages ? chatMessages.scrollTop : 0;
+            
+            // Remove any existing sidebar
+            const existingSidebar = document.getElementById('customerAnalysisSidebar');
+            if (existingSidebar) {
+                existingSidebar.remove();
+            }
+            
+            // Create sidebar
+            const sidebar = document.createElement('div');
+            sidebar.id = 'customerAnalysisSidebar';
+            sidebar.className = 'customer-analysis-sidebar visible';
+            sidebar.innerHTML = `
+                <div class="analysis-header">
+                    <div class="analysis-title">Customer Analysis</div>
+                </div>
+                <div class="analysis-subtitle">Edit or add segments for clearer insight.</div>
+                
+                <div class="customer-segment">
+                    <div class="segment-header">
+                        <div class="segment-title">Remote Workers & Digital Nomads</div>
+                        <div class="segment-actions">
+                            <button class="edit-btn"><img src="../assets/images/icons/edit.svg" alt="Edit"></button>
+                        </div>
+                    </div>
+                    <div class="segment-details">
+                        <div class="segment-demographic">
+                            <strong>• All genders</strong><br>
+                            <strong>• Aged 25-40</strong>
+                        </div>
+                        <div class="segment-description">
+                            These customers are often well-educated, with a disposable income that allows for premium coffee purchases. This segment encompasses individuals who prioritize flexibility and wellness, making them receptive to Eugene's supportive service ethos.
+                        </div>
+                        <div class="segment-behavior">
+                            This demographic is characterized by a strong online presence and a willingness to invest in self-care products, providing an opportunity for targeted marketing campaigns.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="customer-segment">
+                    <div class="segment-header">
+                        <div class="segment-title">Coffee Enthusiasts & Students</div>
+                        <div class="segment-actions">
+                            <button class="edit-btn"><img src="../assets/images/icons/edit.svg" alt="Edit"></button>
+                        </div>
+                    </div>
+                    <div class="segment-details">
+                        <div class="segment-demographic">
+                            <strong>• All genders</strong><br>
+                            <strong>• Aged 18-35</strong>
+                        </div>
+                        <div class="segment-description">
+                            These consumers are predominantly urban, career-oriented individuals who are educated in maintaining a youthful appearance and are influenced by social media trends. They often seek convenient, effective solutions that fit into their busy lifestyles.
+                        </div>
+                        <div class="segment-behavior">
+                            This demographic is characterized by a strong online presence and a willingness to invest in quality coffee and food experiences, providing an opportunity for targeted marketing campaigns.
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Insert into main-content-wrapper (NOT chat-messages)
+            const mainContentWrapper = document.getElementById('mainContentWrapper');
+            if (mainContentWrapper) {
+                mainContentWrapper.appendChild(sidebar);
+            }
+            
+            // Apply body class for control bar positioning - same as marketing plan (both 400px)
+            document.body.classList.add('large-sidebar-open');
+            console.log('CUSTOMER ANALYSIS: Body classes after adding:', document.body.className);
+            console.log('CUSTOMER ANALYSIS: Control bar element:', document.querySelector('.control-bar'));
+            setTimeout(() => {
+                const controlBar = document.querySelector('.control-bar');
+                const disclaimer = document.querySelector('.disclaimer');
+                console.log('CUSTOMER ANALYSIS: Control bar left:', window.getComputedStyle(controlBar).left);
+                console.log('CUSTOMER ANALYSIS: Disclaimer left:', window.getComputedStyle(disclaimer).left);
+                console.log('CUSTOMER ANALYSIS: Both should match for perfect alignment');
+                console.log('CUSTOMER ANALYSIS: Control bar transform:', window.getComputedStyle(controlBar).transform);
+                console.log('CUSTOMER ANALYSIS: Disclaimer transform:', window.getComputedStyle(disclaimer).transform);
+            }, 100);
+            
+            // Restore scroll position AFTER layout changes
+            setTimeout(() => {
+                if (chatMessages) {
+                    chatMessages.scrollTop = currentScrollPosition;
+                    // Then scroll to latest message
+                    setTimeout(() => scrollToLatestMessageEnhanced(), 50);
+                }
+            }, 100);
+        }
+        
+        // Add "Approve analysis" button
+        function addApproveAnalysisButton() {
+            const chatMessages = document.getElementById('chatMessages');
+            
+            const approveElement = document.createElement('div');
+            approveElement.className = 'user-message approve-analysis-standalone';
+            approveElement.innerHTML = `
+                <button class="standalone-btn outline-btn" onclick="handleApproveAnalysis()">Approve analysis</button>
+                <div class="helper-text">
+                    <div class="helper-message">
+                        <span class="helper-icon">↰</span>
+                        Or, write your own response below
+                    </div>
+                </div>
+            `;
+            
+            chatMessages.appendChild(approveElement);
+            
+            // Set current user message for tracking
+            currentUserMessageElement = approveElement;
+            
+            // Auto-scroll to show new button
+            setTimeout(() => scrollToLatestMessage(), 100);
+        }
+        
+        // Handle "Approve analysis" button click
+        function handleApproveAnalysis() {
+            const chatMessages = document.getElementById('chatMessages');
+            const approveButton = chatMessages.querySelector('.approve-analysis-standalone .standalone-btn');
+            
+            if (approveButton) {
+                // Replace standalone button with user message bubble
+                const standaloneContainer = approveButton.closest('.approve-analysis-standalone');
+                if (standaloneContainer) {
+                    const userMessage = document.createElement('div');
+                    userMessage.className = 'user-message';
+                    userMessage.innerHTML = `
+                        <div class="user-bubble">Approve analysis</div>
+                    `;
+                    standaloneContainer.replaceWith(userMessage);
+                    // Set this as the current user message for subsequent AI responses
+                    currentUserMessageElement = userMessage;
+                }
+            }
+            
+            // Remove helper text
+            const helperElements = chatMessages.querySelectorAll('.helper-text');
+            helperElements.forEach(element => {
+                element.remove();
+            });
+            
+            // Hide customer analysis sidebar
+            hideCustomerAnalysisSidebar();
+            
+            // Show building marketing plan loading screen
+            setTimeout(() => {
+                showMarketingPlanLoadingScreen();
+            }, 500);
+        }
+        
+        // Hide customer analysis sidebar
+        function hideCustomerAnalysisSidebar() {
+            const sidebar = document.getElementById('customerAnalysisSidebar');
+            if (sidebar) {
+                sidebar.remove();
+            }
+            
+            // Remove body class
+            document.body.classList.remove('large-sidebar-open');
+            console.log('HIDE CUSTOMER: Body classes after removing:', document.body.className);
+            setTimeout(() => {
+                const controlBar = document.querySelector('.control-bar');
+                console.log('HIDE CUSTOMER: Control bar computed style:', window.getComputedStyle(controlBar).left);
+            }, 100);
+        }
+        
+        // Show marketing plan loading screen
+                // Show marketing plan loading screen
+                function showMarketingPlanLoadingScreen() {
+            const loadingScreen = document.getElementById('marketingLoadingScreen');
+            const video = loadingScreen.querySelector('.marketing-loading-video');
+            loadingScreen.classList.add('visible');
+            
+            // Hide loading screen when video ends and show 4P approach message
+            video.addEventListener('ended', () => {
+                hideMarketingLoadingScreen();
+                setTimeout(() => {
+                    show4PApproachMessage();
+                }, 500);
+            });
+        }
+        
+        // Hide marketing plan loading screen
+        function hideMarketingLoadingScreen() {
+            const loadingScreen = document.getElementById('marketingLoadingScreen');
+            loadingScreen.classList.remove('visible');
+        }
+        
+        // Show 4P approach message
+                function show4PApproachMessage() {
+            // Continue directly to final marketing step without adding chat message
+            showFinalMarketingStep();
+        }
+        
+        // Show final marketing strategy step
+        function showFinalMarketingStep() {
+            // Add the final Ta-da message
+            addAIMessage(`🎉 Ta-da! Here's your custom marketing plan for Eugene's Cafe.`);
+            
+            setTimeout(() => {
+                addMarketingPlanDescription();
+                setTimeout(() => {
+                    addMarketingActionButtons();
+                    showMarketingPlanSidebar();
+                    currentStep = 'marketing-complete';
+                }, 1000);
+            }, 1000);
+        }
+        
+        // Add marketing plan description
+        function addMarketingPlanDescription() {
+            addAIMessage(`
+                Explore your <strong>Promotion strategy</strong> for a clear roadmap on how to get the word out about your business. You can also review your <strong>customer analysis</strong> and get help to execute key actions.
+                <br><br>
+                Or, I can give you some recommended tasks to tackle right now.
+            `);
+        }
+        
+        // Add marketing action buttons
+        function addMarketingActionButtons() {
+            const chatMessages = document.getElementById('chatMessages');
+            const actionsElement = document.createElement('div');
+            actionsElement.className = 'user-message marketing-actions';
+            actionsElement.innerHTML = `
+                <div class="marketing-action-buttons">
+                    <button class="standalone-btn outline-btn" onclick="giveRecommendations()">Give recommendations</button>
+                </div>
+            `;
+            
+            if (currentUserMessageElement) {
+                currentUserMessageElement.insertAdjacentElement('afterend', actionsElement);
+                currentUserMessageElement = actionsElement;
+            } else {
+                chatMessages.appendChild(actionsElement);
+                currentUserMessageElement = actionsElement;
+            }
+            
+            setTimeout(() => scrollToLatestMessage(), 100);
+        }
+        
+        // Show marketing plan sidebar
+        function showMarketingPlanSidebar() {
+            // Store current scroll position BEFORE making changes
+            const chatMessages = document.getElementById('chatMessages');
+            const currentScrollPosition = chatMessages ? chatMessages.scrollTop : 0;
+            
+            // Remove any existing sidebar
+            const existingSidebar = document.getElementById('marketingPlanSidebar');
+            if (existingSidebar) {
+                existingSidebar.remove();
+            }
+            
+            // Create sidebar
+            const sidebar = document.createElement('div');
+            sidebar.id = 'marketingPlanSidebar';
+            sidebar.className = 'marketing-plan-sidebar visible';
+            sidebar.innerHTML = `
+                <div class="marketing-plan-header">
+                    <h2 class="marketing-plan-title">Marketing Plan for Eugene's Cafe</h2>
+                </div>
+                
+                <div class="marketing-plan-tabs">
+                    <button class="marketing-plan-tab active" onclick="switchToStrategyTab()">Strategy</button>
+                    <button class="marketing-plan-tab" onclick="switchToAnalysisTab()">Analysis</button>
+                </div>
+                
+                <div class="marketing-plan-content" id="marketingPlanContent">
+                    ${getStrategyContent()}
+                </div>
+            `;
+            
+            // Insert into main-content-wrapper (NOT chat-messages)
+            const mainContentWrapper = document.getElementById('mainContentWrapper');
+            if (mainContentWrapper) {
+                mainContentWrapper.appendChild(sidebar);
+            }
+            
+            // Apply body class for control bar positioning - large sidebar
+            document.body.classList.add('large-sidebar-open');
+            console.log('MARKETING PLAN: Body classes after adding:', document.body.className);
+            console.log('MARKETING PLAN: Control bar element:', document.querySelector('.control-bar'));
+            setTimeout(() => {
+                const controlBar = document.querySelector('.control-bar');
+                const disclaimer = document.querySelector('.disclaimer');
+                console.log('MARKETING PLAN: Control bar left:', window.getComputedStyle(controlBar).left);
+                console.log('MARKETING PLAN: Disclaimer left:', window.getComputedStyle(disclaimer).left);
+                console.log('MARKETING PLAN: Both should match for perfect alignment');
+                console.log('MARKETING PLAN: Control bar transform:', window.getComputedStyle(controlBar).transform);
+                console.log('MARKETING PLAN: Disclaimer transform:', window.getComputedStyle(disclaimer).transform);
+            }, 100);
+            
+            // Restore scroll position AFTER layout changes
+            setTimeout(() => {
+                if (chatMessages) {
+                    chatMessages.scrollTop = currentScrollPosition;
+                    // Then scroll to latest message
+                    setTimeout(() => scrollToLatestMessageEnhanced(), 50);
+                }
+            }, 100);
+        }
+        
+
+        
+        // Show marketing upgrade screen
+        function showMarketingUpgradeScreen() {
+            const upgradeScreen = document.getElementById('marketingUpgradeScreen');
+            upgradeScreen.classList.add('visible');
+            
+            // Hide control bar
+            document.body.classList.add('upgrade-screen-open');
+        }
+        
+        // Close marketing upgrade screen
+        function closeMarketingUpgradeScreen() {
+            const upgradeScreen = document.getElementById('marketingUpgradeScreen');
+            upgradeScreen.classList.remove('visible');
+            
+            // Show control bar again
+            document.body.classList.remove('upgrade-screen-open');
+        }
+        
+        // Handle add to cart button
+        function handleAddToCart() {
+            alert('Add to Cart functionality would be implemented here');
+        }
+        
+        // Handle "Give recommendations" button  
+        function giveRecommendations() {
+            // Hide the marketing plan sidebar when starting recommendations flow
+            const marketingSidebar = document.getElementById('marketingPlanSidebar');
+            
+            if (marketingSidebar) {
+                marketingSidebar.remove();
+            }
+            
+            // Remove body class
+            document.body.classList.remove('large-sidebar-open');
+            console.log('HIDE MARKETING PLAN: Body classes after removing:', document.body.className);
+            setTimeout(() => {
+                const controlBar = document.querySelector('.control-bar');
+                console.log('HIDE MARKETING PLAN: Control bar computed style:', window.getComputedStyle(controlBar).left);
+            }, 100);
+            
+            // Replace the action buttons with user message first
+            const actionsElement = document.querySelector('.marketing-actions');
+            if (actionsElement) {
+                const userMessage = document.createElement('div');
+                userMessage.className = 'user-message';
+                userMessage.innerHTML = `
+                    <div class="user-bubble">Give recommendations</div>
+                `;
+                actionsElement.replaceWith(userMessage);
+                currentUserMessageElement = userMessage;
+            }
+            
+            setTimeout(() => {
+                addAIMessage(`
+                    Hi, Eugene!<br>
+                    Here are your latest recommendations. Let's work on them together.
+                    <br><br>
+                    <div style="display: flex; flex-direction: column; gap: 16px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px; border: 1px solid #e5e5e5; border-radius: 12px; cursor: pointer;" onclick="handleRecommendation('social-posts')">
+                            <div style="display: flex; align-items: center; gap: 16px;">
+                                <div style="width: 40px; height: 40px; background: #f3e8ff; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                        <path d="M9 2L11 6H15L12 9L13 13L9 11L5 13L6 9L3 6H7L9 2Z" fill="#7B2CBF"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600; color: #333333; margin-bottom: 4px;">Share custom social posts</div>
+                                    <div style="font-size: 14px; color: #666666;">Stay active on social with these pre-made, custom social posts</div>
+                                </div>
+                            </div>
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M7 14L12 9L7 4" stroke="#666666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        
+                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px; border: 1px solid #e5e5e5; border-radius: 12px; cursor: pointer;" onclick="handleRecommendation('google-ad')">
+                            <div style="display: flex; align-items: center; gap: 16px;">
+                                <div style="width: 40px; height: 40px; background: #f3e8ff; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                        <circle cx="10" cy="10" r="8" fill="#7B2CBF"/>
+                                        <path d="M7 10L9 12L13 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600; color: #333333; margin-bottom: 4px;">Your Google Ad is ready</div>
+                                    <div style="font-size: 14px; color: #666666;">Show up in more Google searches for products or services like yours</div>
+                                </div>
+                            </div>
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M7 14L12 9L7 4" stroke="#666666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        
+                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px; border: 1px solid #e5e5e5; border-radius: 12px; cursor: pointer;" onclick="handleRecommendation('email-campaign')">
+                            <div style="display: flex; align-items: center; gap: 16px;">
+                                <div style="width: 40px; height: 40px; background: #f3e8ff; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                        <rect x="2" y="4" width="16" height="12" rx="2" fill="#7B2CBF"/>
+                                        <path d="M2 6L10 11L18 6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600; color: #333333; margin-bottom: 4px;">Email Campaign is ready for you</div>
+                                    <div style="font-size: 14px; color: #666666;">Review and approve your campaign content</div>
+                                </div>
+                            </div>
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M7 14L12 9L7 4" stroke="#666666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                    </div>
+                `);
+            }, 500);
+        }
+        
+        // Handle social posts click
+        function handleSocialPostsClick() {
+            // Reset card selection when showing new posts
+            selectedSocialCard = null;
+            
+            // First add user message
+            const userMessage = document.createElement('div');
+            userMessage.className = 'user-message';
+            userMessage.innerHTML = `
+                <div class="user-bubble cta-triggered">Share custom social posts</div>
+            `;
+            
+            if (currentUserMessageElement) {
+                currentUserMessageElement.insertAdjacentElement('afterend', userMessage);
+                currentUserMessageElement = userMessage;
+            }
+            
+            // Then add AI response with social media calendar
+            setTimeout(() => {
+                addAIMessage(`
+                    <div style="display: flex; flex-direction: column; gap: 16px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; background: #f8f9fa; padding: 8px 16px; border-radius: 8px; margin-bottom: 16px;">
+                            <div style="display: flex; gap: 16px;">
+                                <div style="text-align: center; padding: 4px 8px;">
+                                    <div style="font-size: 12px; color: #666; font-weight: 500;">SUN</div>
+                                    <div style="font-size: 14px; font-weight: 600;">18</div>
+                                </div>
+                                <div style="text-align: center; padding: 4px 8px;">
+                                    <div style="font-size: 12px; color: #666; font-weight: 500;">MON</div>
+                                    <div style="font-size: 14px; font-weight: 600;">19</div>
+                                </div>
+                                <div style="text-align: center; padding: 4px 8px; background: #ffffff; border: 2px solid #7B2CBF; border-radius: 8px;">
+                                    <div style="font-size: 12px; color: #666; font-weight: 500;">TUE</div>
+                                    <div style="font-size: 14px; font-weight: 600;">20</div>
+                                </div>
+                                <div style="text-align: center; padding: 4px 8px;">
+                                    <div style="font-size: 12px; color: #666; font-weight: 500;">WED</div>
+                                    <div style="font-size: 14px; font-weight: 600;">21</div>
+                                </div>
+                                <div style="text-align: center; padding: 4px 8px;">
+                                    <div style="font-size: 12px; color: #666; font-weight: 500;">THU</div>
+                                    <div style="font-size: 14px; font-weight: 600;">22</div>
+                                </div>
+                                <div style="text-align: center; padding: 4px 8px;">
+                                    <div style="font-size: 12px; color: #666; font-weight: 500;">FRI</div>
+                                    <div style="font-size: 14px; font-weight: 600;">23</div>
+                                </div>
+                                <div style="text-align: center; padding: 4px 8px;">
+                                    <div style="font-size: 12px; color: #666; font-weight: 500;">SAT</div>
+                                    <div style="font-size: 14px; font-weight: 600;">24</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; gap: 16px;">
+                            <div id="social-card-1" class="social-card" style="flex: 1; border-radius: 12px; padding: 16px; background: #ffffff; cursor: pointer;" onclick="selectSocialCard('social-card-1')">
+                                <div style="font-size: 12px; color: #666; margin-bottom: 8px;">Tuesday, 08/20/24 at 1PM</div>
+                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                        <path d="M7 10v12l5-3 5 3V10" stroke="#7B2CBF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <rect x="2" y="3" width="20" height="7" rx="1" stroke="#7B2CBF" stroke-width="2"/>
+                                    </svg>
+                                    <span style="font-size: 12px; color: #7B2CBF; font-weight: 500;">ABOUT THE BUSINESS</span>
+                                </div>
+                                <div style="background: #f8f9fa; border-radius: 8px; padding: 16px; margin-bottom: 12px; text-align: center;">
+                                    <img src="../assets/images/social media 1.jpg" style="width: 100%; max-width: 200px; height: auto; border-radius: 8px;" alt="Eugene's Cafe social media post">
+                                </div>
+                                <p style="font-size: 14px; color: #333; line-height: 1.4; margin: 0;">Showcase your fresh, daily-baked bagels and specialty coffee. Share the warmth and community spirit that makes Eugene's Cafe special...</p>
+                            </div>
+                            
+                            <div id="social-card-2" class="social-card" style="flex: 1; border-radius: 12px; padding: 16px; background: #ffffff; cursor: pointer;" onclick="selectSocialCard('social-card-2')">
+                                <div style="font-size: 12px; color: #666; margin-bottom: 8px;">Thursday, 8/22/24 at 1PM</div>
+                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="#7B2CBF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <circle cx="8.5" cy="7" r="4" stroke="#7B2CBF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    <span style="font-size: 12px; color: #7B2CBF; font-weight: 500;">PRODUCT PROMOTION</span>
+                                </div>
+                                <div style="background: #f8f9fa; border-radius: 8px; padding: 16px; margin-bottom: 12px; text-align: center;">
+                                    <img src="../assets/images/social media 2.jpg" style="width: 100%; max-width: 200px; height: auto; border-radius: 8px;" alt="Eugene's Cafe product promotion">
+                                </div>
+                                <p style="font-size: 14px; color: #333; line-height: 1.4; margin: 0;">Highlight your signature breakfast items and artisanal coffee blends. Entice customers with mouth-watering visuals of your freshly made bagels and premium beverages...</p>
+                            </div>
+                            
+                            <div id="social-card-3" class="social-card" style="flex: 1; border-radius: 12px; padding: 16px; background: #ffffff; cursor: pointer;" onclick="selectSocialCard('social-card-3')">
+                                <div style="font-size: 12px; color: #666; margin-bottom: 8px;">Saturday</div>
+                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                        <path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" stroke="#7B2CBF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    <span style="font-size: 12px; color: #7B2CBF; font-weight: 500;">AUDIENCE</span>
+                                </div>
+                                <p style="font-size: 14px; color: #333; line-height: 1.4; margin: 0;">Connect with your local community and coffee lovers. Share behind-the-scenes moments of your daily baking process and cafe atmosphere...</p>
+                            </div>
+                        </div>
+                    </div>
+                `);
+                
+                // Add the CTA buttons after the AI message
+                setTimeout(() => {
+                    addSocialPostActionButtons();
+                }, 300);
+            }, 500);
+        }
+        
+        // Handle social card selection with radio button logic and toggle behavior
+        function selectSocialCard(cardId) {
+            const clickedCard = document.getElementById(cardId);
+            
+            // Check if the clicked card is already selected (toggle behavior)
+            if (selectedSocialCard === cardId) {
+                // Deselect the currently selected card
+                clickedCard.classList.remove('selected');
+                selectedSocialCard = null;
+            } else {
+                // Remove selection from all cards first
+                const allCards = document.querySelectorAll('.social-card');
+                allCards.forEach(card => {
+                    card.classList.remove('selected');
+                });
+                
+                // Select the clicked card
+                if (clickedCard) {
+                    clickedCard.classList.add('selected');
+                    selectedSocialCard = cardId;
+                }
+            }
+            
+            // Update button states
+            updateActionButtonsState();
+        }
+        
+        // Update action buttons state based on card selection
+        function updateActionButtonsState() {
+            const editBtn = document.querySelector('.social-post-actions .standalone-btn[onclick="editSocialPost()"]');
+            const previewBtn = document.querySelector('.social-post-actions .standalone-btn[onclick="previewSocialPost()"]');
+            
+            if (editBtn && previewBtn) {
+                if (selectedSocialCard) {
+                    // Enable buttons
+                    editBtn.disabled = false;
+                    previewBtn.disabled = false;
+                    editBtn.style.opacity = '1';
+                    previewBtn.style.opacity = '1';
+                    editBtn.style.cursor = 'pointer';
+                    previewBtn.style.cursor = 'pointer';
+                    // Remove tooltip when buttons are enabled
+                    editBtn.removeAttribute('title');
+                    previewBtn.removeAttribute('title');
+                } else {
+                    // Disable buttons
+                    editBtn.disabled = true;
+                    previewBtn.disabled = true;
+                    editBtn.style.opacity = '0.5';
+                    previewBtn.style.opacity = '0.5';
+                    editBtn.style.cursor = 'not-allowed';
+                    previewBtn.style.cursor = 'not-allowed';
+                    // Add tooltip message when buttons are disabled
+                    editBtn.setAttribute('title', 'Select one of the posts to be able to choose this option.');
+                    previewBtn.setAttribute('title', 'Select one of the posts to be able to choose this option.');
+                }
+            }
+        }
+        
+        // Add social post action buttons
+        function addSocialPostActionButtons() {
+            const chatMessages = document.getElementById('chatMessages');
+            const actionsElement = document.createElement('div');
+            actionsElement.className = 'user-message social-post-actions';
+            actionsElement.innerHTML = `
+                <div class="marketing-action-buttons">
+                    <button class="standalone-btn outline-btn" onclick="editSocialPost()" disabled style="opacity: 0.5; cursor: not-allowed;">Edit this post</button>
+                    <button class="standalone-btn outline-btn" onclick="previewSocialPost()" disabled style="opacity: 0.5; cursor: not-allowed;">Preview this post</button>
+                </div>
+            `;
+            
+            if (currentUserMessageElement) {
+                currentUserMessageElement.insertAdjacentElement('afterend', actionsElement);
+                currentUserMessageElement = actionsElement;
+            } else {
+                chatMessages.appendChild(actionsElement);
+                currentUserMessageElement = actionsElement;
+            }
+            
+            // Initialize button state (disabled by default since no card is selected)
+            setTimeout(() => {
+                updateActionButtonsState();
+                scrollToLatestMessage();
+            }, 100);
+        }
+        
+        // Handle edit social post
+        function editSocialPost() {
+            // Find the last AI message (social posts preview) and replace it with edit interface
+            const chatMessages = document.getElementById('chatMessages');
+            const aiMessages = chatMessages.querySelectorAll('.airo-message');
+            const lastAiMessage = aiMessages[aiMessages.length - 1];
+            
+            if (lastAiMessage) {
+                // Replace the AI message content with edit interface
+                lastAiMessage.innerHTML = `
+                    <div class="airo-bubble">
+                        <div style="display: flex; flex-direction: column; gap: 20px; max-width: 600px;">
+                            <!-- Image Selection Section -->
+                            <div style="display: flex; gap: 12px; align-items: center;">
+                                <div class="post-thumbnail" style="position: relative; width: 120px; height: 120px; border: 2px solid #7B2CBF; border-radius: 12px; overflow: hidden; cursor: pointer;" onclick="selectPost(1)">
+                                    <img src="../assets/images/social media 1.jpg" style="width: 100%; height: 100%; object-fit: cover;" alt="Social media post 1">
+                                    <div class="post-indicator" style="position: absolute; top: 8px; right: 8px; background: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                                        <span style="font-size: 12px; font-weight: bold; color: #7B2CBF;">1</span>
+                                    </div>
+                                </div>
+                                <div class="post-thumbnail" style="position: relative; width: 120px; height: 120px; border: 1px solid #e5e5e5; border-radius: 12px; overflow: hidden; cursor: pointer;" onclick="selectPost(2)">
+                                    <img src="../assets/images/social media 2.jpg" style="width: 100%; height: 100%; object-fit: cover;" alt="Social media post 2">
+                                    <div class="post-indicator" style="position: absolute; top: 8px; right: 8px; background: white; border-radius: 50%; width: 24px; height: 24px; display: none; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                                        <span style="font-size: 12px; font-weight: bold; color: #7B2CBF;">2</span>
+                                    </div>
+                                </div>
+                                <div class="post-thumbnail" style="position: relative; width: 120px; height: 120px; border: 1px solid #e5e5e5; border-radius: 12px; overflow: hidden; cursor: pointer;" onclick="selectPost(3)">
+                                    <img src="../assets/images/Marketing_Media.png" style="width: 100%; height: 100%; object-fit: cover;" alt="Social media post 3">
+                                    <div class="post-indicator" style="position: absolute; top: 8px; right: 8px; background: white; border-radius: 50%; width: 24px; height: 24px; display: none; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                                        <span style="font-size: 12px; font-weight: bold; color: #7B2CBF;">3</span>
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 8px; cursor: pointer; margin-left: 12px;" onclick="attachImage()">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                        <path d="M21.44 11.05L12.25 20.24C11.1242 21.3658 9.59717 21.9983 8.005 21.9983C6.41283 21.9983 4.88583 21.3658 3.76 20.24C2.63417 19.1142 2.00166 17.5872 2.00166 15.995C2.00166 14.4028 2.63417 12.8758 3.76 11.75L12.95 2.56C13.7267 1.78334 14.7733 1.35 15.86 1.35C16.9467 1.35 17.9933 1.78334 18.77 2.56C19.5467 3.33666 19.98 4.38334 19.98 5.47C19.98 6.55666 19.5467 7.60334 18.77 8.38L9.58 17.57C9.19167 17.9583 8.665 18.175 8.115 18.175C7.565 18.175 7.03833 17.9583 6.65 17.57C6.26167 17.1817 6.045 16.655 6.045 16.105C6.045 15.555 6.26167 15.0283 6.65 14.64L15.34 5.95" stroke="#7B2CBF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    <span style="font-size: 14px; color: #7B2CBF; font-weight: 500;">Attach your own image</span>
+                                </div>
+                            </div>
+
+                            <!-- Caption Editing Section -->
+                            <div>
+                                <div style="font-size: 14px; color: #333; margin-bottom: 8px;">Update your caption manually, or get some new suggestions</div>
+                                <textarea 
+                                    style="width: 100%; min-height: 80px; padding: 12px; border: 1px solid #e5e5e5; border-radius: 8px; font-size: 14px; line-height: 1.4; resize: vertical; outline: none; font-family: inherit;" 
+                                    placeholder="Rewriting..."
+                                    id="captionEditor"
+                                >Fresh bagels baked daily with love at Eugene's Cafe! ☕ Start your morning right with our signature blends and artisan pastries. Made with locally sourced ingredients and a passion for quality. Come taste the difference! ✨ #EugenesCafe #FreshBagels #LocalCafe #QualityCoffee</textarea>
+                            </div>
+
+                            <!-- Caption Tools -->
+                            <div style="display: flex; gap: 12px;">
+                                <div style="position: relative;">
+                                    <button class="standalone-btn outline-btn" style="display: flex; align-items: center; gap: 8px;" onclick="improveCaptionMenu()">
+                                        Improve Caption
+                                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                            <path d="M3 4.5L6 7.5L9 4.5" stroke="#6C47B4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div style="position: relative;">
+                                    <button class="standalone-btn outline-btn" style="display: flex; align-items: center; gap: 8px;" onclick="adjustToneMenu()">
+                                        Adjust Tone
+                                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                            <path d="M3 4.5L6 7.5L9 4.5" stroke="#6C47B4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Schedule Section -->
+                            <div class="schedule-container">
+                                <div style="font-size: 16px; font-weight: 600; color: #333; margin-bottom: 12px;">Schedule your post</div>
+                                <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border: 1px solid #e5e5e5; border-radius: 8px; background: #f8f9fa;">
+                                    <span style="font-size: 14px; color: #333;">Post on Facebook on Thurs. August 22nd at 9:30AM</span>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="cursor: pointer;" onclick="editSchedule()">
+                                        <path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </div>
+                            </div>
+
+                            <!-- Preview Button -->
+                            <div style="display: flex; justify-content: flex-end;">
+                                <button class="standalone-btn outline-btn" onclick="previewEditedPost()">
+                                    Preview this post
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Remove the action buttons since we're now in edit mode
+                const actionButtons = chatMessages.querySelector('.social-post-actions');
+                if (actionButtons) {
+                    actionButtons.remove();
+                }
+                
+                // Add helper text and initialize post selection
+                setTimeout(() => {
+                    addHelperText();
+                    initializePostSelection();
+                }, 100);
+            }
+        }
+        
+        // Add helper text "Or, write your own response below"
+        function addHelperText() {
+            const chatMessages = document.getElementById('chatMessages');
+            const helperElement = document.createElement('div');
+            helperElement.className = 'helper-text';
+            helperElement.style.textAlign = 'center';
+            helperElement.style.color = '#666';
+            helperElement.style.fontSize = '14px';
+            helperElement.style.margin = '16px 0';
+            helperElement.innerHTML = '↩ Or, write your own response below';
+            
+            chatMessages.appendChild(helperElement);
+            currentUserMessageElement = helperElement;
+            
+            setTimeout(() => scrollToLatestMessage(), 100);
+        }
+        
+        // Handle attach image
+        function attachImage() {
+            alert('Attach image functionality would be implemented here');
+        }
+        
+        // Handle improve caption menu
+        function improveCaptionMenu() {
+            alert('Improve caption menu would be implemented here');
+        }
+        
+        // Handle adjust tone menu
+        function adjustToneMenu() {
+            alert('Adjust tone menu would be implemented here');
+        }
+        
+        // Track schedule editing state and selected post
+        let isEditingSchedule = false;
+        let selectedPostId = 1; // Default to first post
+        let currentScheduleData = null; // Store current schedule data for confirmation
+        
+        // Handle edit schedule
+        function editSchedule() {
+            const scheduleContainer = document.querySelector('.schedule-container');
+            if (!scheduleContainer) return;
+            
+            if (!isEditingSchedule) {
+                // Enter edit mode
+                isEditingSchedule = true;
+                scheduleContainer.innerHTML = `
+                    <div style="font-size: 16px; font-weight: 600; color: #333; margin-bottom: 12px;">Schedule your post</div>
+                    <div style="border: 1px solid #e5e5e5; border-radius: 8px; background: white; padding: 16px;">
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            <div>
+                                <label style="font-size: 14px; font-weight: 500; color: #333; display: block; margin-bottom: 4px;">Platform:</label>
+                                <select id="platformSelect" style="width: 100%; padding: 8px 12px; border: 1px solid #e5e5e5; border-radius: 4px; font-size: 14px;">
+                                    <option value="facebook">Facebook</option>
+                                    <option value="instagram">Instagram</option>
+                                    <option value="twitter">Twitter</option>
+                                    <option value="linkedin">LinkedIn</option>
+                                </select>
+                            </div>
+                            <div style="display: flex; gap: 12px;">
+                                <div style="flex: 1;">
+                                    <label style="font-size: 14px; font-weight: 500; color: #333; display: block; margin-bottom: 4px;">Date:</label>
+                                    <input type="date" id="scheduleDate" value="2024-08-22" style="width: 100%; padding: 8px 12px; border: 1px solid #e5e5e5; border-radius: 4px; font-size: 14px;">
+                                </div>
+                                <div style="flex: 1;">
+                                    <label style="font-size: 14px; font-weight: 500; color: #333; display: block; margin-bottom: 4px;">Time:</label>
+                                    <input type="time" id="scheduleTime" value="09:30" style="width: 100%; padding: 8px 12px; border: 1px solid #e5e5e5; border-radius: 4px; font-size: 14px;">
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 8px; margin-top: 16px; justify-content: flex-end;">
+                            <button onclick="cancelScheduleEdit()" style="padding: 8px 16px; border: 1px solid #e5e5e5; border-radius: 4px; background: white; color: #333; cursor: pointer; font-size: 14px;">Cancel</button>
+                            <button onclick="saveSchedule()" style="padding: 8px 16px; border: none; border-radius: 4px; background: #7B2CBF; color: white; cursor: pointer; font-size: 14px;">Save</button>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        
+        // Handle save schedule
+        function saveSchedule() {
+            const platform = document.getElementById('platformSelect').value;
+            const date = document.getElementById('scheduleDate').value;
+            const time = document.getElementById('scheduleTime').value;
+            
+            // Store the current schedule data for later use in confirmation
+            currentScheduleData = {
+                platform: platform,
+                date: date,
+                time: time
+            };
+            
+            // Format the date nicely
+            const dateObj = new Date(date);
+            const options = { weekday: 'short', month: 'short', day: 'numeric' };
+            const formattedDate = dateObj.toLocaleDateString('en-US', options);
+            
+            // Format time to 12-hour format
+            const timeObj = new Date(`1970-01-01T${time}:00`);
+            const formattedTime = timeObj.toLocaleTimeString('en-US', { 
+                hour: 'numeric', 
+                minute: '2-digit',
+                hour12: true 
+            });
+            
+            // Update the schedule display
+            const scheduleContainer = document.querySelector('.schedule-container');
+            scheduleContainer.innerHTML = `
+                <div style="font-size: 16px; font-weight: 600; color: #333; margin-bottom: 12px;">Schedule your post</div>
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border: 1px solid #e5e5e5; border-radius: 8px; background: #f8f9fa;">
+                    <span style="font-size: 14px; color: #333;">Post on ${platform.charAt(0).toUpperCase() + platform.slice(1)} on ${formattedDate} at ${formattedTime}</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="cursor: pointer;" onclick="editSchedule()">
+                        <path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+            `;
+            
+            isEditingSchedule = false;
+            
+            // Show success message
+            showScheduleSuccessMessage();
+        }
+        
+        // Handle cancel schedule edit
+        function cancelScheduleEdit() {
+            const scheduleContainer = document.querySelector('.schedule-container');
+            scheduleContainer.innerHTML = `
+                <div style="font-size: 16px; font-weight: 600; color: #333; margin-bottom: 12px;">Schedule your post</div>
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border: 1px solid #e5e5e5; border-radius: 8px; background: #f8f9fa;">
+                    <span style="font-size: 14px; color: #333;">Post on Facebook on Thurs. August 22nd at 9:30AM</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="cursor: pointer;" onclick="editSchedule()">
+                        <path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+            `;
+            
+            isEditingSchedule = false;
+            
+            // Reset schedule data to default when canceled
+            currentScheduleData = null;
+        }
+        
+        // Show success message for schedule save
+        function showScheduleSuccessMessage() {
+            const successDiv = document.createElement('div');
+            successDiv.style.cssText = `
+                position: fixed; 
+                top: 20px; 
+                right: 20px; 
+                background: #4CAF50; 
+                color: white; 
+                padding: 12px 20px; 
+                border-radius: 4px; 
+                font-size: 14px; 
+                z-index: 1000;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            `;
+            successDiv.textContent = 'Schedule updated successfully!';
+            document.body.appendChild(successDiv);
+            
+            setTimeout(() => {
+                successDiv.remove();
+            }, 3000);
+        }
+        
+        // Handle post selection
+        function selectPost(postId) {
+            selectedPostId = postId;
+            
+            // Update visual selection indicators
+            const posts = document.querySelectorAll('.post-thumbnail');
+            posts.forEach((post, index) => {
+                const postIndex = index + 1;
+                if (postIndex === postId) {
+                    // Selected post
+                    post.style.border = '2px solid #7B2CBF';
+                    const indicator = post.querySelector('.post-indicator');
+                    if (indicator) {
+                        indicator.style.display = 'flex';
+                    }
+                } else {
+                    // Unselected posts
+                    post.style.border = '1px solid #e5e5e5';
+                    const indicator = post.querySelector('.post-indicator');
+                    if (indicator) {
+                        indicator.style.display = 'none';
+                    }
+                }
+            });
+            
+            // Update caption based on selected post
+            updateCaptionForSelectedPost(postId);
+        }
+        
+        // Update caption based on selected post
+        function updateCaptionForSelectedPost(postId) {
+            const captionEditor = document.getElementById('captionEditor');
+            if (!captionEditor) return;
+            
+            const captions = {
+                1: "Fresh bagels baked daily with love at Eugene's Cafe! ☕ Start your morning right with our signature blends and artisan pastries. Made with locally sourced ingredients and a passion for quality. Come taste the difference! ✨ #EugenesCafe #FreshBagels #LocalCafe #QualityCoffee",
+                2: "Indulge in our artisanal breakfast creations! 🥯 From perfectly toasted everything bagels to rich, aromatic coffee blends, every bite tells a story of craftsmanship and care. Visit Eugene's Cafe for an unforgettable morning experience. #BreakfastGoals #ArtisanCoffee #EugenesCafe",
+                3: "Behind the scenes at Eugene's Cafe: where passion meets perfection! 👨‍🍳 Watch our skilled bakers craft each bagel with precision and love. From dough to delight, every step matters. Experience the difference quality makes! #BehindTheScenes #CraftedWithCare #EugenesCafe"
+            };
+            
+            captionEditor.value = captions[postId] || captions[1];
+        }
+        
+        // Initialize post selection when edit interface loads
+        function initializePostSelection() {
+            // Add hover effects to all post thumbnails
+            const postThumbnails = document.querySelectorAll('.post-thumbnail');
+            postThumbnails.forEach((thumbnail, index) => {
+                thumbnail.addEventListener('mouseenter', function() {
+                    if (!this.style.border.includes('2px')) {
+                        this.style.transform = 'scale(1.05)';
+                        this.style.transition = 'transform 0.2s ease';
+                    }
+                });
+                
+                thumbnail.addEventListener('mouseleave', function() {
+                    if (!this.style.border.includes('2px')) {
+                        this.style.transform = 'scale(1)';
+                    }
+                });
+            });
+            
+            // Ensure first post is selected by default
+            selectPost(1);
+        }
+        
+        // Handle preview edited post
+        function previewEditedPost() {
+            const caption = document.getElementById('captionEditor').value;
+            
+            // Get current schedule settings
+            const scheduleInfo = getCurrentScheduleInfo();
+            
+            // Remove any existing preview action buttons to prevent conflicts
+            const existingPreviewActions = document.querySelectorAll('.preview-actions');
+            existingPreviewActions.forEach(element => element.remove());
+            
+            // Add user message first
+            const userMessage = document.createElement('div');
+            userMessage.className = 'user-message';
+            userMessage.innerHTML = `
+                <div class="user-bubble">Preview this post</div>
+            `;
+            
+            const chatMessages = document.getElementById('chatMessages');
+            if (currentUserMessageElement) {
+                currentUserMessageElement.insertAdjacentElement('afterend', userMessage);
+                currentUserMessageElement = userMessage;
+            } else {
+                chatMessages.appendChild(userMessage);
+                currentUserMessageElement = userMessage;
+            }
+            
+            // Add AI preview response
+            setTimeout(() => {
+                addSocialMediaPreview(caption, scheduleInfo);
+                
+                // Add user CTA buttons after preview - ALWAYS add them for every preview
+                setTimeout(() => {
+                    addPreviewActionButtons(scheduleInfo);
+                }, 300);
+            }, 500);
+        }
+        
+        // Get current schedule information
+        function getCurrentScheduleInfo() {
+            // First priority: use stored schedule data if user has saved new values
+            if (currentScheduleData) {
+                return currentScheduleData;
+            }
+            
+            // Second priority: try to get from form inputs (if user edited but not saved)
+            const platformSelect = document.getElementById('platformSelect');
+            const scheduleDate = document.getElementById('scheduleDate');
+            const scheduleTime = document.getElementById('scheduleTime');
+            
+            if (platformSelect && scheduleDate && scheduleTime) {
+                return {
+                    platform: platformSelect.value,
+                    date: scheduleDate.value,
+                    time: scheduleTime.value
+                };
+            }
+            
+            // Third priority: fall back to parsing from display text
+            const scheduleDisplay = document.querySelector('.schedule-container span');
+            if (scheduleDisplay) {
+                const text = scheduleDisplay.textContent;
+                // Parse "Post on Facebook on Thurs. August 22nd at 9:30AM"
+                const platformMatch = text.match(/Post on (\w+)/);
+                const platform = platformMatch ? platformMatch[1].toLowerCase() : 'facebook';
+                
+                return {
+                    platform: platform,
+                    date: '2024-08-22', // Default fallback
+                    time: '09:30' // Default fallback
+                };
+            }
+            
+            // Ultimate fallback
+            return {
+                platform: 'facebook',
+                date: '2024-08-22',
+                time: '09:30'
+            };
+        }
+        
+        // Add social media preview in AI bubble
+        function addSocialMediaPreview(caption, scheduleInfo) {
+            const selectedPostImage = getSelectedPostImage();
+            
+            addAIMessage(`
+                <div style="display: flex; flex-direction: column; gap: 16px;">
+                    <p style="margin: 0; font-size: 16px; color: #333;">Here's how your post will look:</p>
+                    
+                    <!-- Social Media Post Preview -->
+                    <div style="border: 1px solid #e5e5e5; border-radius: 12px; background: white; padding: 16px; max-width: 400px;">
+                        <!-- Post Header -->
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                            <div style="width: 40px; height: 40px; background: linear-gradient(45deg, #7B2CBF, #9B59B6); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <span style="color: white; font-weight: bold; font-size: 16px;">E</span>
+                            </div>
+                            <div>
+                                <div style="font-weight: 600; color: #333; font-size: 14px;">Eugene's Cafe</div>
+                                <div style="color: #666; font-size: 12px;">${formatScheduleForPreview(scheduleInfo)}</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Post Content -->
+                        <div style="margin-bottom: 12px;">
+                            <p style="margin: 0; color: #333; font-size: 14px; line-height: 1.4;">${caption}</p>
+                        </div>
+                        
+                        <!-- Post Image -->
+                        <div style="border-radius: 8px; overflow: hidden; margin-bottom: 12px;">
+                            <img src="${selectedPostImage}" style="width: 100%; height: 200px; object-fit: cover;" alt="Social media post">
+                        </div>
+                        
+                        <!-- Engagement Bar -->
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 8px; border-top: 1px solid #f0f0f0;">
+                            <div style="display: flex; gap: 16px;">
+                                <span style="color: #666; font-size: 12px; cursor: pointer;">👍 Like</span>
+                                <span style="color: #666; font-size: 12px; cursor: pointer;">💬 Comment</span>
+                                <span style="color: #666; font-size: 12px; cursor: pointer;">📤 Share</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `);
+        }
+        
+        // Get the selected post image source
+        function getSelectedPostImage() {
+            const selectedPost = document.querySelector('.post-thumbnail[style*="2px solid #7B2CBF"]');
+            if (selectedPost) {
+                const img = selectedPost.querySelector('img');
+                return img ? img.src : '../assets/images/social media 1.jpg';
+            }
+            return '../assets/images/social media 1.jpg'; // Default fallback
+        }
+        
+        // Format schedule info for preview display
+        function formatScheduleForPreview(scheduleInfo) {
+            const dateObj = new Date(scheduleInfo.date);
+            const timeObj = new Date(`1970-01-01T${scheduleInfo.time}:00`);
+            
+            const formattedDate = dateObj.toLocaleDateString('en-US', { 
+                weekday: 'short', 
+                month: 'short', 
+                day: 'numeric' 
+            });
+            
+            const formattedTime = timeObj.toLocaleTimeString('en-US', { 
+                hour: 'numeric', 
+                minute: '2-digit',
+                hour12: true 
+            });
+            
+            return `Scheduled for ${formattedDate} at ${formattedTime}`;
+        }
+        
+        // Add preview action buttons
+        function addPreviewActionButtons(scheduleInfo) {
+            const chatMessages = document.getElementById('chatMessages');
+            
+            // Debug: Log to verify function is called and scheduleInfo is valid
+            console.log('addPreviewActionButtons called with scheduleInfo:', scheduleInfo);
+            
+            // Always create new action buttons for preview functionality
+            const actionsElement = document.createElement('div');
+            actionsElement.className = 'user-message preview-actions';
+            
+            // Create buttons using DOM methods instead of innerHTML to avoid JSON escaping issues
+            const buttonsContainer = document.createElement('div');
+            buttonsContainer.className = 'marketing-action-buttons';
+            
+            // Create Schedule button - ALWAYS create this button
+            const scheduleButton = document.createElement('button');
+            scheduleButton.className = 'standalone-btn outline-btn';
+            scheduleButton.onclick = confirmSchedulePost;
+            scheduleButton.textContent = 'Schedule';
+            scheduleButton.type = 'button'; // Explicitly set button type
+            // Store schedule info directly as data property instead of JSON string
+            scheduleButton.scheduleData = scheduleInfo || getCurrentScheduleInfo();
+            
+            // Create Make edits button - ALWAYS create this button
+            const editsButton = document.createElement('button');
+            editsButton.className = 'standalone-btn outline-btn';
+            editsButton.onclick = makeEditsFromPreview;
+            editsButton.textContent = 'Make some edits';
+            editsButton.type = 'button'; // Explicitly set button type
+            
+            // Add both buttons to container - ALWAYS add both
+            buttonsContainer.appendChild(scheduleButton);
+            buttonsContainer.appendChild(editsButton);
+            
+            // Add container to actions element
+            actionsElement.appendChild(buttonsContainer);
+            
+            // Debug: Verify both buttons were created
+            console.log('Created buttons - Schedule:', scheduleButton, 'Edits:', editsButton);
+            console.log('Buttons container children count:', buttonsContainer.children.length);
+            
+            if (currentUserMessageElement) {
+                currentUserMessageElement.insertAdjacentElement('afterend', actionsElement);
+                currentUserMessageElement = actionsElement;
+            } else {
+                chatMessages.appendChild(actionsElement);
+                currentUserMessageElement = actionsElement;
+            }
+            
+            // Debug: Verify buttons are in DOM
+            setTimeout(() => {
+                const addedScheduleBtn = document.querySelector('.preview-actions .standalone-btn.outline-btn');
+                const addedEditsBtn = document.querySelector('.preview-actions .outline-btn');
+                console.log('Buttons in DOM - Schedule:', addedScheduleBtn, 'Edits:', addedEditsBtn);
+                scrollToLatestMessage();
+            }, 100);
+        }
+        
+        // Handle schedule confirmation
+        function confirmSchedulePost() {
+            // Get schedule info from the button that was clicked, or fall back to current info
+            let scheduleInfo = null;
+            
+            // Try to get schedule info from the clicked button
+            const scheduleButtons = document.querySelectorAll('.preview-actions .standalone-btn.outline-btn');
+            if (scheduleButtons.length > 0) {
+                const lastScheduleButton = scheduleButtons[scheduleButtons.length - 1];
+                if (lastScheduleButton.scheduleData) {
+                    scheduleInfo = lastScheduleButton.scheduleData;
+                }
+            }
+            
+            // Fall back to current schedule info if button data not available
+            if (!scheduleInfo) {
+                scheduleInfo = getCurrentScheduleInfo();
+            }
+            
+            // Add user message
+            const userMessage = document.createElement('div');
+            userMessage.className = 'user-message';
+            userMessage.innerHTML = `
+                <div class="user-bubble">Schedule</div>
+            `;
+            
+            const chatMessages = document.getElementById('chatMessages');
+            if (currentUserMessageElement) {
+                currentUserMessageElement.insertAdjacentElement('afterend', userMessage);
+                currentUserMessageElement = userMessage;
+            }
+            
+            // Remove preview action buttons
+            const previewActions = document.querySelector('.preview-actions');
+            if (previewActions) {
+                previewActions.remove();
+            }
+            
+            // Add confirmation message
+            setTimeout(() => {
+                const formattedSchedule = formatScheduleForConfirmation(scheduleInfo);
+                addAIMessage(`Done! I've scheduled your post for ${formattedSchedule}.`);
+                
+                // Add follow-up question with CTA buttons
+                setTimeout(() => {
+                    addAIMessage("What would you like to do next?");
+                    
+                    // Add CTA buttons after brief delay
+                    setTimeout(() => {
+                        addMarketingNextActionButtons();
+                    }, 500);
+                }, 800);
+            }, 500);
+        }
+        
+        // Format schedule info for confirmation message
+        function formatScheduleForConfirmation(scheduleInfo) {
+            const dateObj = new Date(scheduleInfo.date);
+            const timeObj = new Date(`1970-01-01T${scheduleInfo.time}:00`);
+            
+            const formattedDate = dateObj.toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                month: 'long', 
+                day: 'numeric',
+                year: '2-digit'
+            });
+            
+            const formattedTime = timeObj.toLocaleTimeString('en-US', { 
+                hour: 'numeric', 
+                minute: '2-digit',
+                hour12: true 
+            });
+            
+            const platformName = scheduleInfo.platform.charAt(0).toUpperCase() + scheduleInfo.platform.slice(1);
+            
+            return `${formattedDate} at ${formattedTime} on ${platformName}`;
+        }
+        
+        // Add CTA buttons for next actions after marketing completion
+        function addMarketingNextActionButtons() {
+            console.log('Adding marketing next action CTA buttons');
+            
+            // Create buttons container
+            const buttonsContainer = document.createElement('div');
+            buttonsContainer.className = 'marketing-next-actions user-message';
+            buttonsContainer.innerHTML = `
+                <div class="marketing-action-buttons">
+                    <button class="standalone-btn outline-btn" onclick="handleCreatePrivacyPolicyFromMarketing()" style="display: none;">Create a privacy policy</button>
+                    <button class="standalone-btn outline-btn" onclick="handleSeeMoreMarketing()">See more ways to market your business</button>
+                </div>
+            `;
+            
+            // Add buttons to chat
+            const chatMessages = document.querySelector('.chat-messages');
+            chatMessages.appendChild(buttonsContainer);
+            
+            // Update currentUserMessageElement for proper AI message positioning
+            currentUserMessageElement = buttonsContainer;
+            
+            // Scroll to show new buttons
+            scrollToLatestMessage();
+            
+            console.log('✅ Marketing next action buttons added successfully');
+        }
+        
+        // Handle Create Privacy Policy button click
+        function handleCreatePrivacyPolicyFromMarketing() {
+            console.log('Create Privacy Policy button clicked from marketing flow');
+            
+            // Replace buttons with user chat bubble
+            const buttonsContainer = document.querySelector('.marketing-next-actions');
+            if (buttonsContainer) {
+                // Replace standalone buttons with user chat bubble
+                buttonsContainer.innerHTML = `
+                    <div class="user-bubble">Create a privacy policy</div>
+                `;
+                // Update currentUserMessageElement for potential future AI messages
+                currentUserMessageElement = buttonsContainer;
+            }
+            
+            // Navigate to privacy policy flow
+            setTimeout(() => {
+                navigateToPage('generate-privacy-policy');
+            }, 300);
+        }
+        
+        // Handle See More Marketing button click
+        function handleSeeMoreMarketing() {
+            console.log('See More Marketing button clicked');
+            
+            // Replace buttons with user chat bubble
+            const buttonsContainer = document.querySelector('.marketing-next-actions');
+            if (buttonsContainer) {
+                // Replace standalone buttons with user chat bubble
+                buttonsContainer.innerHTML = `
+                    <div class="user-bubble">See more ways to market your business</div>
+                `;
+                // Update currentUserMessageElement for AI responses
+                currentUserMessageElement = buttonsContainer;
+            }
+            
+            // Continue marketing flow with additional suggestions
+            setTimeout(() => {
+                addAIMessage("Great! Here are some additional marketing strategies to consider for your business...");
+                
+                // Add more marketing suggestions after brief delay
+                setTimeout(() => {
+                    showAdditionalMarketingOptions();
+                }, 1000);
+            }, 500);
+        }
+        
+        // Show additional marketing options (placeholder for future expansion)
+        function showAdditionalMarketingOptions() {
+            console.log('Showing additional marketing options');
+            // This function can be expanded with more marketing suggestions
+            // For now, just add a basic message
+            setTimeout(() => {
+                addAIMessage("I can help you with email marketing campaigns, SEO strategies, or content marketing plans. What interests you most?");
+            }, 500);
+        }
+        
+        // Handle make edits from preview
+        function makeEditsFromPreview() {
+            // Remove preview action buttons
+            const previewActions = document.querySelector('.preview-actions');
+            if (previewActions) {
+                previewActions.remove();
+            }
+            
+            // Add user message
+            const userMessage = document.createElement('div');
+            userMessage.className = 'user-message';
+            userMessage.innerHTML = `
+                <div class="user-bubble">Make some edits</div>
+            `;
+            
+            const chatMessages = document.getElementById('chatMessages');
+            if (currentUserMessageElement) {
+                currentUserMessageElement.insertAdjacentElement('afterend', userMessage);
+                currentUserMessageElement = userMessage;
+            }
+            
+            // Scroll back to edit interface (it should still be visible above)
+            setTimeout(() => {
+                const captionEditor = document.getElementById('captionEditor');
+                if (captionEditor) {
+                    captionEditor.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    captionEditor.focus();
+                }
+            }, 100);
+        }
+        
+        // Handle preview social post
+        function previewSocialPost() {
+            alert('Preview post functionality would be implemented here');
+        }
+
+        // Handle recommendation clicks
+        function handleRecommendation(type) {
+            switch(type) {
+                case 'social-posts':
+                    handleSocialPostsClick();
+                    break;
+                case 'google-ad':
+                    alert('Google Ad functionality would be implemented here');
+                    break;
+                case 'email-campaign':
+                    alert('Email Campaign functionality would be implemented here');
+                    break;
+                default:
+                    console.log('Unknown recommendation type:', type);
+            }
+        }
+        
+        // Helper function to add AI messages
+        function addAIMessage(content) {
+            const chatMessages = document.getElementById('chatMessages');
+            const airoMessage = document.createElement('div');
+            airoMessage.className = 'airo-message';
+            airoMessage.innerHTML = `
+                <div class="airo-bubble">${content}</div>
+            `;
+            
+            if (currentUserMessageElement) {
+                currentUserMessageElement.insertAdjacentElement('afterend', airoMessage);
+                // Update currentUserMessageElement to the AI message for sequential flow
+                currentUserMessageElement = airoMessage;
+            } else {
+                chatMessages.appendChild(airoMessage);
+                currentUserMessageElement = airoMessage;
+            }
+            
+            // Auto-scroll to show new message
+            setTimeout(() => scrollToLatestMessage(), 100);
+        }
+        
+        // Helper function to add typing indicators
+        function addTypingIndicator(text) {
+            const chatMessages = document.getElementById('chatMessages');
+            const typingIndicator = document.createElement('div');
+            typingIndicator.className = 'typing-indicator';
+            typingIndicator.innerHTML = `
+                <div class="typing-dots">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+                <span class="typing-text">${text}</span>
+            `;
+            
+            if (currentUserMessageElement) {
+                currentUserMessageElement.insertAdjacentElement('afterend', typingIndicator);
+            } else {
+                chatMessages.appendChild(typingIndicator);
+            }
+            
+            // Auto-scroll to show typing indicator
+            setTimeout(() => scrollToLatestMessage(), 100);
+        }
+        
+        // Helper function to remove typing indicator
+        function removeTypingIndicator() {
+            const typingIndicators = document.querySelectorAll('.typing-indicator');
+            typingIndicators.forEach(indicator => indicator.remove());
+        }
+        
+        // Robust scroll function that works with flexbox layout
+        function scrollToLatestMessage() {
+            // Find the actual scroll container
+            const chatInterface = document.getElementById('chatInterface');
+            const chatMessages = document.getElementById('chatMessages');
+            
+            let scrollContainer = chatInterface;
+            
+            // Check if chat-messages is the scroll container instead
+            if (chatMessages && chatMessages.scrollHeight > chatMessages.clientHeight) {
+                scrollContainer = chatMessages;
+            }
+            
+            if (scrollContainer) {
+                requestAnimationFrame(() => {
+                    const controlBarHeight = 140; // Account for control bar
+                    const extraBuffer = 40; // Extra space to ensure visibility
+                    scrollContainer.scrollTop = scrollContainer.scrollHeight + controlBarHeight + extraBuffer;
+                });
+            }
+        }
+
+        // Enhanced version with longer timeout for layout settling
+        function scrollToLatestMessageEnhanced() {
+            setTimeout(() => {
+                scrollToLatestMessage();
+            }, 200); // Increased timeout for layout to settle
+        }
+
+        // Mutation observer to detect when new messages are added
+        let scrollObserver = null;
+
+        function initializeScrollObserver() {
+            const chatMessages = document.getElementById('chatMessages');
+            if (!chatMessages || scrollObserver) return;
+            
+            scrollObserver = new MutationObserver((mutations) => {
+                let shouldScroll = false;
+                mutations.forEach((mutation) => {
+                    if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                        shouldScroll = true;
+                    }
+                });
+                
+                if (shouldScroll) {
+                    console.log('New message detected, scrolling...');
+                    setTimeout(() => scrollToLatestMessage(), 300);
+                }
+            });
+            
+            scrollObserver.observe(chatMessages, { childList: true, subtree: true });
+            console.log('Scroll observer initialized');
+        }
+        
+        // Check if input contains "looks good" variations
+        function isLooksGoodInput(input) {
+            const normalized = input.toLowerCase().trim();
+            const looksGoodVariations = [
+                'looks good',
+                'looks great',
+                'looks perfect',
+                'that looks good',
+                'that looks great',
+                'perfect',
+                'good',
+                'great',
+                'correct',
+                'yes that\'s right',
+                'that\'s correct'
+            ];
+            
+            return looksGoodVariations.some(variation => normalized.includes(variation));
+        }
+        
+        // Universal phrase detection for global navigation
+        function detectGlobalNavigationPhrase(inputText) {
+            const text = inputText.toLowerCase().trim();
+            
+            // Check for logo creation phrases
+            if (text.includes('create a logo') || text.includes('generate a logo') || text.includes('make a logo')) {
+                navigateToPage('generate-logo');
+                return true;
+            }
+            
+            // Check for privacy policy creation phrases
+            if (text.includes('create a privacy policy') || text.includes('generate a privacy policy') || text.includes('make a privacy policy')) {
+                navigateToPage('generate-privacy-policy');
+                return true;
+            }
+            
+            // Check for marketing plan creation phrases
+            if (text.includes('create a marketing plan') || text.includes('generate a marketing plan') || text.includes('make a marketing plan')) {
+                navigateToPage('generate-marketing-strategy');
+                return true;
+            }
+            
+            return false;
+        }
+
+        // Handle chat input
+        function handleChatMessage(message) {
+            console.log('🚨 MARKETING PAGE: handleChatMessage CALLED with:', message);
+            // Check for global navigation phrases first
+            console.log('Marketing page: checking navigation for:', message);
+            if (detectGlobalNavigationPhrase(message)) {
+                console.log('Marketing page: navigation detected, redirecting...');
+                return;
+            }
+            console.log('Marketing page: no navigation phrase detected, continuing...');
+            
+            if (currentStep === 'business-info') {
+                if (isLooksGoodInput(message)) {
+                    // Handle "looks good" input same as button click
+                    const chatMessages = document.getElementById('chatMessages');
+                    const looksGoodButton = chatMessages.querySelector('.looks-good-standalone .standalone-btn');
+                    
+                    if (looksGoodButton) {
+                        const standaloneContainer = looksGoodButton.closest('.looks-good-standalone');
+                        const userBubble = looksGoodButton.closest('.user-bubble');
+                        
+                        if (standaloneContainer) {
+                            // Replace standalone button with user message bubble
+                            const userMessage = document.createElement('div');
+                            userMessage.className = 'user-message';
+                            userMessage.innerHTML = `
+                                <div class="user-bubble">${message}</div>
+                            `;
+                            standaloneContainer.replaceWith(userMessage);
+                            // Set this as the current user message for subsequent AI responses
+                            currentUserMessageElement = userMessage;
+                        } else if (userBubble) {
+                            // Legacy handling for bubble-based buttons
+                            userBubble.innerHTML = message;
+                            userBubble.classList.remove('user-action-buttons');
+                            // Set this as the current user message for subsequent AI responses
+                            currentUserMessageElement = userBubble.closest('.user-message');
+                        }
+                    }
+                    
+                    // Remove helper text
+                    const helperElements = chatMessages.querySelectorAll('.helper-text');
+                    helperElements.forEach(element => {
+                        element.remove();
+                    });
+                    
+                    // Continue flow
+                    setTimeout(() => {
+                        showMarketingStrategyGeneration();
+                    }, 500);
+                } else {
+                    // Handle other responses
+                    addUserMessage(message);
+                    showNotification('Please review your business information and click "Looks good" when ready.');
+                }
+            } else if (currentStep === 'customer-analysis') {
+                if (isApproveAnalysisInput(message)) {
+                    // Handle "approve analysis" input same as button click
+                    const chatMessages = document.getElementById('chatMessages');
+                    const approveButton = chatMessages.querySelector('.approve-analysis-standalone .standalone-btn');
+                    
+                    if (approveButton) {
+                        // Replace standalone button with user message bubble
+                        const standaloneContainer = approveButton.closest('.approve-analysis-standalone');
+                        if (standaloneContainer) {
+                            const userMessage = document.createElement('div');
+                            userMessage.className = 'user-message';
+                            userMessage.innerHTML = `
+                                <div class="user-bubble">${message}</div>
+                            `;
+                            standaloneContainer.replaceWith(userMessage);
+                            // Set this as the current user message for subsequent AI responses
+                            currentUserMessageElement = userMessage;
+                        }
+                    }
+                    
+                    // Remove helper text
+                    const helperElements = chatMessages.querySelectorAll('.helper-text');
+                    helperElements.forEach(element => {
+                        element.remove();
+                    });
+                    
+                    // Hide customer analysis sidebar
+                    hideCustomerAnalysisSidebar();
+                    
+                    // Show building marketing plan loading screen
+                    setTimeout(() => {
+                        showMarketingPlanLoadingScreen();
+                    }, 500);
+                } else {
+                    // Handle other responses
+                    addUserMessage(message);
+                    showNotification('Please review the customer analysis and click "Approve analysis" when ready.');
+                }
+            }
+        }
+        
+        // Check if input contains "approve analysis" variations
+        function isApproveAnalysisInput(input) {
+            const normalized = input.toLowerCase().trim();
+            const approveAnalysisVariations = [
+                'approve analysis',
+                'approve the analysis',
+                'approved analysis',
+                'approve customer analysis',
+                'approve',
+                'analysis looks good',
+                'looks good',
+                'go ahead',
+                'proceed'
+            ];
+            
+            return approveAnalysisVariations.some(variation => normalized.includes(variation));
+        }
+        
+        // Add user message
+        function addUserMessage(content) {
+            const chatMessages = document.getElementById('chatMessages');
+            const userMessage = document.createElement('div');
+            userMessage.className = 'user-message';
+            userMessage.innerHTML = `
+                <div class="user-bubble">${content}</div>
+            `;
+            chatMessages.appendChild(userMessage);
+            currentUserMessageElement = userMessage;
+            
+            // Auto-scroll to show new message
+            setTimeout(() => scrollToLatestMessage(), 100);
+        }
+        
+        // Show notification
+        function showNotification(message) {
+            // Simple notification - could be enhanced
+            console.log('Notification:', message);
+        }
+        
+        // Initialize the flow
+        function initializeMarketingFlow() {
+            // Start the business info request after initial messages
+            setTimeout(() => {
+                showBusinessInfoRequest();
+            }, 1000);
+        }
+        
+        // Initialize chat input handling
+        function initializeChatInput() {
+            const chatInput = document.getElementById('chatInput');
+            const sendBtn = document.getElementById('sendBtn');
+            
+            function sendMessage() {
+                const message = chatInput.value.trim();
+                if (message) {
+                    handleChatMessage(message);
+                    chatInput.value = '';
+                }
+            }
+            
+            chatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+            
+            sendBtn.addEventListener('click', sendMessage);
+        }
+        
+        // Marketing plan tab switching functionality
+        function switchToStrategyTab() {
+            const strategyTab = document.querySelector('.marketing-plan-tab[onclick="switchToStrategyTab()"]');
+            const analysisTab = document.querySelector('.marketing-plan-tab[onclick="switchToAnalysisTab()"]');
+            const content = document.getElementById('marketingPlanContent');
+            
+            // Update tab states
+            strategyTab.classList.add('active');
+            analysisTab.classList.remove('active');
+            
+            // Show strategy content
+            content.innerHTML = getStrategyContent();
+        }
+        
+        function switchToAnalysisTab() {
+            const strategyTab = document.querySelector('.marketing-plan-tab[onclick="switchToStrategyTab()"]');
+            const analysisTab = document.querySelector('.marketing-plan-tab[onclick="switchToAnalysisTab()"]');
+            const content = document.getElementById('marketingPlanContent');
+            
+            // Update tab states
+            strategyTab.classList.remove('active');
+            analysisTab.classList.add('active');
+            
+            // Show analysis content
+            content.innerHTML = getAnalysisContent();
+        }
+        
+        function getStrategyContent() {
+            return `
+                <div class="marketing-section">
+                    <div class="section-header">
+                        <div class="section-title">
+                            Promotion
+                        </div>
+                        <button class="section-expand">
+                            <svg viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M7 7l3-3 3 3m0 6l-3 3-3-3" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="section-content">
+                        <p class="section-description">
+                            Build brand awareness and attract new customers through targeted marketing campaigns.
+                        </p>
+                        <ul class="section-strategies">
+                            <li>Launch "Morning Fresh" social media campaign showcasing daily bagel selections</li>
+                            <li>Partner with local gyms for healthy breakfast promotions</li>
+                            <li>Create loyalty program: "Buy 10 coffees, get 1 free"</li>
+                            <li>Sponsor local community events and farmers markets</li>
+                            <li>Google Ads targeting "breakfast near me" and "fresh coffees"</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="marketing-section">
+                    <div class="section-header">
+                        <div class="section-title">Product</div>
+                        <button class="section-expand">
+                            <svg viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M7 7l3-3 3 3m0 6l-3 3-3-3" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="section-content">
+                        <p class="section-description">
+                            Enhance menu offerings and quality to create memorable customer experiences.
+                        </p>
+                        <ul class="section-strategies">
+                            <li>Introduce seasonal coffee flavors (pumpkin spice, everything seasoning)</li>
+                            <li>Expand healthy options: gluten-free and vegan bagels</li>
+                            <li>Add premium coffee blends and artisanal spreads</li>
+                            <li>Create signature breakfast combos and lunch sandwiches</li>
+                            <li>Implement quality assurance for freshness guarantee</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="marketing-section">
+                    <div class="section-header">
+                        <div class="section-title">Pricing</div>
+                        <button class="section-expand">
+                            <svg viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M7 7l3-3 3 3m0 6l-3 3-3-3" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="section-content">
+                        <p class="section-description">
+                            Optimize pricing strategy to maximize revenue while remaining competitive.
+                        </p>
+                        <ul class="section-strategies">
+                            <li>Implement tiered pricing: basic bagels ($2.50), premium flavors ($3.25)</li>
+                            <li>Offer value bundles: bagel + coffee combo ($6.99)</li>
+                            <li>Early bird discount: 15% off before 8 AM</li>
+                            <li>Corporate catering packages with volume discounts</li>
+                            <li>Student discount program with local college partnerships</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="marketing-section">
+                    <div class="section-header">
+                        <div class="section-title">Place</div>
+                        <button class="section-expand">
+                            <svg viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M7 7l3-3 3 3m0 6l-3 3-3-3" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="section-content">
+                        <p class="section-description">
+                            Expand distribution channels and optimize location strategy for maximum reach.
+                        </p>
+                        <ul class="section-strategies">
+                            <li>Optimize storefront with attractive window displays and clear signage</li>
+                            <li>Launch delivery partnerships with DoorDash, UberEats, and Grubhub</li>
+                            <li>Set up weekend pop-up stands at local farmers markets</li>
+                            <li>Establish office catering delivery service for corporate clients</li>
+                            <li>Create mobile bagel cart for special events and festivals</li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function getAnalysisContent() {
+            return `
+                <div class="marketing-section">
+                    <div class="section-header">
+                        <div class="section-title">
+                            Customers
+                        </div>
+                        <button class="section-expand">
+                            <svg viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M7 7l3-3 3 3m0 6l-3 3-3-3" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                        </div>
+                    <div class="section-content">
+                        <p class="section-description">
+                            Understand who your customers are to better tailor offerings and create lasting connections.
+                        </p>
+                        <ul class="section-strategies">
+                            <li>Segment core audiences: professionals, health-conscious individuals, students, and families</li>
+                            <li>Offer tailored options like vegan/gluten-free bagels, loyalty rewards, and affordable bundles</li>
+                            <li>Gather feedback and track purchase trends to refine menu and promotions</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="marketing-section">
+                    <div class="section-header">
+                        <div class="section-title">Competitors</div>
+                        <button class="section-expand">
+                            <svg viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M7 7l3-3 3 3m0 6l-3 3-3-3" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="section-content">
+                        <p class="section-description">
+                            Identify who you're up against to position Eugene's Café more effectively in the market.
+                        </p>
+                        <ul class="section-strategies">
+                            <li>Compete with local cafés and national chains in the breakfast and coffee space</li>
+                            <li>Differentiate with artisanal quality, seasonal flavors, and community events</li>
+                            <li>Monitor competitor pricing and deals to stay relevant and competitive</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="marketing-section">
+                    <div class="section-header">
+                        <div class="section-title">Company</div>
+                        <button class="section-expand">
+                            <svg viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M7 7l3-3 3 3m0 6l-3 3-3-3" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="section-content">
+                        <p class="section-description">
+                            Leverage what Eugene's Café does best while improving areas with growth potential.
+                        </p>
+                        <ul class="section-strategies">
+                            <li>Build on strengths: fresh ingredients, premium coffee, and neighborhood connections</li>
+                            <li>Expand delivery services and improve in-store experience for more convenience</li>
+                            <li>Enhance brand identity by focusing on quality, service, and customer experience</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="marketing-section">
+                    <div class="section-header">
+                        <div class="section-title">Climate</div>
+                        <button class="section-expand">
+                            <svg viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M7 7l3-3 3 3m0 6l-3 3-3-3" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="section-content">
+                        <p class="section-description">
+                            Adapt to external factors and market trends to stay competitive and resilient.
+                        </p>
+                        <ul class="section-strategies">
+                            <li>Address rising demand for healthy, sustainable, and convenient food options</li>
+                            <li>Monitor impacts of inflation, delivery app growth, and shifting routines</li>
+                            <li>Stay flexible with healthier menu items, strong delivery partnerships, and freshness guarantees</li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Initialize everything when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeMarketingFlow();
+            initializeChatInput();
+            
+            // Initialize scroll observer for automatic scrolling
+            setTimeout(initializeScrollObserver, 1000);
+            
+            // Initialize other components from main script if needed
+            if (typeof initializeDropdowns === 'function') {
+                initializeDropdowns();
+            }
+            
+            // Re-initialize dropdowns periodically to ensure they stay functional
+            setInterval(function() {
+                if (typeof initializeDropdowns === 'function') {
+                    const askAiroBtn = document.getElementById('askAiroBtn');
+                    const airoGridPanel = document.getElementById('airoGridPanel');
+                    if (askAiroBtn && airoGridPanel && !askAiroBtn.hasAttribute('data-initialized')) {
+                        initializeDropdowns();
+                        askAiroBtn.setAttribute('data-initialized', 'true');
+                    }
+                }
+            }, 1000);
+        });
+
+        // Debug helper function
+        function debugSidebarLayout() {
+            const chatInterface = document.getElementById('chatInterface');
+            const chatMessages = document.getElementById('chatMessages');
+            const sidebar = document.getElementById('marketingPlanSidebar') || document.getElementById('customerAnalysisSidebar');
+            const wrapper = document.getElementById('mainContentWrapper');
+            
+            console.log('=== SIDEBAR DEBUG ===');
+            console.log('Chat interface:', chatInterface?.getBoundingClientRect());
+            console.log('Chat messages:', chatMessages?.getBoundingClientRect());
+            console.log('Sidebar:', sidebar?.getBoundingClientRect());
+            console.log('Wrapper:', wrapper?.getBoundingClientRect());
+            console.log('Body classes:', document.body.className);
+            console.log('Chat messages scroll:', chatMessages?.scrollTop, '/', chatMessages?.scrollHeight);
+        }
+    </script>
+    
+    <!-- Marketing Plan Upgrade Screen -->
+    <div class="marketing-upgrade-modal" id="marketingUpgradeScreen">
+        <div class="upgrade-modal">
+            <button class="upgrade-close-btn" onclick="closeMarketingUpgradeScreen()">&times;</button>
+            
+            <div class="upgrade-illustration-section">
+                <button class="back-btn" onclick="closeMarketingUpgradeScreen()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                <div class="marketing-image-container">
+                    <img src="../assets/images/marketingend.png" alt="Marketing upgrade illustration" class="marketing-end-image">
+                </div>
+            </div>
+            
+            <div class="upgrade-content-section">
+                <div class="upgrade-header">
+                    <div class="upgrade-logo">
+                        <svg viewBox="0 0 32 32" fill="none">
+                            <circle cx="16" cy="16" r="12" fill="#666"/>
+                            <path d="M12 16L14 18L20 12" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <div class="upgrade-logo-text">GoDaddy <span class="airo-purple">Airo</span></div>
+                    </div>
+                    
+                    <h1 class="upgrade-title">Upgrade to get your personalized marketing plan</h1>
+                    <p class="upgrade-subtitle">Airo Plus™ Marketing Consultant crafts strategies for you and executes them for real results.</p>
+                </div>
+                
+                <div class="upgrade-features">
+                    <div class="feature-item">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M10 2L12.09 6.26L17 7L13.5 10.74L14.18 15.5L10 13.77L5.82 15.5L6.5 10.74L3 7L7.91 6.26L10 2Z" fill="#666"/>
+                        </svg>
+                        <span>Strategies tailored to your business</span>
+                    </div>
+                    <div class="feature-item">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M10 1L3 5V11C3 16 10 19 10 19S17 16 17 11V5L10 1Z" fill="#666"/>
+                        </svg>
+                        <span>Digital marketing and ad campaigns that convert</span>
+                    </div>
+                    <div class="feature-item">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M9 11L12 14L20 6" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M21 12V17A2 2 0 0119 19H5A2 2 0 013 17V7A2 2 0 015 5H14" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span>SEO + SEM done right</span>
+                    </div>
+                    <div class="feature-item">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M10 2L12 7L17 7L13.5 10L15 15L10 12L5 15L6.5 10L3 7L8 7L10 2Z" fill="#666"/>
+                        </svg>
+                        <span>Smart alerts when it's time to act</span>
+                    </div>
+                    <div class="feature-item">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <circle cx="10" cy="10" r="8" stroke="#666" stroke-width="2"/>
+                            <path d="M14.31 8L9 13.31L5.69 10" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span><strong>Bonus:</strong> Airo Plus™, which includes AI-generated logos and images to keep your brand on point.</span>
+                    </div>
+                </div>
+                
+                <div class="upgrade-pricing">
+                    <div class="pricing-header">
+                        <span class="pricing-label">Subscribe for a year</span>
+                        <span class="discount-badge">GET 62% OFF</span>
+                    </div>
+                    <div class="pricing-details">
+                        <span class="old-price">$12.99</span>
+                        <span class="new-price">$4.99</span>
+                        <span class="pricing-period">/mo x 12 months</span>
+                    </div>
+                    <p class="pricing-terms">With a 1-yr term. You pay $59.88 today. Renews at $155.88. Cancel anytime in Account Settings.</p>
+                </div>
+                
+                <button class="add-to-cart-btn" onclick="handleAddToCart()">Add to Cart</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Disclaimer Text -->
+    <div class="disclaimer">
+        <p class="disclaimer-text">Airo can make mistakes, so double check its responses.</p>
+    </div>
+</body>
+</html>

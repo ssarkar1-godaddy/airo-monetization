@@ -1,0 +1,3255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Privacy Policy - GoDaddy Airo</title>
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        /* Add body class for higher CSS specificity */
+        body {
+            position: relative;
+            background-color: transparent;
+        }
+        
+        .header {
+            background-color: transparent !important;
+            border-bottom: none !important;
+            backdrop-filter: none;
+        }
+        
+        /* Main Content Wrapper - Flex container for chat and sidebar */
+        .main-content-wrapper {
+            display: flex;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            min-height: calc(100vh - 80px);
+            gap: 24px;
+            align-items: flex-start; /* Align items to top */
+        }
+        
+        /* Custom scrollbar styling for independent scroll zones */
+        .chat-interface::-webkit-scrollbar,
+        .privacy-summary-sidebar::-webkit-scrollbar,
+        .congratulations-sidebar::-webkit-scrollbar {
+            width: 0px;
+        }
+        
+        .chat-interface::-webkit-scrollbar-track,
+        .privacy-summary-sidebar::-webkit-scrollbar-track,
+        .congratulations-sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .chat-interface::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 3px;
+        }
+        
+        .privacy-summary-sidebar::-webkit-scrollbar-thumb,
+        .congratulations-sidebar::-webkit-scrollbar-thumb {
+            background: rgba(123, 44, 191, 0.3);
+            border-radius: 3px;
+        }
+        
+        .chat-interface::-webkit-scrollbar-thumb:hover,
+        .privacy-summary-sidebar::-webkit-scrollbar-thumb:hover,
+        .congratulations-sidebar::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.4);
+        }
+        
+        /* Ensure smooth scrolling for chat, auto for sidebar */
+        .chat-interface {
+            scroll-behavior: smooth;
+        }
+        
+        .privacy-summary-sidebar {
+            scroll-behavior: auto;
+        }
+        
+        /* Mobile responsive for wrapper */
+        @media (max-width: 768px) {
+            .main-content-wrapper {
+                flex-direction: column;
+                padding: 0 16px;
+            }
+        }
+        
+        .chat-interface {
+            flex: 1; /* Take remaining space in flex container */
+            padding: 40px 0 120px;
+            min-height: calc(100vh - 160px);
+            max-height: calc(100vh - 160px);
+            display: flex;
+            flex-direction: column;
+            background-color: transparent;
+            overflow-y: auto; /* Independent scrolling for chat */
+            position: relative; /* Ensure independent positioning */
+        }
+        
+        /* No longer needed - flex layout handles spacing */
+        
+        .chat-messages {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            margin-bottom: 40px;
+            /* Note: Scrolling handled by parent .chat-interface container */
+        }
+        
+        .user-message {
+            align-self: flex-end;
+            max-width: 70%;
+        }
+        
+        /* User messages and CTAs stay on the right side of the chat when sidebar is open */
+        
+        .user-bubble {
+            /* Background color handled by global CSS state classes */
+            color: #333333;
+            padding: 16px 20px;
+            border-radius: 20px;
+            border-bottom-right-radius: 6px;
+            font-size: 16px;
+            line-height: 1.4;
+            border: 1px solid #e5e5e5;
+        }
+        
+        .airo-message {
+            align-self: flex-start;
+            max-width: 80%;
+        }
+        
+        .airo-bubble {
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            color: #333333;
+            padding: 20px 24px;
+            border-radius: 20px;
+            border-bottom-left-radius: 6px;
+            font-size: 16px;
+            line-height: 1.5;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .typing-indicator {
+            align-self: flex-start;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 16px;
+        }
+        
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+        
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: #6C47B4;
+            border-radius: 50%;
+            animation: typingPulse 1.4s infinite;
+        }
+        
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        .typing-text {
+            color: #666666;
+            font-size: 14px;
+            font-style: italic;
+        }
+        
+        @keyframes typingPulse {
+            0%, 60%, 100% {
+                opacity: 0.3;
+                transform: scale(0.8);
+            }
+            30% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .why-important {
+            margin-top: 16px;
+            border-top: 1px solid #f0f0f0;
+            padding-top: 16px;
+        }
+        
+        .why-important-btn {
+            background: transparent;
+            border: none;
+            color: #666666;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0;
+            transition: color 0.2s ease;
+        }
+        
+        .why-important-btn:hover {
+            color: #6C47B4;
+        }
+        
+        .info-icon {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #e5e5e5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+        
+        .dropdown-arrow {
+            font-size: 12px;
+            transition: transform 0.2s ease;
+            margin-left: auto;
+        }
+        
+        .why-important-btn.active .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+        
+        .why-important-content {
+            transition: all 0.3s ease;
+        }
+        
+        /* Privacy Policy Summary Sidebar (Smaller - for business info) */
+        .privacy-summary-sidebar {
+            width: 350px;
+            flex-shrink: 0; /* Don't shrink in flex container */
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 16px;
+            padding: 24px;
+            overflow-y: auto; /* Independent internal scrolling */
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            display: none; /* Initially hidden */
+            height: calc(100vh - 145px); /* Corrected - 50px shorter for proper control bar spacing */
+            margin-top: 10px; /* Small gap from header */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: relative; /* Ensure independent positioning */
+        }
+        
+        /* Large Sidebar (for loading and policy preview) */
+        .large-sidebar {
+            width: 50% !important;
+        }
+        
+        .privacy-summary-sidebar.visible {
+            display: block; /* Show when visible */
+        }
+        
+        .summary-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333333;
+            margin-bottom: 8px;
+        }
+        
+        .summary-subtitle {
+            font-size: 14px;
+            color: #666666;
+            margin-bottom: 32px;
+        }
+        
+        .summary-field {
+            margin-bottom: 24px;
+        }
+        
+        .field-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #333333;
+            margin-bottom: 8px;
+        }
+        
+        .field-info-icon {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #e5e5e5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #666666;
+        }
+        
+        .field-value {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #333333;
+        }
+        
+        .edit-icon {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.2s ease;
+        }
+        
+        .edit-icon:hover {
+            opacity: 0.7;
+        }
+        
+        .looks-good-section {
+            margin: 24px 0;
+            text-align: center;
+        }
+        
+        .looks-good-btn {
+            background: transparent !important;
+            color: #6C47B4 !important;
+            border: 1px solid #6C47B4 !important;
+            border-radius: 8px !important;
+            padding: 12px 24px !important;
+            font-size: 16px !important;
+            font-weight: 500 !important;
+            cursor: pointer !important;
+            transition: all 0.2s ease !important;
+            margin-bottom: 16px !important;
+        }
+        
+        .looks-good-btn:hover {
+            background: #D3C1F7 !important;
+            color: #6C47B4 !important;
+            border-color: #6C47B4 !important;
+        }
+        
+        /* Standalone Looks Good button styling */
+        .looks-good-standalone {
+            align-self: flex-end;
+            margin: 16px 0;
+        }
+        
+        .standalone-btn {
+            background: transparent !important;
+            border: 1px solid #6C47B4 !important;
+            color: #6C47B4 !important;
+            border-radius: 8px !important;
+            padding: 12px 24px !important;
+            font-size: 14px !important;
+            font-weight: 500 !important;
+            cursor: pointer !important;
+            transition: all 0.2s ease !important;
+        }
+        
+        .standalone-btn:hover {
+            background: #D3C1F7 !important;
+            color: #6C47B4 !important;
+            border-color: #6C47B4 !important;
+        }
+        
+        /* Action button outline styling - consistent with standalone buttons */
+        .action-btn.outline-btn,
+        .standalone-btn.outline-btn {
+            background: transparent !important;
+            border: 1px solid #6C47B4 !important;
+            color: #6C47B4 !important;
+            padding: 12px 24px !important;
+            border-radius: 8px !important;
+            font-weight: 500 !important;
+            cursor: pointer !important;
+            transition: all 0.2s ease !important;
+        }
+        
+        .action-btn.outline-btn:hover,
+        .standalone-btn.outline-btn:hover {
+            background: #D3C1F7 !important;
+            color: #6C47B4 !important;
+            border-color: #6C47B4 !important;
+        }
+        
+        /* User bubble with button styling (legacy) */
+        .user-button-bubble {
+            background: transparent !important;
+            border: none !important;
+            padding: 0 !important;
+        }
+        
+        .user-button-bubble .looks-good-btn {
+            margin: 0 !important;
+            border-radius: 8px !important;
+            padding: 16px 24px !important;
+            font-size: 16px !important;
+            display: block !important;
+            width: 100% !important;
+            background: transparent !important;
+            color: #6C47B4 !important;
+            border: 1px solid #6C47B4 !important;
+        }
+
+        /* Privacy CTA Button Styling */
+        .privacy-cta-container {
+            padding: 0 !important;
+            overflow: hidden;
+            background: transparent !important;
+            border: none !important;
+        }
+        
+        .privacy-cta-btn {
+            background: transparent !important;
+            color: #6C47B4 !important;
+            border: 1px solid #6C47B4 !important;
+            border-radius: 8px !important;
+            padding: 12px 24px !important;
+            font-size: 14px !important;
+            font-weight: 500 !important;
+            cursor: pointer !important;
+            transition: all 0.2s ease !important;
+            width: 100% !important;
+            text-align: left !important;
+            /* Override any global button or user-bubble styles */
+        }
+        
+        .privacy-cta-btn:hover {
+            background: #D3C1F7 !important;
+            color: #6C47B4 !important;
+            border-color: #6C47B4 !important;
+        }
+
+        /* UNIFIED CTA BUTTON STYLING - All CTA buttons get same styling */
+        .privacy-cta-btn, 
+        .action-btn.outline-btn, 
+        .standalone-btn.outline-btn,
+        .standalone-btn,
+        .looks-good-btn {
+            background: transparent !important;
+            border: 1px solid #6C47B4 !important;
+            color: #6C47B4!important;
+            border-radius: 8px !important;
+            padding: 12px 24px !important;
+            font-weight: 500 !important;
+            cursor: pointer !important;
+            transition: all 0.2s ease !important;
+        }
+
+        /* UNIFIED CTA BUTTON HOVER - All CTA buttons get same hover */
+        .privacy-cta-btn:hover, 
+        .action-btn.outline-btn:hover, 
+        .standalone-btn.outline-btn:hover,
+        .standalone-btn:hover,
+        .looks-good-btn:hover,
+        .user-button-bubble .looks-good-btn:hover {
+            background: #D3C1F7 !important;
+            color: #6C47B4 !important;
+            border-color: #6C47B4 !important;
+        }
+
+        /* Ensure clicked CTA buttons become grey bubbles */
+        .user-bubble.from-cta, .user-bubble.cta-triggered,
+        .user-message.from-cta .user-bubble {
+            background: #F5F7F8  !important;
+            color: #333333 !important;
+            border: none !important;
+        }
+
+        /* FINAL OVERRIDE - Higher specificity to override global styles.css */
+        body .looks-good-btn,
+        body .standalone-btn,
+        body .standalone-btn.outline-btn,
+        body .action-btn.outline-btn,
+        body .privacy-cta-btn,
+        html body .looks-good-btn,
+        html body .standalone-btn.outline-btn,
+        html body .action-btn.outline-btn {
+            background: transparent !important;
+            border: 1px solid #6C47B4 !important;
+            color: #6C47B4 !important;
+            border-radius: 8px !important;
+            padding: 12px 24px !important;
+            font-weight: 500 !important;
+            cursor: pointer !important;
+            transition: all 0.2s ease !important;
+        }
+
+        /* FINAL HOVER OVERRIDE - Higher specificity for hover states */
+        body .looks-good-btn:hover,
+        body .standalone-btn:hover,
+        body .standalone-btn.outline-btn:hover,
+        body .action-btn.outline-btn:hover,
+        body .privacy-cta-btn:hover,
+        body .user-button-bubble .looks-good-btn:hover,
+        html body .looks-good-btn:hover,
+        html body .standalone-btn.outline-btn:hover,
+        html body .action-btn.outline-btn:hover {
+            background: #D3C1F7 !important;
+            color: #6C47B4 !important;
+            border-color: #6C47B4 !important;
+        }
+
+        /* FINAL SPECIFIC BUTTON CLASS OVERRIDES */
+        body button.looks-good-btn,
+        body button.standalone-btn,
+        body button.privacy-cta-btn {
+            background: transparent !important;
+            border: 1px solid #6C47B4 !important;
+            color: #6C47B4 !important;
+            border-radius: 8px !important;
+        }
+
+        body button.looks-good-btn:hover,
+        body button.standalone-btn:hover,
+        body button.privacy-cta-btn:hover {
+            background: #D3C1F7 !important;
+            color: #6C47B4 !important;
+            border-color: #6C47B4 !important;
+        }
+
+        /* Looks Good Button Styling - Outline style to match other action buttons */
+        .looks-good-standalone {
+            align-self: flex-end;
+            max-width: 70%;
+            margin-bottom: 16px;
+        }
+        
+        .terms-note {
+            font-size: 12px;
+            color: #666666;
+            line-height: 1.4;
+            margin-bottom: 16px;
+        }
+        
+        .terms-link {
+            color: #666;
+            text-decoration: underline;
+        }
+        
+        .alternative-input {
+            font-size: 12px;
+            color: #999999;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .alternative-input::before,
+        .alternative-input::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e5e5e5;
+        }
+        
+        /* Helper text styling */
+        .helper-text {
+            display: flex;
+            justify-content: flex-end;
+            margin: 16px 0;
+        }
+        
+        .helper-message {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #666666;
+        }
+        
+        .helper-icon {
+            margin-right: 8px;
+            font-size: 16px;
+            color: #999999;
+        }
+        
+        /* Dynamic messages container */
+        #dynamicMessages {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        /* Subtle animation for new AI messages */
+        .airo-message {
+            animation: slideInLeft 0.4s ease-out;
+        }
+        
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        /* Flex layout automatically handles sidebar spacing */
+        
+
+        
+        /* Loading screen styles - now works within flex layout like sidebar */
+        .loading-screen {
+            width: 50%;
+            flex-shrink: 0; /* Don't shrink in flex container */
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 16px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            height: calc(100vh - 145px); /* Corrected - 50px shorter for proper control bar spacing */
+            margin-top: 10px; /* Match sidebar positioning */
+        }
+        
+        .loading-screen.visible {
+            display: flex;
+        }
+        
+        .loading-icon {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 32px;
+            background: linear-gradient(135deg, #666, #9D4EDD);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: white;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 0.8;
+            }
+        }
+        
+        .loading-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #333333;
+            text-align: center;
+            margin-bottom: 16px;
+            line-height: 1.3;
+            max-width: 400px;
+        }
+        
+        .loading-subtitle {
+            font-size: 16px;
+            color: #666666;
+            text-align: center;
+        }
+        
+
+        
+        /* Control bar positioning is now handled by global styles.css */
+        
+        /* Policy Preview Card Styles - Matching Logo Artifact */
+        .policy-preview-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background: #ffffff;
+            border: 1px solid #6C47B4;
+            border-radius: 12px;
+            margin: 16px 0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            max-width: 400px;
+        }
+        
+        .policy-preview-card:hover {
+            border-color: #6C47B4;
+            background: #D3C1F7;
+            box-shadow: 0 2px 8px rgba(108, 71, 180, 0.1);
+        }
+        
+        .policy-card-icon {
+            width: 48px;
+            height: 48px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .policy-card-content {
+            flex: 1;
+        }
+        
+        .policy-card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333333;
+            margin-bottom: 4px;
+        }
+        
+        .policy-card-date {
+            font-size: 14px;
+            color: #666666;
+        }
+        
+        /* REMOVED: Old Action Buttons Styles - buttons now standalone */
+        
+        /* NEW: Standalone Action Buttons Container */
+        .standalone-action-buttons {
+            display: flex !important;
+            flex-direction: row !important;
+            gap: 16px !important;
+            justify-content: flex-end !important;
+            margin: 16px 0 !important;
+            padding: 0 !important;
+            /* Position buttons outside of chat bubbles */
+        }
+        
+        /* Responsive: Stack buttons vertically on small screens */
+        @media (max-width: 480px) {
+            .standalone-action-buttons {
+                flex-direction: column !important;
+                gap: 12px !important;
+            }
+        }
+        
+        .action-btn {
+            width: auto;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+            background: transparent;
+        }
+        
+        .primary-btn {
+            background: #666;
+            color: white;
+        }
+        
+        .primary-btn:hover {
+            background: #D3C1F7;
+            color: #6C47B4;
+        }
+        
+        .secondary-btn {
+            background: #f8f9fa;
+            color: #333333;
+            border: 1px solid #e5e5e5;
+        }
+        
+        .secondary-btn:hover {
+            background: #e9ecef;
+        }
+        
+        /* Policy Preview Sidebar Styles */
+        .policy-preview-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .policy-preview-header {
+            border-bottom: 1px solid #e5e5e5;
+            padding-bottom: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .policy-preview-header h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333333;
+            margin: 0 0 16px 0;
+        }
+        
+        .policy-tabs {
+            display: flex;
+            gap: 0;
+        }
+        
+        .policy-tab {
+            flex: 1;
+            padding: 8px 16px;
+            border: none;
+            background: transparent;
+            color: #666666;
+            font-size: 14px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+        
+        .policy-tab.active {
+            color: #666;
+            border-bottom-color: #666;
+        }
+        
+        .policy-tab:hover {
+            color: #666;
+        }
+        
+        .policy-preview-body {
+            flex: 1;
+            overflow-y: auto;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .policy-preview-body h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333333;
+            margin: 24px 0 12px 0;
+        }
+        
+        .policy-preview-body h3:first-child {
+            margin-top: 0;
+        }
+        
+        .policy-preview-body p {
+            margin: 12px 0;
+            color: #333333;
+        }
+        
+        .policy-preview-body ul {
+            margin: 12px 0;
+            padding-left: 20px;
+        }
+        
+        .policy-preview-body li {
+            margin: 8px 0;
+            color: #333333;
+        }
+        
+        .policy-preview-body strong {
+            font-weight: 600;
+        }
+        
+        /* Congratulations Screen Styles */
+        .congratulations-sidebar {
+            width: 50%;
+            flex-shrink: 0; /* Don't shrink in flex container */
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 16px;
+            padding: 32px;
+            overflow-y: auto; /* Independent internal scrolling */
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            display: none; /* Initially hidden */
+            height: calc(100vh - 145px); /* Corrected - 50px shorter for proper control bar spacing */
+            margin-top: 10px; /* Small gap from header */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: relative; /* Ensure independent positioning */
+            scroll-behavior: auto; /* No smooth scrolling for sidebar */
+        }
+        
+        .congratulations-sidebar.visible {
+            display: block;
+        }
+        
+        .congrats-header {
+            background: #f8f9fa url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDIwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik01MCA0MEM1MCAzMCA2MCAyMCA3MCAyMEM4MCAyMCA5MCAzMCA5MCA0MEM5MCA1MCA4MCA2MCA3MCA2MEM2MCA2MCA1MCA1MCA1MCA0MFoiIGZpbGw9IiM2OEQzOTEiLz4KPHA+PHBhdGggZD0iTTEyMCA0MEM0MCAzMCA1MCAyMCA2MCAyMEM3MCAyMCA4MCAzMCA4MCA0MEM4MCA1MCA3MCA2MCA2MCA2MEM1MCA2MCA0MCA1MCA0MCA0MFoiIGZpbGw9IiM3NUQ2OEEiLz4KPHA+PHBhdGggZD0iTTE1MCA0MEM1MCAzMCA2MCAyMCA3MCAyMEM4MCAyMCA5MCAzMCA5MCA0MEM5MCA1MCA4MCA2MCA3MCA2MEM2MCA2MCA1MCA1MCA1MCA0MFoiIGZpbGw9IiM2OEQzOTEiLz4KPC9zdmc+') no-repeat top right;
+            background-size: auto 80px;
+            border-radius: 16px 16px 0 0;
+            padding: 24px 32px;
+            margin-bottom: 0;
+            text-align: center;
+            position: relative;
+        }
+        
+        .congrats-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #333333;
+            margin-bottom: 16px;
+            line-height: 1.3;
+        }
+        
+        .preview-section {
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 0 0 16px 16px;
+            padding: 24px;
+            margin: 0 0 24px;
+            position: relative;
+        }
+        
+        .preview-header {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333333;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e5e5e5;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .preview-content-wrapper {
+            max-height: 200px;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+        
+        .preview-content-wrapper::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .preview-content-wrapper::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+        
+        .preview-content-wrapper::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+        
+        .preview-content-wrapper::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+        
+        .expand-btn {
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 12px;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: background-color 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .expand-btn:hover {
+            background-color: rgba(123, 44, 191, 0.1);
+        }
+        
+        .expand-icon {
+            width: 12px;
+            height: 12px;
+            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEgMUwxMSAxMU0xIDExTDExIDEiIHN0cm9rZT0iIzdCMkNCRiIgc3Ryb2tlLXdpZHRoPSIxLjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8cGF0aCBkPSJNNyAxTDExIDFMMTEgNU03IDExTDExIDExTDExIDciIHN0cm9rZT0iIzdCMkNCRiIgc3Ryb2tlLXdpZHRoPSIxLjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4K') center/contain no-repeat;
+        }
+        
+        .preview-content h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333333;
+            margin: 0 0 12px 0;
+        }
+        
+        .preview-content p {
+            font-size: 14px;
+            color: #666666;
+            margin: 0 0 12px 0;
+            line-height: 1.5;
+        }
+        
+        .preview-content ul {
+            margin: 0 0 20px 0;
+            padding-left: 20px;
+            font-size: 14px;
+            color: #666666;
+            line-height: 1.6;
+        }
+        
+        .preview-content li {
+            margin-bottom: 8px;
+        }
+        
+        .preview-content li strong {
+            font-weight: 600;
+            color: #333333;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 32px;
+            justify-content: center;
+        }
+        
+        .action-button {
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            text-align: center;
+            min-width: 120px;
+        }
+        
+        .primary-action {
+            background: #333333;
+            color: white;
+        }
+        
+        .primary-action:hover {
+            background: #222222;
+        }
+        
+        .secondary-action {
+            background: #f8f9fa;
+            color: #333333;
+            border: 1px solid #e5e5e5;
+        }
+        
+        .secondary-action:hover {
+            background: #e9ecef;
+        }
+        
+        .next-steps {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        
+        .next-steps-title {
+            font-size: 16px;
+            color: #666666;
+            margin-bottom: 20px;
+        }
+        
+        .suggestion-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        
+        .suggestion-card {
+            background: #f8f9fa;
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .suggestion-card:hover {
+            border-color: #666;
+            background: #fafbfc;
+        }
+        
+        .suggestion-icon {
+            width: 80px;
+            height: 60px;
+            margin: 0 auto 16px;
+            background: #f8f9fa;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .suggestion-icon-placeholder {
+            width: 100%;
+            height: 100%;
+            background: #d0d0d0;
+            border-radius: 6px;
+            position: relative;
+        }
+        
+        .terms-icon {
+            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA4MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjZjhmOWZhIi8+CjxyZWN0IHg9IjE1IiB5PSIxMCIgd2lkdGg9IjUwIiBoZWlnaHQ9IjQwIiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjNjY2NjY2IiBzdHJva2Utd2lkdGg9IjEiLz4KPGNpcmNsZSBjeD0iMjUiIGN5PSIyMCIgcj0iMyIgZmlsbD0iIzdCMkNCRiIvPgo8cmVjdCB4PSIzMiIgeT0iMTgiIHdpZHRoPSIyNSIgaGVpZ2h0PSI0IiBmaWxsPSIjMzMzMzMzIi8+CjxyZWN0IHg9IjIwIiB5PSIyOCIgd2lkdGg9IjMwIiBoZWlnaHQ9IjIiIGZpbGw9IiM2NjY2NjYiLz4KPHJlY3QgeD0iMjAiIHk9IjM1IiB3aWR0aD0iMzUiIGhlaWdodD0iMiIgZmlsbD0iIzY2NjY2NiIvPgo8cmVjdCB4PSIyMCIgeT0iNDIiIHdpZHRoPSIyMCIgaGVpZ2h0PSIyIiBmaWxsPSIjNjY2NjY2Ii8+Cjwvc3ZnPg==') center/cover;
+        }
+        
+        .google-ads-icon {
+            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA4MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjZjhmOWZhIi8+CjxyZWN0IHg9IjEwIiB5PSIxNSIgd2lkdGg9IjYwIiBoZWlnaHQ9IjMwIiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjZTVlNWU1IiBzdHJva2Utd2lkdGg9IjEiLz4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyNSIgcj0iNCIgZmlsbD0iIzRGQjFGRiIvPgo8Y2lyY2xlIGN4PSIyMCIgY3k9IjI1IiByPSIyIiBmaWxsPSIjRkY2QkIzIi8+CjxjaXJjbGUgY3g9IjIwIiBjeT0iMjUiIHI9IjEiIGZpbGw9IiNGRkIzMzMiLz4KPHJlY3QgeD0iMzAiIHk9IjIwIiB3aWR0aD0iMzAiIGhlaWdodD0iMyIgZmlsbD0iIzMzMzMzMyIvPgo8cmVjdCB4PSIzMCIgeT0iMjciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyIiBmaWxsPSIjNjY2NjY2Ii8+CjxyZWN0IHg9IjMwIiB5PSIzMiIgd2lkdGg9IjI1IiBoZWlnaHQ9IjIiIGZpbGw9IiM2NjY2NjYiLz4KPC9zdmc+') center/cover;
+        }
+        
+        .suggestion-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #333333;
+            margin-bottom: 4px;
+        }
+        
+        .suggestion-desc {
+            font-size: 12px;
+            color: #666666;
+            line-height: 1.4;
+        }
+        
+        /* Confetti Animation */
+        .confetti {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+        
+        .confetti-piece {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+            animation: confetti-fall 3s linear forwards;
+        }
+        
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+        
+        .confetti-piece:nth-child(odd) {
+            background: #666;
+        }
+        
+        .confetti-piece:nth-child(even) {
+            background: #FFD700;
+        }
+        
+        .confetti-piece:nth-child(3n) {
+            background: #FF6B6B;
+        }
+        
+        .confetti-piece:nth-child(4n) {
+            background: #4ECDC4;
+        }
+        
+        .confetti-piece:nth-child(5n) {
+            background: #45B7D1;
+        }
+        
+        /* Removed standalone suggestions button styles - now using user-side button */
+        
+        @media (max-width: 768px) {
+            .chat-interface {
+                padding: 24px 16px 120px;
+                max-height: calc(100vh - 120px);
+            }
+            
+            /* Mobile: Control bar stays centered, even with large sidebars */
+            body.large-sidebar-open .control-bar {
+                left: 50% !important;
+                right: auto !important;
+                transform: translateX(-50%) !important;
+                width: calc(100vw - 48px) !important;
+                max-width: 600px !important;
+            }
+            
+            /* DISCLAIMER POSITIONING - Follow control bar movement */
+            
+            /* Base disclaimer positioning */
+            .disclaimer {
+                position: fixed;
+                bottom: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                width: calc(100vw - 48px);
+                max-width: 600px;
+                z-index: 999; /* Below control bar's z-index: 1000 */
+                transition: all 0.3s ease; /* Smooth movement */
+                pointer-events: none;
+            }
+            
+            /* When sidebar is open - disclaimer follows control bar left shift */
+            body.sidebar-open .disclaimer {
+                left: calc(50% - 175px); /* Half of small sidebar width */
+                transform: translateX(-50%);
+            }
+            
+            /* When large sidebar is open - disclaimer follows control bar positioning exactly */
+            body.large-sidebar-open .disclaimer,
+            body.loading-with-sidebar .disclaimer {
+                left: max(24px, calc((100vw - 1200px) / 2 + 24px)) !important; /* Exact same as control bar */
+                right: auto !important;
+                transform: translateX(0) !important; /* Exact same as control bar */
+                width: calc((min(1200px, 100vw - 48px) / 2 - 12px) * 0.9) !important; /* Match control bar width */
+                max-width: none !important;
+            }
+            
+            /* Mobile responsive disclaimer positioning */
+            @media (max-width: 768px) {
+                body.large-sidebar-open .disclaimer {
+                    left: 50% !important;
+                    right: auto !important;
+                    transform: translateX(-50%) !important;
+                    width: calc(100vw - 48px) !important;
+                    max-width: 600px !important;
+                }
+            }
+            
+            /* Mobile: Sidebar adjustments for flex layout */
+            .privacy-summary-sidebar {
+                width: 100% !important;
+                margin-top: 20px !important;
+                margin-bottom: 20px !important;
+            }
+            
+            .user-message {
+                max-width: 85%;
+            }
+            
+            .airo-message {
+                max-width: 90%;
+            }
+            
+            .user-bubble,
+            .airo-bubble {
+                padding: 14px 18px;
+                font-size: 15px;
+            }
+            
+            /* Mobile: Small sidebar (business info) */
+            .privacy-summary-sidebar {
+                width: calc(100% - 48px);
+                height: calc(100vh - 145px); /* Corrected - 50px shorter for proper control bar spacing */
+                top: auto;
+                bottom: 24px;
+                left: 24px;
+                right: 24px;
+                border: 1px solid #e5e5e5;
+                border-radius: 16px;
+                padding: 24px;
+                transform: translateY(calc(100% + 24px));
+            }
+            
+            /* Mobile: Large sidebar (loading/policy preview) */
+            .privacy-summary-sidebar.large-sidebar {
+                width: calc(100% - 48px) !important;
+                height: calc(100vh - 145px); /* Corrected - 50px shorter for proper control bar spacing */
+                transform: translateY(calc(100% + 24px));
+            }
+            
+            .privacy-summary-sidebar.visible {
+                display: block; /* Show when visible */
+                transform: translateY(0);
+            }
+            
+            .summary-title {
+                font-size: 18px;
+            }
+            
+            .field-value {
+                padding: 10px 12px;
+                font-size: 13px;
+            }
+            
+            .looks-good-btn {
+                width: 100% !important;
+                padding: 14px 24px !important;
+                font-size: 16px !important;
+                background: transparent !important;
+                color: #6C47B4 !important;
+                border: 1px solid #6C47B4 !important;
+            }
+            
+            .user-button-bubble .looks-good-btn {
+                padding: 12px 20px !important;
+                font-size: 15px !important;
+                background: transparent !important;
+                color: #6C47B4 !important;
+                border: 1px solid #6C47B4 !important;
+            }
+            
+            .helper-message {
+                font-size: 13px;
+            }
+            
+            .loading-screen {
+                width: 100% !important;
+                height: calc(100vh - 145px); /* Corrected - 50px shorter for proper control bar spacing */
+                margin-top: 20px !important;
+                margin-bottom: 20px !important;
+            }
+            
+
+            
+            .loading-title {
+                font-size: 24px;
+            }
+            
+            .action-btn {
+                padding: 14px 24px;
+                font-size: 16px;
+            }
+            
+            .policy-preview-card {
+                padding: 12px;
+                gap: 12px;
+            }
+            
+            .policy-card-icon {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .policy-card-title {
+                font-size: 15px;
+            }
+            
+            .policy-preview-header h2 {
+                font-size: 18px;
+            }
+            
+            /* Mobile: Congratulations screen */
+            .congratulations-sidebar {
+                width: calc(100% - 48px) !important;
+                height: calc(100vh - 145px); /* Corrected - 50px shorter for proper control bar spacing */
+                margin-top: 20px !important;
+                margin-bottom: 20px !important;
+                padding: 20px;
+            }
+            
+            .congrats-header {
+                background-size: auto 50px;
+                padding: 20px 16px;
+                margin-bottom: 0;
+            }
+            
+            .congrats-title {
+                font-size: 20px;
+            }
+            
+            .preview-section {
+                margin: 0 0 20px;
+                padding: 16px;
+            }
+            
+            .preview-header {
+                font-size: 14px;
+                margin-bottom: 12px;
+                padding-bottom: 8px;
+            }
+            
+            .preview-content-wrapper {
+                max-height: 150px;
+            }
+            
+            .expand-btn {
+                font-size: 11px;
+                padding: 3px 6px;
+            }
+            
+            .expand-icon {
+                width: 10px;
+                height: 10px;
+            }
+            
+            .suggestion-cards {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            
+            .suggestion-icon {
+                width: 70px;
+                height: 50px;
+                margin: 0 auto 12px;
+            }
+            
+            .suggestion-title {
+                font-size: 13px;
+            }
+            
+            .suggestion-desc {
+                font-size: 11px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                gap: 8px;
+                margin-bottom: 24px;
+            }
+            
+            .action-button {
+                padding: 8px 16px;
+                font-size: 12px;
+                min-width: 100px;
+            }
+            
+            /* Removed standalone suggestions button mobile styles */
+        }
+        
+        @media (max-width: 480px) {
+            .chat-interface {
+                padding: 20px 12px 120px;
+                max-height: calc(100vh - 100px);
+            }
+            
+            .user-message,
+            .airo-message {
+                max-width: 95%;
+            }
+            
+            .user-bubble,
+            .airo-bubble {
+                padding: 12px 16px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo" onclick="window.location.href='../index.html'" style="cursor: pointer;">
+                <img src="../assets/images/logo.svg" alt="GoDaddy Airo" class="logo-icon" />
+            </div>
+            <div class="header-actions">
+                <button class="upgrade-btn" onclick="alert('Airo Plus Upgrade Page')">Upgrade to Airo Plus™</button>
+                <button class="close-btn" onclick="window.location.href='../index.html'">×</button>
+            </div>
+        </div>
+    </header>
+
+    <script>
+        // DEVELOPMENT: Only reset purchased state on manual page refresh (not navigation)
+        const isRefresh = performance.getEntriesByType('navigation')[0].type === 'reload';
+        if (isRefresh) {
+            localStorage.removeItem('airo_purchased');
+        }
+        
+        // Check if user has already purchased and remove upgrade button immediately
+        if (localStorage.getItem('airo_purchased') === 'true') {
+            const upgradeButton = document.querySelector('.upgrade-btn');
+            if (upgradeButton) {
+                upgradeButton.remove();
+            }
+        }
+    </script>
+
+    <!-- Main Content Wrapper -->
+    <div class="main-content-wrapper">
+        <!-- Chat Interface -->
+        <main class="chat-interface">
+        <div class="chat-messages">
+            <div class="user-message">
+                <div class="user-bubble">
+                    Generate my privacy policy
+                </div>
+            </div>
+            
+            <div class="airo-message" id="initialAIMessage">
+                <div class="airo-bubble">
+                    Alright! Before I generate your privacy policy, I want to make sure I really understand your business.
+                </div>
+            </div>
+            
+            <div class="typing-indicator" id="typingIndicator">
+                <div class="typing-dots">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+                <div class="typing-text">Reviewing your business details...</div>
+            </div>
+            
+
+            
+
+            
+            <!-- New CTA Buttons for Simplified Flow -->
+            <div class="user-message looks-good-standalone" id="newCTAButtons" style="display: none;">
+                <div class="standalone-action-buttons">
+                    <button class="standalone-btn outline-btn" onclick="handleConfirmBusinessInfo()">Confirm business info</button>
+                    <button class="standalone-btn outline-btn" onclick="handleWhyPrivacyPolicy()">Why do I need a privacy policy</button>
+                </div>
+            </div>
+            
+            <div class="airo-message" id="termsMessage" style="display: none;">
+                <div class="airo-bubble">
+                    By clicking "Looks Good" you agree to the <a href="#" class="terms-link">Airo Plus™ Compliance Terms of Service</a>
+                </div>
+            </div>
+            
+            <!-- Static "Looks Good" button - hidden, using dynamic version at bottom -->
+            <div class="user-message" id="looksGoodUserMessage" style="display: none;">
+                <div class="user-bubble user-button-bubble">
+                    <button class="standalone-btn outline-btn" onclick="handleLooksGood()">Looks Good</button>
+                </div>
+            </div>
+            
+            <div class="user-message" id="businessDetailsUserMessage" style="display: none;">
+                <div class="user-bubble" id="businessDetailsText">
+                    <!-- Business details will be inserted here -->
+                </div>
+            </div>
+            
+            <!-- Static helper text - hidden, using dynamic version at bottom -->
+            <div class="helper-text" id="helperText" style="display: none;">
+                <div class="helper-message">
+                    <span class="helper-icon">↰</span>
+                    Or, write your own response below
+                </div>
+            </div>
+            
+            <!-- AI responses will be inserted directly after user messages they reply to -->
+        </div>
+    </main>
+
+        <!-- Privacy Policy Summary Sidebar -->
+        <div class="privacy-summary-sidebar" id="privacySummary">
+        <div class="summary-title">Privacy Policy Summary</div>
+        <div class="summary-subtitle">Confirm your business info:</div>
+        
+        <div class="summary-field">
+            <div class="field-label">
+                Business Name
+                <div class="field-info-icon">i</div>
+            </div>
+            <div class="field-value">
+                <span id="summaryBusinessName">Eugene's Cafe</span>
+                <span class="edit-icon" onclick="editField('businessName')">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 17.7496C4.88901 17.7496 4.77941 17.725 4.67911 17.6775C4.5788 17.63 4.49028 17.5608 4.41994 17.4749C4.3496 17.3891 4.29918 17.2887 4.27233 17.181C4.24548 17.0733 4.24285 16.961 4.26465 16.8522L5.22465 12.0534C5.25335 11.908 5.32475 11.7746 5.42973 11.6701L14.3496 2.75064C14.6752 2.43952 15.1081 2.26581 15.5584 2.26563C16.0087 2.26544 16.4418 2.43879 16.7676 2.74964L19.25 5.23255C19.5699 5.5534 19.7495 5.98798 19.7495 6.44105C19.7495 6.89412 19.5699 7.32871 19.25 7.64955L10.3296 16.57C10.2248 16.6746 10.0915 16.7459 9.94629 16.775L5.14697 17.735C5.09858 17.7447 5.04935 17.7496 5 17.7496ZM6.65088 12.57L5.95605 16.0436L9.42969 15.3493L18.1894 6.58953C18.2286 6.55016 18.2506 6.49688 18.2506 6.44134C18.2506 6.3858 18.2286 6.33252 18.1894 6.29315L15.707 3.81064C15.6649 3.77691 15.6126 3.75848 15.5587 3.75839C15.5047 3.7583 15.4523 3.77655 15.4101 3.81015L6.65088 12.57Z" fill="#666666"/>
+                        <path d="M20 21.7496H4C3.80109 21.7496 3.61032 21.6706 3.46967 21.53C3.32902 21.3893 3.25 21.1986 3.25 20.9996C3.25 20.8007 3.32902 20.61 3.46967 20.4693C3.61032 20.3287 3.80109 20.2496 4 20.2496H20C20.1989 20.2496 20.3897 20.3287 20.5303 20.4693C20.671 20.61 20.75 20.8007 20.75 20.9996C20.75 21.1986 20.671 21.3893 20.5303 21.53C20.3897 21.6706 20.1989 21.7496 20 21.7496Z" fill="#666666"/>
+                    </svg>
+                </span>
+            </div>
+        </div>
+        
+        <div class="summary-field">
+            <div class="field-label">
+                Email Address
+                <div class="field-info-icon">i</div>
+            </div>
+            <div class="field-value">
+                <span id="summaryEmail">contact@eugenecafe.com</span>
+                <span class="edit-icon" onclick="editField('email')">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 17.7496C4.88901 17.7496 4.77941 17.725 4.67911 17.6775C4.5788 17.63 4.49028 17.5608 4.41994 17.4749C4.3496 17.3891 4.29918 17.2887 4.27233 17.181C4.24548 17.0733 4.24285 16.961 4.26465 16.8522L5.22465 12.0534C5.25335 11.908 5.32475 11.7746 5.42973 11.6701L14.3496 2.75064C14.6752 2.43952 15.1081 2.26581 15.5584 2.26563C16.0087 2.26544 16.4418 2.43879 16.7676 2.74964L19.25 5.23255C19.5699 5.5534 19.7495 5.98798 19.7495 6.44105C19.7495 6.89412 19.5699 7.32871 19.25 7.64955L10.3296 16.57C10.2248 16.6746 10.0915 16.7459 9.94629 16.775L5.14697 17.735C5.09858 17.7447 5.04935 17.7496 5 17.7496ZM6.65088 12.57L5.95605 16.0436L9.42969 15.3493L18.1894 6.58953C18.2286 6.55016 18.2506 6.49688 18.2506 6.44134C18.2506 6.3858 18.2286 6.33252 18.1894 6.29315L15.707 3.81064C15.6649 3.77691 15.6126 3.75848 15.5587 3.75839C15.5047 3.7583 15.4523 3.77655 15.4101 3.81015L6.65088 12.57Z" fill="#666666"/>
+                        <path d="M20 21.7496H4C3.80109 21.7496 3.61032 21.6706 3.46967 21.53C3.32902 21.3893 3.25 21.1986 3.25 20.9996C3.25 20.8007 3.32902 20.61 3.46967 20.4693C3.61032 20.3287 3.80109 20.2496 4 20.2496H20C20.1989 20.2496 20.3897 20.3287 20.5303 20.4693C20.671 20.61 20.75 20.8007 20.75 20.9996C20.75 21.1986 20.671 21.3893 20.5303 21.53C20.3897 21.6706 20.1989 21.7496 20 21.7496Z" fill="#666666"/>
+                    </svg>
+                </span>
+            </div>
+        </div>
+        
+        <div class="summary-field">
+            <div class="field-label">
+                Jurisdiction
+                <div class="field-info-icon">i</div>
+            </div>
+            <div class="field-value">
+                <span id="summaryJurisdiction">New York, NY</span>
+                <span class="edit-icon" onclick="editField('jurisdiction')">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 17.7496C4.88901 17.7496 4.77941 17.725 4.67911 17.6775C4.5788 17.63 4.49028 17.5608 4.41994 17.4749C4.3496 17.3891 4.29918 17.2887 4.27233 17.181C4.24548 17.0733 4.24285 16.961 4.26465 16.8522L5.22465 12.0534C5.25335 11.908 5.32475 11.7746 5.42973 11.6701L14.3496 2.75064C14.6752 2.43952 15.1081 2.26581 15.5584 2.26563C16.0087 2.26544 16.4418 2.43879 16.7676 2.74964L19.25 5.23255C19.5699 5.5534 19.7495 5.98798 19.7495 6.44105C19.7495 6.89412 19.5699 7.32871 19.25 7.64955L10.3296 16.57C10.2248 16.6746 10.0915 16.7459 9.94629 16.775L5.14697 17.735C5.09858 17.7447 5.04935 17.7496 5 17.7496ZM6.65088 12.57L5.95605 16.0436L9.42969 15.3493L18.1894 6.58953C18.2286 6.55016 18.2506 6.49688 18.2506 6.44134C18.2506 6.3858 18.2286 6.33252 18.1894 6.29315L15.707 3.81064C15.6649 3.77691 15.6126 3.75848 15.5587 3.75839C15.5047 3.7583 15.4523 3.77655 15.4101 3.81015L6.65088 12.57Z" fill="#666666"/>
+                        <path d="M20 21.7496H4C3.80109 21.7496 3.61032 21.6706 3.46967 21.53C3.32902 21.3893 3.25 21.1986 3.25 20.9996C3.25 20.8007 3.32902 20.61 3.46967 20.4693C3.61032 20.3287 3.80109 20.2496 4 20.2496H20C20.1989 20.2496 20.3897 20.3287 20.5303 20.4693C20.671 20.61 20.75 20.8007 20.75 20.9996C20.75 21.1986 20.671 21.3893 20.5303 21.53C20.3897 21.6706 20.1989 21.7496 20 21.7496Z" fill="#666666"/>
+                    </svg>
+                </span>
+            </div>
+        </div>
+        
+        <div class="summary-field">
+            <div class="field-label">
+                COPPA Compliance Needed
+                <div class="field-info-icon">i</div>
+            </div>
+            <div class="field-value">
+                <span id="summaryCoppa">No</span>
+                <span class="edit-icon" onclick="editField('coppa')">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 17.7496C4.88901 17.7496 4.77941 17.725 4.67911 17.6775C4.5788 17.63 4.49028 17.5608 4.41994 17.4749C4.3496 17.3891 4.29918 17.2887 4.27233 17.181C4.24548 17.0733 4.24285 16.961 4.26465 16.8522L5.22465 12.0534C5.25335 11.908 5.32475 11.7746 5.42973 11.6701L14.3496 2.75064C14.6752 2.43952 15.1081 2.26581 15.5584 2.26563C16.0087 2.26544 16.4418 2.43879 16.7676 2.74964L19.25 5.23255C19.5699 5.5534 19.7495 5.98798 19.7495 6.44105C19.7495 6.89412 19.5699 7.32871 19.25 7.64955L10.3296 16.57C10.2248 16.6746 10.0915 16.7459 9.94629 16.775L5.14697 17.735C5.09858 17.7447 5.04935 17.7496 5 17.7496ZM6.65088 12.57L5.95605 16.0436L9.42969 15.3493L18.1894 6.58953C18.2286 6.55016 18.2506 6.49688 18.2506 6.44134C18.2506 6.3858 18.2286 6.33252 18.1894 6.29315L15.707 3.81064C15.6649 3.77691 15.6126 3.75848 15.5587 3.75839C15.5047 3.7583 15.4523 3.77655 15.4101 3.81015L6.65088 12.57Z" fill="#666666"/>
+                        <path d="M20 21.7496H4C3.80109 21.7496 3.61032 21.6706 3.46967 21.53C3.32902 21.3893 3.25 21.1986 3.25 20.9996C3.25 20.8007 3.32902 20.61 3.46967 20.4693C3.61032 20.3287 3.80109 20.2496 4 20.2496H20C20.1989 20.2496 20.3897 20.3287 20.5303 20.4693C20.671 20.61 20.75 20.8007 20.75 20.9996C20.75 21.1986 20.671 21.3893 20.5303 21.53C20.3897 21.6706 20.1989 21.7496 20 21.7496Z" fill="#666666"/>
+                    </svg>
+                </span>
+            </div>
+        </div>
+        
+        <!-- Loading Screen -->
+        <div class="loading-screen" id="loadingScreen">
+            <div class="loading-icon">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M16 2L20 10L28 6L24 14L32 16L24 18L28 26L20 22L16 30L12 22L4 26L8 18L0 16L8 14L4 6L12 10L16 2Z" fill="white"/>
+                </svg>
+            </div>
+            <div class="loading-title">Hang tight, I'm getting your privacy policy ready</div>
+            <div class="loading-subtitle">This will only take a moment...</div>
+        </div>
+    </div>
+    </div> <!-- End main-content-wrapper -->
+
+    <!-- Floating Control Bar -->
+    <div class="control-bar">
+        <div class="control-main">
+            <button class="home-btn" onclick="window.location.href='../index.html'">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M3 7l7-4 7 4v11a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M9 17V11h2v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            <div class="input-container">
+                <input type="text" class="chat-input" placeholder="Start typing..." id="chatInput">
+                <button class="attach-btn">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M7 3a3 3 0 013 3v7a1 1 0 01-2 0V6a1 1 0 00-2 0v7a3 3 0 01-6 0V6a5 5 0 0110 0v7a1 1 0 102 0V6a7 7 0 00-14 0v7a5 5 0 0010 0V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+            <button class="send-btn" id="sendBtn">
+                <img src="../assets/images/sendicon.png" alt="Send" class="send-icon-img">
+            </button>
+        </div>
+        
+        <!-- Expanded Grid Panel (shows between input and buttons) -->
+        <div class="airo-grid-panel" id="airoGridPanel">
+            <div class="grid-item" onclick="window.location.href='generate-privacy-policy.html'">
+                <div class="grid-item-icon">
+                    <img src="../assets/images/privacypolicyicon.png" alt="Privacy Policy" width="20" height="20">
+                </div>
+                <div class="grid-item-content">
+                    <div class="grid-item-title">Create a privacy policy</div>
+                    <div class="grid-item-desc">Build a policy to create trust with your customers</div>
+                </div>
+            </div>
+            <div class="grid-item" onclick="window.location.href='generate-marketing-strategy.html'">
+                <div class="grid-item-icon">
+                    <img src="../assets/images/marketingicon.png" alt="Marketing" width="20" height="20">
+                </div>
+                <div class="grid-item-content">
+                    <div class="grid-item-title">Market my business</div>
+                    <div class="grid-item-desc">Get tailored insights to help grow your business</div>
+                </div>
+            </div>
+            <div class="grid-item" onclick="alert('Generate Images - Coming Soon!')">
+                <div class="grid-item-icon">
+                    <img src="../assets/images/imagesicon.png" alt="Generate Images" width="20" height="20">
+                </div>
+                <div class="grid-item-content">
+                    <div class="grid-item-title">Generate images</div>
+                    <div class="grid-item-desc">Explore how Airo™ can help you create images that match your brand</div>
+                </div>
+            </div>
+            <div class="grid-item" onclick="window.location.href='generate-logo.html'">
+                <div class="grid-item-icon">
+                    <img src="../assets/images/logoicon.png" alt="Design Logo" width="20" height="20">
+                </div>
+                <div class="grid-item-content">
+                    <div class="grid-item-title">Design a logo</div>
+                    <div class="grid-item-desc">See how a logo designed by the best AI could look</div>
+                </div>
+            </div>
+            <div class="grid-item" onclick="alert('Website Optimization Tool - Coming Soon!')">
+                <div class="grid-item-icon">
+                    <img src="../assets/images/optimizeicon.png" alt="Optimize Site" width="20" height="20">
+                </div>
+                <div class="grid-item-content">
+                    <div class="grid-item-title">Optimize my site</div>
+                    <div class="grid-item-desc">Find ways to boost your website</div>
+                </div>
+            </div>
+            <div class="grid-item" onclick="alert('LLC Setup Tool - Coming Soon!')">
+                <div class="grid-item-icon">
+                    <img src="../assets/images/LLCicon.png" alt="Set up LLC" width="20" height="20">
+                </div>
+                <div class="grid-item-content">
+                    <div class="grid-item-title">Set up my LLC</div>
+                    <div class="grid-item-desc">Set up your business, LLC, and more</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="control-dropdowns">
+            <div class="dropdown-container dropdown-left">
+                <button class="dropdown-btn" id="askAiroBtn">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M8 1v6m0 0l3-3m-3 3L5 4M1 9h14l-1 6H2L1 9z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Ask Airo to...
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="dropdown-arrow">
+                        <path d="M3 4.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="dropdown-container dropdown-right">
+                <button class="dropdown-btn" id="recentChatsBtn">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M8 5v3l2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                    Recent Chats
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="dropdown-arrow">
+                        <path d="M3 4.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                <div class="dropdown-menu" id="recentChatsDropdown">
+                    <a href="privacy-policy.html" onclick="event.preventDefault(); window.location.href='privacy-policy.html'">Privacy Policy</a>
+                    <a href="#" onclick="event.preventDefault(); alert('Carpet Logo Design Chat - Coming Soon!')">Carpet Logo</a>
+                    <a href="#" onclick="event.preventDefault(); alert('Rug Warehouse Images Chat - Coming Soon!')">Image of a Rug Warehouse</a>
+                    <a href="#" onclick="event.preventDefault(); alert('Business Goals Setting Chat - Coming Soon!')">Set Business Goals</a>
+                    <a href="#" onclick="event.preventDefault(); alert('LLC Setup Chat - Coming Soon!')">Set Up LLC</a>
+                    <a href="#" onclick="event.preventDefault(); alert('Coming Soon Page Chat - Coming Soon!')">Coming Soon Page</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../script.js"></script>
+    <script>
+        // Page-specific functionality
+        // Navigation function - using global script.js version
+
+
+
+        // Global variables to store business details
+        let businessDetails = {
+            name: '',
+            email: '',
+            jurisdiction: '',
+            coppaNeeded: false
+        };
+
+        // Removed complex threading system - using simple direct insertion approach
+
+
+
+        // Handle CTA button click for business details
+        function handleBusinessDetailsCTA() {
+            console.log('🔥 Business details CTA clicked');
+            
+            const chatMessages = document.querySelector('.chat-messages');
+            
+            // Find the business button container
+            const businessButtonContainer = document.getElementById('businessDetailsCTA');
+            
+            if (businessButtonContainer) {
+                console.log('✅ Found business details button, replacing with user message');
+                // Replace button with grey user message bubble
+                const businessMessage = "I have a coffee shop called Eugene's Cafe in New York, NY. My email is contact@eugenescafe.com. We don't serve children under 13.";
+                const userMessage = document.createElement('div');
+                userMessage.className = 'user-message from-cta';
+                userMessage.innerHTML = `
+                    <div class="user-bubble cta-triggered from-cta">${businessMessage}</div>
+                `;
+                businessButtonContainer.replaceWith(userMessage);
+                
+                // Mark the bubble as CTA-triggered
+                const bubble = userMessage.querySelector('.user-bubble');
+                if (bubble && window.markUserMessageAsCTATriggered) {
+                    window.markUserMessageAsCTATriggered(bubble);
+                }
+                
+                // Set as current user message element for AI response positioning
+                currentUserMessageElement = userMessage;
+                console.log('✅ Button replaced with grey CTA user message');
+            } else {
+                console.error('❌ Business details button not found');
+            }
+            
+            // Set predefined business details
+            businessDetails = {
+                name: "Eugene's Cafe",
+                email: "contact@eugenescafe.com", 
+                jurisdiction: "New York, NY",
+                coppaNeeded: false
+            };
+            console.log('✅ Business details set:', businessDetails);
+            
+            // Set currentStep to ensure flow compatibility
+            currentStep = 'business-details';
+            console.log('🎯 currentStep set to business-details for flow compatibility');
+            
+            // Show processing notification
+            showNotification('Processing your business details...');
+            console.log('✅ Processing notification shown');
+            
+            // Add 3-second loading spinner directly after user message
+            setTimeout(() => {
+                console.log('🔄 Adding typing indicator...');
+                addTypingIndicator('Analyzing your business details...');
+            }, 1000);
+            
+            // Show review response and sidebar directly after loading - bypass dependencies
+            setTimeout(() => {
+                console.log('🔄 Removing typing indicator and forcing sidebar display...');
+                console.log('🎯 currentUserMessageElement before flow:', currentUserMessageElement);
+                
+                // DEFENSIVE FIX: Ensure currentUserMessageElement is set
+                if (!currentUserMessageElement) {
+                    console.error('🚨 CRITICAL: currentUserMessageElement is null! Attempting to recover...');
+                    // Find the last user message as fallback
+                    const chatMessages = document.querySelector('.chat-messages');
+                    const lastUserMessage = chatMessages.querySelector('.user-message:last-of-type');
+                    if (lastUserMessage) {
+                        currentUserMessageElement = lastUserMessage;
+                        console.log('✅ RECOVERY: Set currentUserMessageElement to last user message');
+                    } else {
+                        console.error('❌ FATAL: No user messages found - cannot proceed with flow');
+                        return; // Exit the flow entirely
+                    }
+                }
+                
+                removeTypingIndicator();
+                
+                // Force direct flow to sidebar without dependencies
+                console.log('📋 Adding AI review message...');
+                console.log('🎯 VERIFIED currentUserMessageElement before addAIMessage:', currentUserMessageElement);
+                addAIMessage(`
+                    Done! I generated some details based on what I found. Can you confirm that this info is correct?
+                `);
+                console.log('✅ AI message should now be added successfully');
+                
+                // Force sidebar display first
+                setTimeout(() => {
+                    console.log('📊 FORCING privacy summary update and display...');
+                    updatePrivacySummary(businessDetails);
+                    showPrivacySummary();
+                    currentStep = 'review';
+                    console.log('✅ SIDEBAR SHOULD NOW BE VISIBLE - check the screen!');
+                }, 500);
+                
+                // Add "Looks Good" button AFTER sidebar is displayed
+                setTimeout(() => {
+                    console.log('🔘 Adding Looks Good button...');
+                    addLooksGoodButtonToBottom();
+                    console.log('✅ LOOKS GOOD BUTTON SHOULD NOW BE VISIBLE!');
+                }, 1000);
+                
+            }, 4000); // 1 second delay + 3 seconds loading
+        }
+
+        // Handle "Confirm business info" button click (acts like Looks Good)
+        function handleConfirmBusinessInfo() {
+            console.log('🔘 Confirm business info clicked');
+            const chatMessages = document.querySelector('.chat-messages');
+            
+            // Find the new CTA buttons container
+            const ctaContainer = document.getElementById('newCTAButtons');
+            
+            if (ctaContainer) {
+                console.log('✅ Found CTA buttons, replacing with user message');
+                // Replace buttons with user message bubble
+                const userMessage = document.createElement('div');
+                userMessage.className = 'user-message from-cta';
+                userMessage.innerHTML = `
+                    <div class="user-bubble cta-triggered from-cta">Confirm business info</div>
+                `;
+                ctaContainer.replaceWith(userMessage);
+                
+                // Mark the bubble as CTA-triggered
+                const bubble = userMessage.querySelector('.user-bubble');
+                if (bubble && window.markUserMessageAsCTATriggered) {
+                    window.markUserMessageAsCTATriggered(bubble);
+                }
+                
+                // Set as current user message element for AI response positioning
+                currentUserMessageElement = userMessage;
+                console.log('✅ Buttons replaced with grey CTA user message');
+                
+                // Show "Hang tight" loading screen after user confirms
+                setTimeout(() => {
+                    showHangTightLoadingScreen();
+                    setTimeout(() => scrollToLatestMessage(), 100);
+                }, 500);
+            } else {
+                console.error('❌ CTA buttons container not found');
+            }
+        }
+        
+        // Handle "Why do I need a privacy policy" button click
+        function handleWhyPrivacyPolicy() {
+            console.log('🔘 Why privacy policy clicked');
+            // Show informational content or navigate to an info page
+            alert('A privacy policy builds trust with your customers and is legally required in many jurisdictions when collecting personal data.');
+        }
+
+        // Extract business details from user input
+        function extractBusinessDetails(userInput) {
+            const input = userInput.toLowerCase();
+            
+            // Extract business name (look for patterns like "called X" or "named X")
+            let businessName = '';
+            const namePatterns = [
+                /called\s+([^,.\n]+)/,
+                /named\s+([^,.\n]+)/,
+                /business\s+([^,.\n]+)/,
+                /shop\s+([^,.\n]+)/,
+                /company\s+([^,.\n]+)/
+            ];
+            
+            for (const pattern of namePatterns) {
+                const match = userInput.match(pattern);
+                if (match) {
+                    businessName = match[1].trim();
+                    break;
+                }
+            }
+            
+            // Extract email
+            const emailMatch = userInput.match(/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/);
+            const email = emailMatch ? emailMatch[1] : '';
+            
+            // Extract jurisdiction (look for state/city patterns)
+            let jurisdiction = '';
+            const jurisdictionMatch = userInput.match(/(in|at)\s+([^,.\n]+(?:,\s*[A-Z]{2})?)/);
+            if (jurisdictionMatch) {
+                jurisdiction = jurisdictionMatch[2].trim();
+            }
+            
+            // Check for children/COPPA mentions
+            const coppaNeeded = /children|kids|under\s+13|coppa/i.test(userInput) ? true : false;
+            
+            return {
+                name: businessName || 'Your Business',
+                email: email || 'your@email.com',
+                jurisdiction: jurisdiction || 'Your Location',
+                coppaNeeded: coppaNeeded
+            };
+        }
+
+        // Update privacy summary sidebar
+        function updatePrivacySummary(details) {
+            console.log('🔧 updatePrivacySummary called with:', details);
+            try {
+                document.getElementById('summaryBusinessName').textContent = details.name;
+                document.getElementById('summaryEmail').textContent = details.email;
+                document.getElementById('summaryJurisdiction').textContent = details.jurisdiction;
+                document.getElementById('summaryCoppa').textContent = details.coppaNeeded ? 'Yes' : 'No';
+                console.log('✅ Privacy summary updated successfully');
+            } catch (error) {
+                console.error('❌ Error updating privacy summary:', error);
+            }
+        }
+
+        // Show privacy summary sidebar (small size, control bar aligns with chat)
+        function showPrivacySummary() {
+            console.log('🚀 showPrivacySummary called');
+            
+            const sidebar = document.getElementById('privacySummary');
+            const chatInterface = document.querySelector('.chat-interface');
+            const loadingScreen = document.getElementById('loadingScreen');
+            
+            console.log('📍 Sidebar element found:', !!sidebar);
+            console.log('📍 Chat interface found:', !!chatInterface);
+            console.log('📍 Sidebar current display:', sidebar ? sidebar.style.display : 'N/A');
+            console.log('📍 Sidebar current classes:', sidebar ? sidebar.className : 'N/A');
+            
+            if (!sidebar) {
+                console.error('❌ SIDEBAR ELEMENT NOT FOUND! Cannot display sidebar.');
+                return;
+            }
+            
+            if (!chatInterface) {
+                console.error('❌ CHAT INTERFACE NOT FOUND! Cannot setup sidebar layout.');
+                return;
+            }
+            
+            // Hide other elements first
+            if (loadingScreen) {
+                loadingScreen.classList.remove('visible');
+                console.log('✅ Loading screen hidden');
+            }
+            hideCongratulationsSidebar();
+            
+            // Force sidebar display - remove any blocking styles
+            sidebar.style.display = 'block';
+            sidebar.style.visibility = 'visible';
+            sidebar.style.opacity = '1';
+            
+            // Show small sidebar (business info confirmation)
+            sidebar.classList.add('visible');
+            sidebar.classList.remove('large-sidebar'); // Ensure it's small
+            chatInterface.classList.add('with-sidebar');
+            chatInterface.classList.remove('with-large-sidebar');
+            chatInterface.classList.remove('with-loading');
+            document.body.classList.add('sidebar-open'); // For sidebar styling only
+            document.body.classList.remove('large-sidebar-open');
+            
+            // Force sidebar to start at top
+            sidebar.scrollTop = 0;
+            
+            console.log('✅ FORCED SIDEBAR DISPLAY');
+            console.log('📱 Final sidebar classes:', sidebar.className);
+            console.log('📱 Final sidebar style.display:', sidebar.style.display);
+            console.log('🎯 Final chat interface classes:', chatInterface.className);
+            console.log('🎯 Final body classes:', document.body.className);
+        }
+        
+        // Hide privacy summary sidebar (if needed)
+        function hidePrivacySummary() {
+            const sidebar = document.getElementById('privacySummary');
+            const chatInterface = document.querySelector('.chat-interface');
+            
+            sidebar.classList.remove('visible');
+            sidebar.classList.remove('large-sidebar');
+            chatInterface.classList.remove('with-sidebar');
+            chatInterface.classList.remove('with-large-sidebar');
+            document.body.classList.remove('sidebar-open');
+            document.body.classList.remove('large-sidebar-open');
+        }
+
+        // Show loading screen
+        function showLoadingScreen() {
+            const loadingScreen = document.getElementById('loadingScreen');
+            const chatInterface = document.querySelector('.chat-interface');
+            const sidebar = document.getElementById('privacySummary');
+            
+            // Hide other elements first
+            hideCongratulationsSidebar();
+            sidebar.classList.remove('visible'); // Hide sidebar when loading shows
+            
+            // Show loading screen (replaces sidebar in flex layout)
+            loadingScreen.classList.add('visible');
+            chatInterface.classList.add('with-loading');
+            chatInterface.classList.add('with-large-sidebar');
+            chatInterface.classList.remove('with-sidebar');
+            document.body.classList.add('large-sidebar-open');
+        }
+
+        // Hide loading screen (if needed)
+        function hideLoadingScreen() {
+            const loadingScreen = document.getElementById('loadingScreen');
+            const chatInterface = document.querySelector('.chat-interface');
+            const sidebar = document.getElementById('privacySummary');
+            
+            // Reset loading screen text to original
+            const loadingTitle = loadingScreen.querySelector('.loading-title');
+            if (loadingTitle) {
+                loadingTitle.textContent = 'Hang tight, I\'m getting your privacy policy ready';
+            }
+            
+            loadingScreen.classList.remove('visible');
+            chatInterface.classList.remove('with-loading');
+            // Keep large sidebar and control bar positioning for policy preview
+            // Don't remove large-sidebar classes here
+        }
+
+        // Show "Hang tight" loading screen after user confirms business info
+        function showHangTightLoadingScreen() {
+            console.log('🔄 showHangTightLoadingScreen called - reusing sidebar element');
+            const chatInterface = document.querySelector('.chat-interface');
+            const sidebar = document.getElementById('privacySummary');
+            const loadingScreen = document.getElementById('loadingScreen');
+            
+            // Set business details for the flow
+            businessDetails = {
+                name: "Eugene's Cafe",
+                email: "contact@eugenescafe.com", 
+                jurisdiction: "New York, NY",
+                coppaNeeded: false
+            };
+            
+            if (!sidebar || !chatInterface) {
+                console.error('❌ Required elements not found for loading screen');
+                return;
+            }
+            
+            // Hide separate loading screen element if visible
+            if (loadingScreen) loadingScreen.classList.remove('visible');
+            hideCongratulationsSidebar();
+            
+            // Keep sidebar visible and ensure large sidebar classes are maintained
+            sidebar.classList.add('visible');
+            sidebar.classList.add('large-sidebar');
+            chatInterface.classList.add('with-large-sidebar');
+            chatInterface.classList.remove('with-sidebar');
+            chatInterface.classList.remove('with-loading');
+            document.body.classList.add('large-sidebar-open');
+            
+            // Replace sidebar content with loading screen content
+            sidebar.innerHTML = `
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; padding: 40px;">
+                    <div class="loading-video-container" style="margin-bottom: 24px;">
+                        <video width="192" height="192" autoplay muted loop playsinline style="border-radius: 8px;">
+                            <source src="../assets/videos/loadinganimation.mp4" type="video/mp4">
+                            <!-- Fallback to spinner if video fails to load -->
+                            <div class="loading-icon" style="margin-bottom: 24px;">
+                                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="animation: spin 1s linear infinite;">
+                                    <path d="M16 2L20 10L28 6L24 14L32 16L24 18L28 26L20 22L16 30L12 22L4 26L8 18L0 16L8 14L4 6L12 10L16 2Z" fill="#7B2CBF"/>
+                                </svg>
+                            </div>
+                        </video>
+                    </div>
+                    <div style="font-size: 18px; font-weight: 600; color: #333; margin-bottom: 8px;">
+                        Hang tight, I'm getting your privacy policy ready
+                    </div>
+                    <div style="font-size: 14px; color: #666;">
+                        This will only take a moment...
+                    </div>
+                </div>
+                <style>
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+                </style>
+            `;
+            
+            // Force sidebar to start at top
+            sidebar.scrollTop = 0;
+            
+            console.log('✅ Loading screen content set in sidebar - waiting 25 seconds');
+            
+            // After 25 seconds, replace content with policy preview
+            setTimeout(() => {
+                console.log('🔄 Loading complete, replacing content with policy preview');
+                showPolicyPreviewInSidebar();
+            }, 25000);
+        }
+
+        // Replace sidebar content with policy preview (reusing same element)
+        function showPolicyPreviewInSidebar() {
+            console.log('🔄 showPolicyPreviewInSidebar called - replacing loading content with policy preview');
+            const sidebar = document.getElementById('privacySummary');
+            
+            if (!sidebar) {
+                console.error('❌ Sidebar element not found for policy preview');
+                return;
+            }
+            
+            // Replace loading content with policy preview content
+            sidebar.innerHTML = `
+                <div class="policy-preview-content">
+                    <div class="policy-preview-header">
+                        <h2>Privacy Policy for Eugene's Cafe</h2>
+                        <div class="policy-tabs">
+                            <button class="policy-tab">Summary</button>
+                            <button class="policy-tab active">Preview</button>
+                        </div>
+                    </div>
+                    <div class="policy-preview-body">
+                        <h3>1. Information We Collect</h3>
+                        <p>We collect the following types of information:</p>
+                        <ul>
+                            <li><strong>Personal Information:</strong> Name, email address, phone number, and billing information (if applicable).</li>
+                            <li><strong>User Input:</strong> Data you provide to generate legal documents (e.g., names, addresses, contract terms).</li>
+                            <li><strong>Usage Data:</strong> IP address, browser type, device information, and usage patterns.</li>
+                            <li><strong>Cookies and Tracking Data:</strong> Information collected through cookies and similar technologies.</li>
+                        </ul>
+                        
+                        <h3>2. How We Use Your Information</h3>
+                        <p>We use your information to:</p>
+                        <ul>
+                            <li>Provide, maintain, and improve our services.</li>
+                            <li>Generate and customize legal documents based on your input.</li>
+                            <li>Process payments and send transaction confirmations.</li>
+                            <li>Communicate with you about updates, support, and promotions.</li>
+                            <li>Ensure legal compliance and protect against fraud or security risks.</li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+            
+            // Force sidebar to start at top after content update
+            sidebar.scrollTop = 0;
+            
+            console.log('✅ Policy preview content loaded in sidebar');
+            
+            // Add AI message and action buttons after a short delay
+            setTimeout(() => {
+                console.log('📋 Adding AI message and policy action buttons');
+                showPolicyPreview();
+            }, 500);
+        }
+
+        // Show policy preview screen after loading
+        function showPolicyPreview() {
+            console.log('showPolicyPreview() called - adding two separate AI messages');
+            // Add first AI message emphasizing editing capability
+            addAIMessage(`
+                Take a look at the preview I've generated for you. Make any edits you need to the right, and let me know when you're ready to finalize.
+            `);
+            
+            // Add second AI message with terms agreement - now works correctly with fixed addAIMessage()
+            addAIMessage(`
+                By clicking Let's finalize you agree to the <a href="#" class="terms-link">Airo Plus™ Compliance Terms of Service</a>
+            `);
+            
+
+            
+            // Add action buttons and helper text after message is displayed
+            setTimeout(() => {
+                addPolicyActionButtons();
+                // Set current step to policy-action to handle "finalize" input
+                currentStep = 'policy-action';
+            }, 1000);
+            
+            // Sidebar is already showing, no need to call showPolicyPreviewSidebar() again
+        }
+
+
+
+        // Add finalize button on user side
+        function addPolicyActionButtons() {
+            const chatMessages = document.querySelector('.chat-messages');
+            
+            // Create standalone finalize button element (outside of chat bubbles)
+            const actionButtonsElement = document.createElement('div');
+            actionButtonsElement.className = 'standalone-action-buttons';
+            actionButtonsElement.innerHTML = `
+                <button class="standalone-btn outline-btn" onclick="handleFinalize()">Let's finalize</button>
+            `;
+            
+            // Create helper text element
+            const helperElement = document.createElement('div');
+            helperElement.className = 'helper-text';
+            helperElement.innerHTML = `
+                <div class="helper-message">
+                    <span class="helper-icon">↰</span>
+                    Or, write your own response below
+                </div>
+            `;
+            
+            // Add both elements to the bottom of chat
+            chatMessages.appendChild(actionButtonsElement);
+            chatMessages.appendChild(helperElement);
+            
+            // Auto-scroll to show new buttons
+            setTimeout(() => scrollToLatestMessage(), 100);
+        }
+
+        // Show privacy policy preview in sidebar (large size)
+        function showPolicyPreviewSidebar() {
+            console.log('showPolicyPreviewSidebar() called - starting loading phase');
+            const sidebar = document.getElementById('privacySummary');
+            const chatInterface = document.querySelector('.chat-interface');
+            const loadingScreen = document.getElementById('loadingScreen');
+            
+            // Hide other elements first
+            if (loadingScreen) loadingScreen.classList.remove('visible');
+            hideCongratulationsSidebar();
+            
+            // Ensure large sidebar classes are applied (50% width)
+            sidebar.classList.add('visible');
+            sidebar.classList.add('large-sidebar');
+            chatInterface.classList.add('with-large-sidebar');
+            chatInterface.classList.remove('with-sidebar');
+            chatInterface.classList.remove('with-loading');
+            document.body.classList.add('large-sidebar-open');
+            
+            // Show loading content first
+            sidebar.innerHTML = `
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center;">
+                    <div class="loading-icon" style="margin-bottom: 24px;">
+                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M16 2L20 10L28 6L24 14L32 16L24 18L28 26L20 22L16 30L12 22L4 26L8 18L0 16L8 14L4 6L12 10L16 2Z" fill="white"/>
+                        </svg>
+                    </div>
+                    <div style="font-size: 18px; font-weight: 600; color: #333; margin-bottom: 8px;">
+                        Hang tight, I'm getting your privacy policy ready
+                    </div>
+                    <div style="font-size: 14px; color: #666;">
+                        This will only take a moment...
+                    </div>
+                </div>
+            `;
+            
+            // Force sidebar to start at top
+            sidebar.scrollTop = 0;
+            
+            // After 2 seconds, replace with actual policy content
+            setTimeout(() => {
+                console.log('2-second timeout complete - showing policy content');
+                sidebar.innerHTML = `
+                    <div class="policy-preview-content">
+                        <div class="policy-preview-header">
+                            <h2>Privacy Policy for Eugene's Cafe</h2>
+                            <div class="policy-tabs">
+                                <button class="policy-tab">Summary</button>
+                                <button class="policy-tab active">Preview</button>
+                            </div>
+                        </div>
+                        <div class="policy-preview-body">
+                            <h3>1. Information We Collect</h3>
+                            <p>We collect the following types of information:</p>
+                            <ul>
+                                <li><strong>Personal Information:</strong> Name, email address, phone number, and billing information (if applicable).</li>
+                                <li><strong>User Input:</strong> Data you provide to generate legal documents (e.g., names, addresses, contract terms).</li>
+                                <li><strong>Usage Data:</strong> IP address, browser type, device information, and usage patterns.</li>
+                                <li><strong>Cookies and Tracking Data:</strong> Information collected through cookies and similar technologies.</li>
+                            </ul>
+                            
+                            <h3>2. How We Use Your Information</h3>
+                            <p>We use your information to:</p>
+                            <ul>
+                                <li>Provide, maintain, and improve our services.</li>
+                                <li>Generate and customize legal documents based on your input.</li>
+                                <li>Process payments and send transaction confirmations.</li>
+                                <li>Communicate with you about updates, support, and promotions.</li>
+                                <li>Ensure legal compliance and protect against fraud or security risks.</li>
+                            </ul>
+                        </div>
+                    </div>
+                `;
+                
+                // Force sidebar to start at top after content update
+                sidebar.scrollTop = 0;
+                
+                // Add AI message and action buttons
+                console.log('Calling showPolicyPreview() to add chat messages and buttons');
+                showPolicyPreview();
+            }, 2000);
+        }
+
+        // Handle "Let's finalize" button  
+        function handleFinalize() {
+            console.log('handleFinalize() called - Let\'s finalize button clicked');
+            
+            const chatMessages = document.querySelector('.chat-messages');
+            
+            // Find the standalone action buttons container
+            const actionButtonsContainer = chatMessages.querySelector('.standalone-action-buttons');
+            
+            if (actionButtonsContainer) {
+                // Replace standalone buttons with grey user bubble
+                const userMessage = document.createElement('div');
+                userMessage.className = 'user-message from-cta';
+                userMessage.innerHTML = `
+                    <div class="user-bubble cta-triggered from-cta">Let's finalize</div>
+                `;
+                actionButtonsContainer.replaceWith(userMessage);
+                
+                // Mark the bubble as CTA-triggered
+                const bubble = userMessage.querySelector('.user-bubble');
+                if (bubble && window.markUserMessageAsCTATriggered) {
+                    window.markUserMessageAsCTATriggered(bubble);
+                }
+                
+                // CRITICAL FIX: Set currentUserMessageElement for AI message positioning
+                currentUserMessageElement = userMessage;
+                console.log('✅ Set currentUserMessageElement after Let\'s finalize button replacement:', currentUserMessageElement);
+            }
+            
+            // Remove helper text elements
+            const helperElements = chatMessages.querySelectorAll('.helper-text');
+            helperElements.forEach(element => {
+                element.remove();
+            });
+            
+            showNotification('Creating your privacy policy...');
+            
+            // Show congratulations sidebar after brief delay
+            setTimeout(() => {
+                // Hide the privacy policy sidebar
+                document.querySelector('.privacy-summary-sidebar').classList.remove('visible');
+                
+                // Show the congratulations sidebar
+                showCongratulationsScreen();
+                
+                // Add confetti animation
+                triggerConfetti();
+                
+                // Add AI follow-up message SIMULTANEOUSLY with congratulations sidebar
+                console.log('🤖 Adding AI follow-up message with congratulations sidebar');
+                console.log('🎯 currentUserMessageElement check:', currentUserMessageElement);
+                
+                // Defensive check: ensure currentUserMessageElement is set for AI message
+                if (!currentUserMessageElement) {
+                    console.warn('⚠️ currentUserMessageElement is null, finding last user message...');
+                    const chatMessages = document.querySelector('.chat-messages');
+                    const lastUserMessage = chatMessages.querySelector('.user-message:last-of-type');
+                    if (lastUserMessage) {
+                        currentUserMessageElement = lastUserMessage;
+                        console.log('✅ Set currentUserMessageElement to last user message for AI follow-up');
+                    } else {
+                        console.error('❌ No user messages found for AI follow-up - creating fallback');
+                        // Create a minimal fallback element for AI message positioning
+                        const chatMessages = document.querySelector('.chat-messages');
+                        const fallbackElement = document.createElement('div');
+                        fallbackElement.style.display = 'none';
+                        chatMessages.appendChild(fallbackElement);
+                        currentUserMessageElement = fallbackElement;
+                    }
+                }
+                
+                addAIMessage('Done! Would you like to create another document for your business? I can suggest the next one based on your business.');
+                console.log('✅ AI follow-up message added to chat SIMULTANEOUSLY with congratulations sidebar');
+            }, 1500);
+        }
+
+
+
+
+        
+        // Add "Yes, see suggestions" button
+        function addSuggestionsButton() {
+            const chatMessages = document.querySelector('.chat-messages');
+            
+            // Create standalone suggestions button element (outside of chat bubbles)
+            const suggestionsElement = document.createElement('div');
+            suggestionsElement.className = 'standalone-action-buttons';
+            suggestionsElement.innerHTML = `
+                <button class="standalone-btn outline-btn" onclick="handleSeeSuggestions()">Yes, see suggestions</button>
+            `;
+            
+            // Create helper text element
+            const helperElement = document.createElement('div');
+            helperElement.className = 'helper-text';
+            helperElement.innerHTML = `
+                <div class="helper-message">
+                    <span class="helper-icon">↰</span>
+                    Or, write your own response below
+                </div>
+            `;
+            
+            // Add both elements to the bottom of chat
+            chatMessages.appendChild(suggestionsElement);
+            chatMessages.appendChild(helperElement);
+            
+            // Auto-scroll to show new buttons
+            setTimeout(() => scrollToLatestMessage(), 100);
+        }
+        
+        // Hide congratulations sidebar
+        function hideCongratulationsSidebar() {
+            const congratsSidebar = document.getElementById('congratsSidebar');
+            if (congratsSidebar) {
+                congratsSidebar.classList.remove('visible');
+            }
+            document.body.classList.remove('large-sidebar-open');
+        }
+        
+        // Show congratulations screen
+        function showCongratulationsScreen() {
+            console.log('showCongratulationsScreen() called');
+            
+            // FORCE HIDE privacy policy preview sidebar completely
+            const privacySidebar = document.getElementById('privacySummary');
+            if (privacySidebar) {
+                privacySidebar.style.display = 'none';
+                privacySidebar.classList.remove('visible', 'large-sidebar');
+                console.log('✅ Privacy policy preview sidebar force hidden');
+            }
+            
+            // Hide any existing sidebars
+            hidePrivacySummary();
+            const loadingScreen = document.getElementById('loadingScreen');
+            if (loadingScreen) loadingScreen.classList.remove('visible');
+            
+            // Ensure chat takes full width next to congrats sidebar
+            const chatInterface = document.querySelector('.chat-interface');
+            if (chatInterface) {
+                chatInterface.classList.remove('with-sidebar', 'with-large-sidebar', 'with-loading');
+                console.log('✅ Chat interface reset to full width');
+            }
+            
+            // Reset body classes to prevent layout issues
+            document.body.classList.remove('sidebar-open', 'large-sidebar-open');
+            console.log('✅ Body classes reset for congrats screen');
+            
+            // Create or show congratulations sidebar
+            let congratsSidebar = document.getElementById('congratsSidebar');
+            if (!congratsSidebar) {
+                congratsSidebar = document.createElement('div');
+                congratsSidebar.id = 'congratsSidebar';
+                congratsSidebar.className = 'congratulations-sidebar';
+                // Append to main-content-wrapper to participate in flex layout
+                const mainWrapper = document.querySelector('.main-content-wrapper');
+                if (mainWrapper) {
+                    mainWrapper.appendChild(congratsSidebar);
+                } else {
+                    document.body.appendChild(congratsSidebar);
+                }
+            }
+            
+            // Set congratulations content
+            congratsSidebar.innerHTML = `
+                <div class="congrats-header">
+                    <div class="congrats-title">Congrats! Your Privacy Policy is ready to use.</div>
+                </div>
+                
+                <div class="preview-section">
+                    <div class="preview-header">
+                        <span>Preview</span>
+                        <button class="expand-btn" onclick="handleExpandPreview()">
+                            <span class="expand-icon"></span>
+                            Expand
+                        </button>
+                    </div>
+                    <div class="preview-content-wrapper">
+                        <div class="preview-content">
+                            <h3>1. Information We Collect</h3>
+                            <p>We collect the following types of information:</p>
+                            <ul>
+                                <li><strong>Personal Information:</strong> Name, email address, phone number, and billing information (if applicable).</li>
+                                <li><strong>User Input:</strong> Data you provide to generate legal documents (e.g., names, addresses, contract terms).</li>
+                            </ul>
+                            
+                            <h3>2. How We Use Your Information</h3>
+                            <p>We use your information to:</p>
+                            <ul>
+                                <li><strong>Provide Services:</strong> Deliver, maintain, and improve our legal document generation services.</li>
+                                <li><strong>Customization:</strong> Generate and customize legal documents based on your specific input and business needs.</li>
+                                <li><strong>Communication:</strong> Send you important updates, support messages, and promotional content.</li>
+                                <li><strong>Legal Compliance:</strong> Ensure compliance with applicable laws and protect against fraud or security risks.</li>
+                            </ul>
+                            
+                            <h3>3. Information Sharing</h3>
+                            <p>We may share your information in the following circumstances:</p>
+                            <ul>
+                                <li><strong>Service Providers:</strong> With trusted third-party service providers who assist in our operations.</li>
+                                <li><strong>Legal Requirements:</strong> When required by law or to protect our rights and safety.</li>
+                                <li><strong>Business Transfers:</strong> In connection with a merger, acquisition, or sale of assets.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="action-button primary-action" onclick="handleAddToWebsite()">Add to Website</button>
+                    <button class="action-button secondary-action" onclick="handleDownload()">Download</button>
+                </div>
+                
+                <div class="next-steps">
+                    <div class="next-steps-title">Here are some things you can do next...</div>
+                    <div class="suggestion-cards">
+                        <div class="suggestion-card" onclick="handleTermsOfService()">
+                            <div class="suggestion-icon terms-icon"></div>
+                            <div class="suggestion-title">Add terms of service to your site</div>
+                            <div class="suggestion-desc">Protect your business with comprehensive terms</div>
+                        </div>
+                        <div class="suggestion-card" onclick="handleGoogleAd()">
+                            <div class="suggestion-icon google-ads-icon"></div>
+                            <div class="suggestion-title">Promote your products with a free Google ad</div>
+                            <div class="suggestion-desc">Get started with Google Ads</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Show sidebar and adjust control bar positioning
+            congratsSidebar.classList.add('visible');
+            document.body.classList.add('large-sidebar-open');
+        }
+        
+        // Trigger confetti animation
+        function triggerConfetti() {
+            console.log('triggerConfetti() called');
+            const confettiContainer = document.createElement('div');
+            confettiContainer.className = 'confetti';
+            document.body.appendChild(confettiContainer);
+            
+            // Create 50 confetti pieces
+            for (let i = 0; i < 50; i++) {
+                const piece = document.createElement('div');
+                piece.className = 'confetti-piece';
+                piece.style.left = Math.random() * 100 + '%';
+                piece.style.animationDelay = Math.random() * 3 + 's';
+                piece.style.animationDuration = (2 + Math.random() * 3) + 's';
+                confettiContainer.appendChild(piece);
+            }
+            
+            // Remove confetti after animation
+            setTimeout(() => {
+                confettiContainer.remove();
+            }, 6000);
+        }
+        
+        // Handle action button clicks
+        function handleSeeSuggestions() {
+            const chatMessages = document.querySelector('.chat-messages');
+            
+            // Find the standalone action buttons container
+            const actionButtonsContainer = chatMessages.querySelector('.standalone-action-buttons');
+            
+            if (actionButtonsContainer) {
+                // Replace standalone buttons with grey user bubble
+                const userMessage = document.createElement('div');
+                userMessage.className = 'user-message from-cta';
+                userMessage.innerHTML = `
+                    <div class="user-bubble cta-triggered from-cta">Yes, see suggestions</div>
+                `;
+                actionButtonsContainer.replaceWith(userMessage);
+                
+                // Mark the bubble as CTA-triggered
+                const bubble = userMessage.querySelector('.user-bubble');
+                if (bubble && window.markUserMessageAsCTATriggered) {
+                    window.markUserMessageAsCTATriggered(bubble);
+                }
+                
+                console.log('✅ Replaced suggestions button with grey user message');
+            }
+            
+            // Remove helper text elements
+            const helperElements = chatMessages.querySelectorAll('.helper-text');
+            helperElements.forEach(element => {
+                element.remove();
+            });
+            
+            showNotification('See suggestions functionality would be implemented here...');
+        }
+        
+        function handleAddToWebsite() {
+            showNotification('Add to Website functionality would open here');
+        }
+        
+        function handleDownload() {
+            showNotification('Download functionality would open here');
+        }
+        
+        function handleTermsOfService() {
+            showNotification('Terms of Service creation would start here');
+        }
+        
+        function handleGoogleAd() {
+            showNotification('Google Ads setup would open here');
+        }
+        
+        function handleExpandPreview() {
+            showNotification('Preview expansion functionality would open here');
+        }
+
+        // Handle "Start over" button  
+        function handleStartOver() {
+            showNotification('Starting over...');
+            // Add logic for starting over
+        }
+
+
+
+        // Handle "Looks Good" button click (FIXED - find correct button class)
+        function handleLooksGood() {
+            console.log('🔘 handleLooksGood called');
+            const chatMessages = document.querySelector('.chat-messages');
+            
+            // Find the standalone button (correct class)
+            const standaloneButton = chatMessages.querySelector('.standalone-btn');
+            const standaloneContainer = standaloneButton ? standaloneButton.closest('.looks-good-standalone') : null;
+            
+            if (standaloneContainer) {
+                console.log('✅ Found standalone Looks Good button, replacing with user message');
+                // Replace standalone button with user message bubble
+                const userMessage = document.createElement('div');
+                userMessage.className = 'user-message from-cta';
+                userMessage.innerHTML = `
+                    <div class="user-bubble cta-triggered from-cta">Looks good</div>
+                `;
+                standaloneContainer.replaceWith(userMessage);
+                
+                // Use global CTA marking function if available
+                const bubble = userMessage.querySelector('.user-bubble');
+                if (bubble && window.markUserMessageAsCTATriggered) {
+                    window.markUserMessageAsCTATriggered(bubble);
+                }
+                
+                console.log('✅ Button replaced with grey CTA user message');
+            } else {
+                console.error('❌ Standalone Looks Good button not found');
+            }
+            
+            // Remove helper text elements
+            const helperElements = chatMessages.querySelectorAll('.helper-text');
+            helperElements.forEach(element => {
+                element.remove();
+            });
+            
+            showNotification('Great! Generating your privacy policy...');
+            
+            // Show "Hang tight" loading screen instead
+            showHangTightLoadingScreen();
+        }
+
+        // Edit field functionality
+        function editField(fieldName) {
+            showNotification(`Edit ${fieldName} functionality would open here`);
+        }
+
+        // Check if input contains "looks good"
+        function isLooksGoodInput(input) {
+            const normalized = input.toLowerCase().trim();
+            const looksGoodVariations = [
+                'looks good',
+                'look good',
+                'looks great',
+                'look great',
+                'good',
+                'great',
+                'yes',
+                'okay',
+                'ok'
+            ];
+            
+            return looksGoodVariations.some(variation => normalized.includes(variation));
+        }
+
+        // Check if input contains "finalize" variations
+        function isFinalizeInput(input) {
+            const normalized = input.toLowerCase().trim();
+            const finalizeVariations = [
+                'finalize',
+                'finalize it',
+                "let's finalize",
+                'lets finalize',
+                'go ahead',
+                'proceed',
+                'continue',
+                'done',
+                'ready',
+                'yes'
+            ];
+            
+            return finalizeVariations.some(variation => normalized.includes(variation));
+        }
+
+        // Check if input contains "yes see suggestions" variations
+        function isSeeSuggestionsInput(input) {
+            const normalized = input.toLowerCase().trim();
+            const seeSuggestionsVariations = [
+                'yes see suggestions',
+                'yes, see suggestions',
+                'see suggestions',
+                'show suggestions',
+                'suggestions',
+                'yes show me',
+                'what suggestions',
+                'next document',
+                'next'
+            ];
+            
+            return seeSuggestionsVariations.some(variation => normalized.includes(variation));
+        }
+
+        // SIMPLIFIED MESSAGE SYSTEM - Direct insertion approach
+        
+        let currentUserMessageElement = null; // Track the current user message element for replies
+        let currentStep = 'initial'; // 'initial', 'business-details', 'review', 'policy-action', 'final'
+        
+        // Show business details message in static element
+        function showBusinessDetailsMessage(message) {
+            const businessDetailsUserMessage = document.getElementById('businessDetailsUserMessage');
+            const businessDetailsText = document.getElementById('businessDetailsText');
+            
+            if (businessDetailsUserMessage && businessDetailsText) {
+                businessDetailsText.textContent = message;
+                businessDetailsUserMessage.style.display = 'block';
+                
+                // Set this as the current user message for AI replies
+                currentUserMessageElement = businessDetailsUserMessage;
+                
+                // Auto-scroll to show new message
+                setTimeout(() => scrollToLatestMessage(), 100);
+            }
+        }
+
+        // Add user message to chat (creates new user message)
+        function addUserMessage(content) {
+            console.log('👤 addUserMessage called with content:', content);
+            
+            const chatMessages = document.querySelector('.chat-messages');
+            const userMessage = document.createElement('div');
+            userMessage.className = 'user-message';
+            userMessage.innerHTML = `<div class="user-bubble">${content}</div>`;
+            
+            // Add after the last element in chat-messages
+            chatMessages.appendChild(userMessage);
+            
+            // Set this as the current user message for AI replies
+            currentUserMessageElement = userMessage;
+            console.log('✅ currentUserMessageElement set to:', currentUserMessageElement);
+            
+            // Auto-scroll to show new message
+            setTimeout(() => scrollToLatestMessage(), 100);
+            
+            return userMessage;
+        }
+
+        // Add AI message to the end of the chat container
+        function addAIMessage(content) {
+            console.log('🤖 addAIMessage called');
+            
+            const chatMessages = document.querySelector('.chat-messages');
+            if (!chatMessages) {
+                console.error('❌ Chat messages container not found!');
+                return;
+            }
+            
+            const aiMessage = document.createElement('div');
+            aiMessage.className = 'airo-message';
+            aiMessage.innerHTML = `<div class="airo-bubble">${content}</div>`;
+            
+            // Append AI message to the end of the chat container
+            chatMessages.appendChild(aiMessage);
+            console.log('✅ AI message appended to end of chat');
+            
+            // Auto-scroll to show new message
+            setTimeout(() => scrollToLatestMessage(), 100);
+            
+            return aiMessage;
+        }
+
+        // Add typing indicator directly after the current user message  
+        function addTypingIndicator(text = 'Typing...') {
+            console.log('⏳ addTypingIndicator called with text:', text);
+            console.log('🎯 currentUserMessageElement for typing:', currentUserMessageElement);
+            
+            if (!currentUserMessageElement) {
+                console.error('❌ No current user message to reply to - Typing indicator will fail!');
+                return;
+            }
+            
+            const typingMessage = document.createElement('div');
+            typingMessage.className = 'typing-indicator processing-indicator';
+            typingMessage.innerHTML = `
+                <div class="typing-dots">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+                <div class="typing-text">${text}</div>
+            `;
+            
+            // Insert typing indicator directly after the current user message
+            currentUserMessageElement.insertAdjacentElement('afterend', typingMessage);
+            
+            // Auto-scroll to show typing indicator
+            setTimeout(() => scrollToLatestMessage(), 100);
+            
+            return typingMessage;
+        }
+
+        // Remove typing indicator
+        function removeTypingIndicator() {
+            const indicator = document.querySelector('.processing-indicator');
+            if (indicator) {
+                indicator.remove();
+            }
+        }
+
+        // Scroll to latest content automatically
+        function scrollToLatestMessage() {
+            const chatInterface = document.querySelector('.chat-interface');
+            if (chatInterface) {
+                chatInterface.scrollTop = chatInterface.scrollHeight;
+            }
+        }
+
+        // Add "Looks Good" button at bottom of chat (GLOBAL SCOPE)
+        function addLooksGoodButtonToBottom() {
+            console.log('🔘 addLooksGoodButtonToBottom called');
+            const chatMessages = document.querySelector('.chat-messages');
+            
+            if (!chatMessages) {
+                console.error('❌ Chat messages container not found!');
+                return;
+            }
+            
+            console.log('✅ Chat messages container found');
+            
+            // Create standalone "Looks Good" button element (not in bubble)
+            const looksGoodElement = document.createElement('div');
+            looksGoodElement.className = 'user-message looks-good-standalone';
+            looksGoodElement.innerHTML = `
+                <button class="standalone-btn outline-btn" onclick="handleLooksGood()">Looks Good</button>
+            `;
+            
+            // Add button to the bottom of chat
+            chatMessages.appendChild(looksGoodElement);
+            
+            // Add helper text using the new function
+            addHelperText();
+            
+            console.log('✅ Looks Good button and helper text added to chat');
+            console.log('📱 Button element:', looksGoodElement);
+            
+            // Auto-scroll to show new buttons
+            setTimeout(() => {
+                scrollToLatestMessage();
+                console.log('✅ Auto-scrolled to show new button');
+            }, 100);
+        }
+
+        // Add enhanced chat input handling for this page
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatInput = document.getElementById('chatInput');
+            const sendBtn = document.getElementById('sendBtn');
+            const typingIndicator = document.getElementById('typingIndicator');
+
+
+            const chatMessages = document.querySelector('.chat-messages');
+            
+            // currentStep is now global variable
+            
+            // Show simplified flow after 3 seconds
+            setTimeout(() => {
+                if (typingIndicator) {
+                    typingIndicator.style.display = 'none';
+                }
+                
+                // Transform the initial AI message content and show sidebar simultaneously
+                const initialAIMessage = document.getElementById('initialAIMessage');
+                if (initialAIMessage) {
+                    const aiBubble = initialAIMessage.querySelector('.airo-bubble');
+                    if (aiBubble) {
+                        aiBubble.innerHTML = 'Done! I generated some details based on what I found. Can you confirm that this info is correct?';
+                    }
+                    currentStep = 'review-response';
+                    
+                    // Show the privacy policy sidebar (business summary only - no auto progression)
+                    showPrivacySummary();
+                    
+                    // Update sidebar with business details
+                    setTimeout(() => {
+                        businessDetails = {
+                            name: "Eugene's Cafe",
+                            email: "contact@eugenescafe.com", 
+                            jurisdiction: "New York, NY",
+                            coppaNeeded: false
+                        };
+                        updatePrivacySummary(businessDetails);
+                    }, 500);
+                    
+                    // Show the new CTA buttons
+                    const newCTAButtons = document.getElementById('newCTAButtons');
+                    if (newCTAButtons) {
+                        newCTAButtons.style.display = 'block';
+                        console.log('✅ CTA buttons displayed - WAIT STATE active');
+                        console.log('🔸 User must click "Confirm business info" to proceed');
+                        
+                        // Add helper text underneath the CTA buttons
+                        setTimeout(() => {
+                            addHelperText();
+                        }, 100);
+                    } else {
+                        console.error('❌ newCTAButtons element not found!');
+                    }
+                    
+                    // Auto-scroll to show new message
+                    setTimeout(() => scrollToLatestMessage(), 100);
+                }
+            }, 3000);
+            
+            if (chatInput && sendBtn) {
+                // Override the send functionality to handle different steps
+                sendBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const message = chatInput.value.trim();
+                    if (message) {
+                        handleChatMessage(message);
+                        chatInput.value = '';
+                    } else {
+                        showNotification('Please enter a message first');
+                    }
+                });
+                
+                chatInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        sendBtn.click();
+                    }
+                });
+            }
+            
+            // Universal phrase detection for global navigation
+            function detectGlobalNavigationPhrase(inputText) {
+                const text = inputText.toLowerCase().trim();
+                
+                // Check for logo creation phrases
+            if (text.includes('create a logo') || text.includes('generate a logo') || text.includes('make a logo')) {
+                window.location.href = 'generate-logo.html';
+                return true;
+            }
+            
+            // Check for privacy policy creation phrases
+            if (text.includes('create a privacy policy') || text.includes('generate a privacy policy') || text.includes('make a privacy policy')) {
+                window.location.href = 'generate-privacy-policy.html';
+                return true;
+            }
+            
+            // Check for marketing plan creation phrases
+            if (text.includes('create a marketing plan') || text.includes('generate a marketing plan') || text.includes('make a marketing plan')) {
+                window.location.href = 'generate-marketing-strategy.html';
+                return true;
+            }
+                
+                return false;
+            }
+
+            // Handle chat messages based on current step (SIMPLIFIED)
+            function handleChatMessage(message) {
+                console.log('🚨 PRIVACY PAGE: handleChatMessage CALLED with:', message);
+                // Check for global navigation phrases first
+                console.log('Privacy page: checking navigation for:', message);
+                if (detectGlobalNavigationPhrase(message)) {
+                    console.log('Privacy page: navigation detected, redirecting...');
+                    return;
+                }
+                console.log('Privacy page: no navigation phrase detected, continuing...');
+                
+                if (currentStep === 'business-details') {
+                    // Show business details in static element
+                    showBusinessDetailsMessage(message);
+                    
+                    // Extract business details
+                    businessDetails = extractBusinessDetails(message);
+                    
+                    // Show processing notification
+                    showNotification('Processing your business details...');
+                    
+                    // Add 3-second loading spinner directly after user message
+                    setTimeout(() => {
+                        addTypingIndicator('Analyzing your business details...');
+                    }, 1000);
+                    
+                    // Show review response after 3 seconds and remove typing
+                    setTimeout(() => {
+                        removeTypingIndicator();
+                        showReviewResponse();
+                    }, 4000); // 1 second delay + 3 seconds loading
+                    
+                } else if (currentStep === 'review') {
+                    // Check if user typed "looks good" or similar
+                    if (isLooksGoodInput(message)) {
+                        // Handle standalone button removal and replacement with user message
+                        const chatMessages = document.querySelector('.chat-messages');
+                        const looksGoodButton = chatMessages.querySelector('.standalone-btn.outline-btn');
+                        
+                        if (looksGoodButton) {
+                            const standaloneContainer = looksGoodButton.closest('.looks-good-standalone');
+                            const userBubble = looksGoodButton.closest('.user-bubble');
+                            
+                            if (standaloneContainer) {
+                                // Replace standalone button with user message bubble
+                                const userMessage = document.createElement('div');
+                                userMessage.className = 'user-message from-cta';
+                                userMessage.innerHTML = `
+                                    <div class="user-bubble cta-triggered from-cta">${message}</div>
+                                `;
+                                standaloneContainer.replaceWith(userMessage);
+                                
+                                // Mark the bubble as CTA-triggered
+                                const bubble = userMessage.querySelector('.user-bubble');
+                                if (bubble && window.markUserMessageAsCTATriggered) {
+                                    window.markUserMessageAsCTATriggered(bubble);
+                                }
+                            } else if (userBubble) {
+                                // Legacy handling for bubble-based buttons
+                                userBubble.innerHTML = message;
+                                userBubble.classList.remove('user-button-bubble');
+                                userBubble.classList.add('cta-triggered', 'from-cta');
+                                
+                                // Mark as CTA-triggered for grey background
+                                if (window.markUserMessageAsCTATriggered) {
+                                    window.markUserMessageAsCTATriggered(userBubble);
+                                }
+                                
+                                const parentMessage = userBubble.closest('.user-message');
+                                if (parentMessage) {
+                                    parentMessage.classList.add('from-cta');
+                                }
+                            }
+                        }
+                        
+                        // Remove helper text elements
+                        const helperElements = chatMessages.querySelectorAll('.helper-text');
+                        helperElements.forEach(element => {
+                            element.remove();
+                        });
+                        
+                        showNotification('Great! Generating your privacy policy...');
+                        
+                        // Show "Hang tight" loading screen instead
+                        showHangTightLoadingScreen();
+                    } else {
+                        // Handle other responses
+                        addUserMessage(message);
+                        showNotification('Processing your response...');
+                        
+                        setTimeout(() => {
+                            addAIMessage('I understand. Let me adjust the details based on your feedback...');
+                        }, 1500);
+                    }
+                } else if (currentStep === 'policy-action') {
+                    // Check if user typed "finalize" or similar
+                    if (isFinalizeInput(message)) {
+                        // Replace standalone action buttons with user message
+                        const chatMessages = document.querySelector('.chat-messages');
+                        const actionButtonsContainer = chatMessages.querySelector('.standalone-action-buttons');
+                        
+                        if (actionButtonsContainer) {
+                            // Replace standalone buttons with grey user bubble
+                            const userMessage = document.createElement('div');
+                            userMessage.className = 'user-message from-cta';
+                            userMessage.innerHTML = `
+                                <div class="user-bubble cta-triggered from-cta">${message}</div>
+                            `;
+                            actionButtonsContainer.replaceWith(userMessage);
+                            
+                            // Mark the bubble as CTA-triggered
+                            const bubble = userMessage.querySelector('.user-bubble');
+                            if (bubble && window.markUserMessageAsCTATriggered) {
+                                window.markUserMessageAsCTATriggered(bubble);
+                            }
+                        }
+                        
+                        // Remove helper text elements
+                        const helperElements = chatMessages.querySelectorAll('.helper-text');
+                        helperElements.forEach(element => {
+                            element.remove();
+                        });
+                        
+                        showNotification('Creating your privacy policy...');
+                        
+                        // Show finalizing loading screen for 5 seconds
+                        setTimeout(() => {
+                            showFinalizingLoadingScreen();
+                        }, 500);
+                    } else {
+                        // Handle other responses
+                        addUserMessage(message);
+                        showNotification('Please choose an option or type "finalize"...');
+                    }
+                } else if (currentStep === 'final') {
+                    // Check if user typed "yes see suggestions" or similar
+                    if (isSeeSuggestionsInput(message)) {
+                        // Replace standalone suggestions button with user message
+                        const chatMessages = document.querySelector('.chat-messages');
+                        const actionButtonsContainer = chatMessages.querySelector('.standalone-action-buttons');
+                        
+                        if (actionButtonsContainer) {
+                            // Replace standalone buttons with grey user bubble
+                            const userMessage = document.createElement('div');
+                            userMessage.className = 'user-message from-cta';
+                            userMessage.innerHTML = `
+                                <div class="user-bubble cta-triggered from-cta">${message}</div>
+                            `;
+                            actionButtonsContainer.replaceWith(userMessage);
+                            
+                            // Mark the bubble as CTA-triggered
+                            const bubble = userMessage.querySelector('.user-bubble');
+                            if (bubble && window.markUserMessageAsCTATriggered) {
+                                window.markUserMessageAsCTATriggered(bubble);
+                            }
+                        }
+                        
+                        // Remove helper text elements
+                        const helperElements = chatMessages.querySelectorAll('.helper-text');
+                        helperElements.forEach(element => {
+                            element.remove();
+                        });
+                        
+                        showNotification('See suggestions functionality would be implemented here...');
+                    } else {
+                        // Handle other responses
+                        addUserMessage(message);
+                        showNotification('Please choose an option or type "yes see suggestions"...');
+                    }
+                }
+            }
+            
+            // Show the review response using direct insertion
+            function showReviewResponse() {
+                console.log('📋 showReviewResponse called');
+                
+                // Add AI responses directly after the user's business details message
+                // Combine both messages into one for proper positioning
+                addAIMessage(`
+                    Done! I generated some details based on what I found. Can you confirm that this info is correct?
+                `);
+                console.log('✅ AI review message added');
+                
+                // Add "Looks Good" button and helper text at the bottom of chat
+                setTimeout(() => {
+                    console.log('🔘 Adding Looks Good button...');
+                    addLooksGoodButtonToBottom();
+                }, 500);
+                
+                // Update and show privacy summary after messages are shown
+                setTimeout(() => {
+                    console.log('📊 Updating privacy summary with:', businessDetails);
+                    updatePrivacySummary(businessDetails);
+                    console.log('📱 Showing privacy summary sidebar...');
+                    showPrivacySummary();
+                    console.log('✅ Privacy summary sidebar should now be visible');
+                }, 1500);
+                
+                currentStep = 'review';
+                console.log('✅ Step set to review');
+            }
+            
+
+            
+            // Additional helper functions for backward compatibility
+            function addProcessingIndicator() {
+                return addTypingIndicator('Analyzing your business details...');
+            }
+            
+            function addAiroTypingIndicator(text = 'Generating your privacy policy...') {
+                return addTypingIndicator(text);
+            }
+            
+            // Initialize dropdown functionality - ensure it's always available
+            if (typeof initializeDropdowns === 'function') {
+                initializeDropdowns();
+            }
+            
+            // Add helper text "Or, write your own response below"
+            function addHelperText() {
+                const chatMessages = document.getElementById('chatMessages');
+                const helperElement = document.createElement('div');
+                helperElement.className = 'helper-text';
+                helperElement.style.textAlign = 'center';
+                helperElement.style.color = '#666';
+                helperElement.style.fontSize = '14px';
+                helperElement.style.margin = '16px 0';
+                helperElement.innerHTML = '↩ Or, write your own response below';
+                
+                chatMessages.appendChild(helperElement);
+                
+                setTimeout(() => scrollToLatestMessage(), 100);
+            }
+            
+            // Re-initialize dropdowns periodically to ensure they stay functional
+            setInterval(function() {
+                if (typeof initializeDropdowns === 'function') {
+                    const askAiroBtn = document.getElementById('askAiroBtn');
+                    const airoGridPanel = document.getElementById('airoGridPanel');
+                    if (askAiroBtn && airoGridPanel && !askAiroBtn.hasAttribute('data-initialized')) {
+                        initializeDropdowns();
+                        askAiroBtn.setAttribute('data-initialized', 'true');
+                    }
+                }
+            }, 1000);
+        });
+    </script>
+
+    <!-- Disclaimer Text -->
+    <div class="disclaimer">
+        <p class="disclaimer-text">Airo can make mistakes, so double check its responses.</p>
+    </div>
+</body>
+</html>

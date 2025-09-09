@@ -1,0 +1,226 @@
+/* Design Tokens - Extracted from Figma */
+/* This file should be generated from your Figma design system */
+
+:root {
+  /* === COLORS === */
+  /* Primary Purple (from Figma color palette) */
+  --color-primary: #7B2CBF;
+  --color-primary-hover: #6a1ba3;
+  --color-primary-light: #9D4EDD;
+  --color-primary-dark: #5A189A;
+  
+  /* Neutrals (from Figma) */
+  --color-white: #ffffff;
+  --color-gray-50: #f8f9fa;
+  --color-gray-100: #f5f5f5;
+  --color-gray-200: #e9ecef;
+  --color-gray-300: #e5e5e5;
+  --color-gray-400: #999999;
+  --color-gray-500: #666666;
+  --color-gray-600: #555555;
+  --color-gray-700: #333333;
+  --color-gray-800: #1a1a1a;
+  
+  /* Send Button Colors */
+  --color-send-default: #9CA3AF;
+  --color-send-hover: var(--color-primary);
+  
+  /* === TYPOGRAPHY === */
+  /* Font Families (from Figma text styles) */
+  --font-family-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  
+  /* Font Sizes (from Figma type scale) */
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-base: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 28px;
+  --font-size-4xl: 32px;
+  
+  /* Font Weights (from Figma) */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  /* Line Heights (from Figma) */
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.6;
+  
+  /* === SPACING === */
+  /* Spacing Scale (from Figma auto-layout) */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 20px;
+  --spacing-2xl: 24px;
+  --spacing-3xl: 32px;
+  --spacing-4xl: 40px;
+  --spacing-5xl: 48px;
+  
+  /* === BORDER RADIUS === */
+  /* Radius values (from Figma corner radius) */
+  --radius-none: 0;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
+  --radius-full: 50px;
+  
+  /* === SHADOWS === */
+  /* Shadow system (from Figma effects) */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --shadow-2xl: 0 8px 32px rgba(0, 0, 0, 0.15);
+  
+  /* Control Bar Shadow */
+  --shadow-control-bar: 0 8px 32px rgba(0, 0, 0, 0.12);
+  
+  /* Purple Shadows */
+  --shadow-primary: 0 4px 8px rgba(123, 44, 191, 0.3);
+  --shadow-primary-lg: 0 8px 24px rgba(123, 44, 191, 0.15);
+  
+  /* === BORDERS === */
+  /* Border widths (from Figma) */
+  --border-width-thin: 1px;
+  --border-width-thick: 2px;
+  
+  /* Border colors */
+  --border-color-light: var(--color-gray-300);
+  --border-color-medium: var(--color-gray-400);
+  --border-color-focus: var(--color-primary);
+  
+  /* === COMPONENT SPECIFIC === */
+  /* Control Bar (from Figma component) */
+  --control-bar-bg: var(--color-white);
+  --control-bar-border: var(--border-color-light);
+  --control-bar-radius: var(--radius-2xl);
+  --control-bar-shadow: var(--shadow-control-bar);
+  --control-bar-padding: var(--spacing-lg);
+  --control-bar-gap: var(--spacing-lg);
+  
+  /* Input Field (from Figma) */
+  --input-bg: var(--color-white);
+  --input-border: var(--border-color-light);
+  --input-radius: var(--radius-lg);
+  --input-padding-x: var(--spacing-xl);
+  --input-padding-y: var(--spacing-sm);
+  --input-focus-border: var(--border-color-focus);
+  --input-focus-shadow: var(--shadow-primary-lg);
+  
+  /* Buttons (from Figma button components) */
+  --button-radius: var(--radius-lg);
+  --button-padding-x: var(--spacing-lg);
+  --button-padding-y: var(--spacing-sm);
+  --button-shadow: var(--shadow-sm);
+  --button-hover-shadow: var(--shadow-md);
+  
+  /* Dropdown (from Figma) */
+  --dropdown-bg: var(--color-white);
+  --dropdown-border: var(--border-color-light);
+  --dropdown-radius: var(--radius-lg);
+  --dropdown-shadow: var(--shadow-2xl);
+  --dropdown-padding: var(--spacing-lg);
+  
+  /* Cards (from Figma card components) */
+  --card-bg: var(--color-white);
+  --card-border: var(--border-color-light);
+  --card-radius: var(--radius-lg);
+  --card-shadow: var(--shadow-sm);
+  --card-hover-shadow: var(--shadow-lg);
+  --card-padding: var(--spacing-xl);
+  
+  /* === ANIMATIONS === */
+  /* Transition timings (from Figma prototyping) */
+  --transition-fast: 0.1s ease;
+  --transition-normal: 0.2s ease;
+  --transition-slow: 0.3s ease;
+  
+  /* Easing curves */
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  
+  /* === BREAKPOINTS === */
+  /* Responsive breakpoints (from Figma frames) */
+  --breakpoint-sm: 480px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1200px;
+  
+  /* === Z-INDEX === */
+  /* Layer management (from Figma layer order) */
+  --z-index-dropdown: 1000;
+  --z-index-modal: 1001;
+  --z-index-toast: 1002;
+  --z-index-tooltip: 1003;
+}
+
+/* === UTILITY CLASSES === */
+/* These mirror Figma's design system patterns */
+
+/* Spacing utilities */
+.p-xs { padding: var(--spacing-xs); }
+.p-sm { padding: var(--spacing-sm); }
+.p-md { padding: var(--spacing-md); }
+.p-lg { padding: var(--spacing-lg); }
+.p-xl { padding: var(--spacing-xl); }
+
+.m-xs { margin: var(--spacing-xs); }
+.m-sm { margin: var(--spacing-sm); }
+.m-md { margin: var(--spacing-md); }
+.m-lg { margin: var(--spacing-lg); }
+.m-xl { margin: var(--spacing-xl); }
+
+/* Typography utilities */
+.text-xs { font-size: var(--font-size-xs); }
+.text-sm { font-size: var(--font-size-sm); }
+.text-base { font-size: var(--font-size-base); }
+.text-lg { font-size: var(--font-size-lg); }
+.text-xl { font-size: var(--font-size-xl); }
+
+.font-light { font-weight: var(--font-weight-light); }
+.font-normal { font-weight: var(--font-weight-normal); }
+.font-medium { font-weight: var(--font-weight-medium); }
+.font-semibold { font-weight: var(--font-weight-semibold); }
+.font-bold { font-weight: var(--font-weight-bold); }
+
+/* Color utilities */
+.text-primary { color: var(--color-primary); }
+.text-gray-500 { color: var(--color-gray-500); }
+.text-gray-700 { color: var(--color-gray-700); }
+
+.bg-primary { background-color: var(--color-primary); }
+.bg-gray-50 { background-color: var(--color-gray-50); }
+.bg-white { background-color: var(--color-white); }
+
+/* Border utilities */
+.border { border: var(--border-width-thin) solid var(--border-color-light); }
+.border-primary { border-color: var(--border-color-focus); }
+
+.rounded-sm { border-radius: var(--radius-sm); }
+.rounded-md { border-radius: var(--radius-md); }
+.rounded-lg { border-radius: var(--radius-lg); }
+.rounded-xl { border-radius: var(--radius-xl); }
+.rounded-2xl { border-radius: var(--radius-2xl); }
+.rounded-full { border-radius: var(--radius-full); }
+
+/* Shadow utilities */
+.shadow-sm { box-shadow: var(--shadow-sm); }
+.shadow-md { box-shadow: var(--shadow-md); }
+.shadow-lg { box-shadow: var(--shadow-lg); }
+.shadow-xl { box-shadow: var(--shadow-xl); }
+
+/* Transition utilities */
+.transition { transition: all var(--transition-normal); }
+.transition-fast { transition: all var(--transition-fast); }
+.transition-slow { transition: all var(--transition-slow); }

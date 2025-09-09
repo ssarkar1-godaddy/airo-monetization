@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoDaddy Airo - Home</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo" onclick="navigateToPage('index')" style="cursor: pointer;">
+                <img src="assets/images/logo.svg" alt="GoDaddy Airo" class="logo-icon" />
+            </div>
+            <div class="header-actions">
+                <button class="upgrade-btn" onclick="navigateToPage('upgrade')">Upgrade to Airo Plus™</button>
+                <button class="close-btn" onclick="navigateToPage('index')">×</button>
+            </div>
+        </div>
+    </header>
+
+    <script>
+        // DEVELOPMENT: Only reset purchased state on manual page refresh (not navigation)
+        const isRefresh = performance.getEntriesByType('navigation')[0].type === 'reload';
+        if (isRefresh) {
+            localStorage.removeItem('airo_purchased');
+        }
+        
+        // Check if user has already purchased and remove upgrade button immediately
+        if (localStorage.getItem('airo_purchased') === 'true') {
+            const upgradeButton = document.querySelector('.upgrade-btn');
+            if (upgradeButton) {
+                upgradeButton.remove();
+            }
+        }
+    </script>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Welcome Section -->
+            <section class="welcome-section">
+                <h1 class="welcome-title">Hi, Sayan! I've got some ideas just for you.</h1>
+                <p class="welcome-subtitle">I'm always on the lookout for ways to help you grow. Here are a few I've come up with.</p>
+            </section>
+
+
+
+            <!-- Recent Chats Section -->
+            <section class="recent-chats" id="recentChatsSection" style="display: none;">
+                <h2 class="section-title">Recent chats</h2>
+                <div class="chat-grid">
+                    <div class="chat-item" id="privacyPolicyChat" onclick="navigateToPage('privacy-policy')" style="display: none;">
+                        <div class="chat-icon">📄</div>
+                        <div class="chat-content">
+                            <h3 class="chat-title">Privacy Policy</h3>
+                            <p class="chat-time">Last updated 26 Feb at 2:36pm</p>
+                        </div>
+                        <button class="chat-menu">⋯</button>
+                    </div>
+                    
+                    <div class="chat-item" id="logoChat" onclick="navigateToPage('generate-logo')" style="display: none;">
+                        <div class="chat-icon">🎨</div>
+                        <div class="chat-content">
+                            <h3 class="chat-title">Eugene's Cafe</h3>
+                            <p class="chat-time">Last updated 24 Feb at 9:02am</p>
+                        </div>
+                        <button class="chat-menu">⋯</button>
+                    </div>
+
+                    <div class="chat-item" onclick="navigateToPage('rug-warehouse')" style="display: none;">
+                        <div class="chat-icon">🏢</div>
+                        <div class="chat-content">
+                            <h3 class="chat-title">Image of a Rug Warehouse</h3>
+                            <p class="chat-time">Last updated 23 Feb at 4:22pm</p>
+                        </div>
+                        <button class="chat-menu">⋯</button>
+                    </div>
+
+                    <div class="chat-item" onclick="navigateToPage('business-goals')" style="display: none;">
+                        <div class="chat-icon">📊</div>
+                        <div class="chat-content">
+                            <h3 class="chat-title">Set Business Goals</h3>
+                            <p class="chat-time">Last updated 4 Feb at 1:45pm</p>
+                        </div>
+                        <button class="chat-menu">⋯</button>
+                    </div>
+
+                    <div class="chat-item" onclick="navigateToPage('set-up-llc')" style="display: none;">
+                        <div class="chat-icon">🏛️</div>
+                        <div class="chat-content">
+                            <h3 class="chat-title">Set Up LLC</h3>
+                            <p class="chat-time">Last updated 20 Jan at 8:41pm</p>
+                        </div>
+                        <button class="chat-menu">⋯</button>
+                    </div>
+
+                    <div class="chat-item" onclick="navigateToPage('coming-soon')" style="display: none;">
+                        <div class="chat-icon">📱</div>
+                        <div class="chat-content">
+                            <h3 class="chat-title">Coming Soon Page</h3>
+                            <p class="chat-time">Last updated 19 Jan at 5:42pm</p>
+                        </div>
+                        <button class="chat-menu">⋯</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recommendations Section -->
+            <section class="recommendations">
+                <h2 class="section-title">Your recommendations</h2>
+                <div class="recommendation-grid">
+                    <div class="recommendation-card">
+                        <div class="card-image">
+                            <img src="assets/images/images_Agent.png" alt="Buy a new domain for your business" class="card-image-photo">
+                        </div>
+                        <div class="card-content">
+                            <h3 class="card-title">Search for a domain to improve your online brand presence</h3>
+                            <button class="card-btn" onclick="navigateToPage('domain-search')">Find domain</button>
+                        </div>
+                    </div>
+
+                    <div class="recommendation-card">
+                        <div class="card-image">
+                            <img src="assets/images/Logo_Media.png" alt="Generate a logo to promote your products" class="card-image-photo">
+                        </div>
+                        <div class="card-content">
+                            <h3 class="card-title">Generate a logo to promote your products</h3>
+                            <button class="card-btn" onclick="navigateToPage('generate-logo')">Try Logo</button>
+                        </div>
+                    </div>
+
+                    <div class="recommendation-card">
+                        <div class="card-image">
+                            <img src="assets/images/Marketing_Media.png" alt="Get tips on how to reach more customers" class="card-image-photo">
+                        </div>
+                        <div class="card-content">
+                            <h3 class="card-title">Get tips on how to reach more customers</h3>
+                            <button class="card-btn" onclick="navigateToPage('generate-marketing-strategy')">Try Marketing Consultant</button>
+                        </div>
+                    </div>
+
+                    <div class="recommendation-card">
+                        <div class="card-image">
+                            <img src="assets/images/Privacy_Policy-image.png" alt="Create a privacy policy" class="card-image-photo">
+                        </div>
+                        <div class="card-content">
+                            <h3 class="card-title">Get help with a privacy policy for your site</h3>
+                            <button class="card-btn" onclick="navigateToPage('generate-privacy-policy')">Start Editing</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Create Section -->
+            <section class="create-section" style="display: none;">
+                <h2 class="section-title">Create</h2>
+                <div class="create-grid">
+                    <div class="create-item" onclick="navigateToPage('generate-logo')">
+                        <div class="create-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M12 2l3.09 6.26L22 9l-5.5 3.74L18.18 20 12 16.77 5.82 20 7.5 12.74 2 9l6.91-0.74L12 2z" fill="#666"/>
+                            </svg>
+                        </div>
+                        <div class="create-content">
+                            <h3 class="create-title">Design a logo</h3>
+                            <p class="create-description">See how a logo designed by the best AI could look</p>
+                        </div>
+                    </div>
+
+                    <div class="create-item" onclick="navigateToPage('optimize-site')">
+                        <div class="create-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="#666"/>
+                            </svg>
+                        </div>
+                        <div class="create-content">
+                            <h3 class="create-title">Optimize my site</h3>
+                            <p class="create-description">Find ways to boost your website with the website optimizer</p>
+                        </div>
+                    </div>
+
+                    <div class="create-item" onclick="alert('Generate Images - Coming Soon!')">
+                        <div class="create-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2v11z" stroke="#666" stroke-width="2" fill="none"/>
+                                <circle cx="12" cy="13" r="4" stroke="#666" stroke-width="2" fill="none"/>
+                            </svg>
+                        </div>
+                        <div class="create-content">
+                            <h3 class="create-title">Generate images</h3>
+                            <p class="create-description">Explore how Airo™ can help you create images that match your brand</p>
+                        </div>
+                    </div>
+
+                    <div class="create-item" onclick="navigateToPage('generate-marketing-strategy')">
+                        <div class="create-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M3 3v18h18" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M9 9l4 4 4-4" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <rect x="7" y="13" width="3" height="5" fill="#666"/>
+                                <rect x="12" y="8" width="3" height="10" fill="#666"/>
+                                <rect x="17" y="6" width="3" height="12" fill="#666"/>
+                            </svg>
+                        </div>
+                        <div class="create-content">
+                            <h3 class="create-title">Market my business</h3>
+                            <p class="create-description">Get tailored insights to help grow your business</p>
+                        </div>
+                    </div>
+
+                    <div class="create-item" onclick="navigateToPage('setup-llc')">
+                        <div class="create-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M6 20V10l6-6 6 6v10z" stroke="#666" stroke-width="2" fill="none"/>
+                                <path d="M8 12h8" stroke="#666" stroke-width="2"/>
+                                <path d="M10 12v4" stroke="#666" stroke-width="2"/>
+                                <path d="M14 12v4" stroke="#666" stroke-width="2"/>
+                                <path d="M6 20h12" stroke="#666" stroke-width="2"/>
+                            </svg>
+                        </div>
+                        <div class="create-content">
+                            <h3 class="create-title">Set up my LLC</h3>
+                            <p class="create-description">Set up your business, LLC, and more...</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Floating Control Bar -->
+    <div class="control-bar">
+        <div class="control-main">
+            <button class="home-btn">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M3 7l7-4 7 4v11a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M9 17V11h2v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            <div class="input-container">
+                <input type="text" class="chat-input" placeholder="Start typing...">
+                <button class="attach-btn">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M7 3a3 3 0 013 3v7a1 1 0 01-2 0V6a1 1 0 00-2 0v7a3 3 0 01-6 0V6a5 5 0 0110 0v7a1 1 0 102 0V6a7 7 0 00-14 0v7a5 5 0 0010 0V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+            <button class="send-btn">
+                <img src="assets/images/sendicon.png" alt="Send" class="send-icon-img">            </button>
+        </div>
+        
+        <!-- Expanded Grid Panel (shows between input and buttons) -->
+        <div class="airo-grid-panel" id="airoGridPanel">
+            <div class="grid-item" onclick="navigateToPage('generate-privacy-policy')">
+                <div class="grid-item-icon">
+                    <img src="assets/images/privacypolicyicon.png" alt="Privacy Policy" width="20" height="20">
+                </div>
+                <div class="grid-item-content">
+                    <div class="grid-item-title">Create a privacy policy</div>
+                    <div class="grid-item-desc">Build a policy to create trust with your customers</div>
+                </div>
+            </div>
+            <div class="grid-item" onclick="navigateToPage('generate-marketing-strategy')">
+                <div class="grid-item-icon">
+                    <img src="assets/images/marketingicon.png" alt="Marketing" width="20" height="20">
+                </div>
+                <div class="grid-item-content">
+                    <div class="grid-item-title">Market my business</div>
+                    <div class="grid-item-desc">Get tailored insights to help grow your business</div>
+                </div>
+            </div>
+            <div class="grid-item" onclick="alert('Generate Images - Coming Soon!')">
+                <div class="grid-item-icon">
+                    <img src="assets/images/imagesicon.png" alt="Generate Images" width="20" height="20">
+                </div>
+                <div class="grid-item-content">
+                    <div class="grid-item-title">Generate images</div>
+                    <div class="grid-item-desc">Explore how Airo™ can help you create images that match your brand</div>
+                </div>
+            </div>
+            <div class="grid-item" onclick="navigateToPage('generate-logo')">
+                <div class="grid-item-icon">
+                    <img src="assets/images/logoicon.png" alt="Design Logo" width="20" height="20">
+                </div>
+                <div class="grid-item-content">
+                    <div class="grid-item-title">Design a logo</div>
+                    <div class="grid-item-desc">See how a logo designed by the best AI could look</div>
+                </div>
+            </div>
+            <div class="grid-item" onclick="navigateToPage('optimize-site')">
+                <div class="grid-item-icon">
+                    <img src="assets/images/optimizeicon.png" alt="Optimize Site" width="20" height="20">
+                </div>
+                <div class="grid-item-content">
+                    <div class="grid-item-title">Optimize my site</div>
+                    <div class="grid-item-desc">Find ways to boost your website</div>
+                </div>
+            </div>
+            <div class="grid-item" onclick="navigateToPage('setup-llc')">
+                <div class="grid-item-icon">
+                    <img src="assets/images/LLCicon.png" alt="Set up LLC" width="20" height="20">
+                </div>
+                <div class="grid-item-content">
+                    <div class="grid-item-title">Set up my LLC</div>
+                    <div class="grid-item-desc">Set up your business, LLC, and more</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="control-dropdowns">
+            <div class="dropdown-container dropdown-left">
+                <button class="dropdown-btn" id="askAiroBtn">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M8 1v6m0 0l3-3m-3 3L5 4M1 9h14l-1 6H2L1 9z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Ask Airo to...
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="dropdown-arrow">
+                        <path d="M3 4.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="dropdown-container dropdown-right">
+                <button class="dropdown-btn" id="recentChatsBtn">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M8 5v3l2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                    Recent Chats
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="dropdown-arrow">
+                        <path d="M3 4.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                <div class="dropdown-menu" id="recentChatsDropdown">
+                    <a href="#" onclick="navigateToPage('privacy-policy')">Privacy Policy</a>
+                    <a href="#" onclick="navigateToPage('carpet-logo')">Eugene's Cafe</a>
+                    <a href="#" onclick="navigateToPage('rug-warehouse')">Image of a Rug Warehouse</a>
+                    <a href="#" onclick="navigateToPage('business-goals')">Set Business Goals</a>
+                    <a href="#" onclick="navigateToPage('set-up-llc')">Set Up LLC</a>
+                    <a href="#" onclick="navigateToPage('coming-soon')">Coming Soon Page</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Disclaimer Text -->
+    <div class="disclaimer">
+        <p class="disclaimer-text">Airo can make mistakes, so double check its responses.</p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

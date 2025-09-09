@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Images - GoDaddy Airo</title>
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        body {
+            background-color: transparent;
+            margin: 0;
+            font-family: 'GD Sherpa', sans-serif;
+            overflow-x: hidden;
+        }
+        
+        .header {
+            background-color: transparent;
+            border-bottom: none;
+            padding: 24px 32px;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: opacity 0.2s ease;
+        }
+        
+        .logo:hover {
+            opacity: 0.8;
+        }
+        
+        .logo-icon {
+            width: 24px;
+            height: 24px;
+        }
+        
+        .logo-text-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        
+        .logo-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+            line-height: 1;
+        }
+        
+        .airo {
+            color: #666;
+        }
+        
+        .airo-plus {
+            font-size: 12px;
+            font-weight: 500;
+            color: #666666;
+            line-height: 1;
+        }
+        
+        .header-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .header-description {
+            font-size: 14px;
+            color: #666666;
+            font-weight: 400;
+        }
+        
+        .image-generation-container {
+            display: flex;
+            min-height: calc(100vh - 80px);
+            align-items: flex-start;
+        }
+        
+        .image-sidebar {
+            width: 400px;
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 16px;
+            padding: 32px;
+            box-sizing: border-box;
+            overflow-y: auto;
+            margin: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        .sidebar-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333333;
+            margin-bottom: 32px;
+        }
+        
+        .form-group {
+            margin-bottom: 32px;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 16px;
+            font-weight: 500;
+            color: #333333;
+            margin-bottom: 12px;
+        }
+        
+        .form-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 16px;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #666666;
+            font-family: 'GD Sherpa', sans-serif;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+        
+        .form-textarea::placeholder {
+            color: #999999;
+        }
+        
+        .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #333333;
+            background: #ffffff;
+            cursor: pointer;
+            box-sizing: border-box;
+        }
+        
+        .style-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 16px;
+        }
+        
+        .style-option {
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .style-option:hover {
+            transform: translateY(-2px);
+        }
+        
+        .style-image {
+            width: 100%;
+            height: 80px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            object-fit: cover;
+            border: 2px solid transparent;
+            transition: border-color 0.2s ease;
+        }
+        
+        .style-option.selected .style-image {
+            border-color: #666;
+        }
+        
+        .style-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: #666666;
+        }
+        
+        .generate-btn {
+            width: 100%;
+            padding: 16px;
+            background: #999999;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            margin-top: 32px;
+        }
+        
+        .generate-btn:hover {
+            background: #666;
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+
+        
+        .image-preview-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 32px;
+            min-height: 400px;
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                padding: 16px 24px;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 16px;
+                align-items: flex-start;
+            }
+            
+            .header-info {
+                align-self: stretch;
+            }
+            
+            .header-description {
+                font-size: 13px;
+            }
+            
+            .image-generation-container {
+                flex-direction: column;
+                min-height: calc(100vh - 120px);
+            }
+            
+            .image-sidebar {
+                width: calc(100% - 48px);
+                margin: 16px 24px;
+                border-radius: 12px;
+            }
+            
+            .style-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .image-preview-area {
+                padding: 40px 24px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header {
+                padding: 12px 16px;
+            }
+            
+            .logo-text {
+                font-size: 16px;
+            }
+            
+            .airo-plus {
+                font-size: 11px;
+            }
+            
+            .header-description {
+                font-size: 12px;
+            }
+            
+            .image-sidebar {
+                width: calc(100% - 32px);
+                margin: 12px 16px;
+                padding: 24px;
+            }
+            
+            .image-generation-container {
+                min-height: calc(100vh - 100px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo" onclick="navigateToPage('index')" style="cursor: pointer;">
+                <img src="../assets/images/logo.svg" alt="GoDaddy Airo" class="logo-icon" />
+            </div>
+            <div class="header-actions">
+                <button class="upgrade-btn" onclick="navigateToPage('upgrade')">Upgrade to Airo Plus™</button>
+                <button class="close-btn" onclick="navigateToPage('index')">×</button>
+            </div>
+        </div>
+    </header>
+
+    <script>
+        // DEVELOPMENT: Only reset purchased state on manual page refresh (not navigation)
+        const isRefresh = performance.getEntriesByType('navigation')[0].type === 'reload';
+        if (isRefresh) {
+            localStorage.removeItem('airo_purchased');
+        }
+        
+        // Check if user has already purchased and remove upgrade button immediately
+        if (localStorage.getItem('airo_purchased') === 'true') {
+            const upgradeButton = document.querySelector('.upgrade-btn');
+            if (upgradeButton) {
+                upgradeButton.remove();
+            }
+        }
+    </script>
+
+    <!-- Main Content -->
+    <div class="image-generation-container">
+        <!-- Sidebar -->
+        <div class="image-sidebar">
+            <h2 class="sidebar-title">Image Design Brief</h2>
+            
+            <div class="form-group">
+                <label class="form-label">Image Description</label>
+                <textarea class="form-textarea" id="imageDescription" placeholder="Describe the image you want to generate. The more details, the better!"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Orientation</label>
+                <select class="form-select" id="imageOrientation">
+                    <option value="square">Square</option>
+                    <option value="landscape">Landscape</option>
+                    <option value="portrait">Portrait</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Image Style</label>
+                <div class="style-grid">
+                    <div class="style-option" data-style="none">
+                        <div class="style-image" style="background: #f0f0f0;"></div>
+                        <div class="style-label">None</div>
+                    </div>
+                    <div class="style-option" data-style="lowpoly">
+                        <img class="style-image" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjgwIiB2aWV3Qm94PSIwIDAgMTAwIDgwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iODAiIGZpbGw9IiM2NjMzZmYiLz48cG9seWdvbiBwb2ludHM9IjAsMzAgMzAsMTAgNjAsMjAgMTAwLDAgMTAwLDgwIDAsMzgiIGZpbGw9IiM4ODU1ZmYiLz48cG9seWdvbiBwb2ludHM9IjMwLDEwIDYwLDIwIDg1LDE1IDg1LDQwIDUwLDM1IDMwLDI1IiBmaWxsPSIjYWE3N2ZmIi8+PHBvbHlnb24gcG9pbnRzPSI2MCwyMCA4NSwxNSAxMDAsMCAqMDAsMzAgNzAsMzAiIGZpbGw9IiNkZGFhZmYiLz48cG9seWdvbiBwb2ludHM9IjAsNjAgMzAsNDUgNTAsNjAgMzAsNzUiIGZpbGw9IiM1NTI5ZGQiLz48cG9seWdvbiBwb2ludHM9IjUwLDYwIDg1LDUwIDEwMCw2NSAxMDAsMCAwLDgwIiBmaWxsPSIjNzc0NGVlIi8+PC9zdmc+" alt="Low Poly">
+                        <div class="style-label">Low Poly</div>
+                    </div>
+                    <div class="style-option" data-style="fantasy">
+                        <img class="style-image" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAQABkDASIAAhEBAxEB/8QAFwABAAMAAAAAAAAAAAAAAAAABgQFB//EACkQAAIBAwMDAgcBAAAAAAAAAAECAwAEEQUSITFBBhMiUWEUcYGRobHB/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAYEQEBAQEBAAAAAAAAAAAAAAAAARECEv/aAAwDAQACEQMRAD8A1/hnxPqF34thTxVcWsliZAJ7cRgXKQgqpVQxKngsFJO4elscVp9J1Kw8Uad+2+EjkvIrhd6zC7aNGTdGUDHBZs4YccZ61n/R/gtUa58VwaUv1N9k3+pI3lykM+3aFXKAYXGCCecmtrF4a8Q6J8Po3huKPxFLNcWxe5Fvujd8HO5Y0YLyM5YEY4rZnS9yXkjdKKKg0KKKKqP/2Q==" alt="Fantasy Art">
+                        <div class="style-label">Fantasy Art</div>
+                    </div>
+                    <div class="style-option" data-style="origami">
+                        <div class="style-image" style="background: linear-gradient(45deg, #ff7b00, #ff9f00);"></div>
+                        <div class="style-label">Origami</div>
+                    </div>
+                    <div class="style-option" data-style="photographic">
+                        <div class="style-image" style="background: linear-gradient(45deg, #8b7355, #a0916a);"></div>
+                        <div class="style-label">Photographic</div>
+                    </div>
+                    <div class="style-option" data-style="neon">
+                        <div class="style-image" style="background: linear-gradient(45deg, #ff00ff, #00ffff);"></div>
+                        <div class="style-label">Neon Funk</div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="generate-btn" id="generateBtn">Generate</button>
+        </div>
+        
+        <!-- Main Content Area -->
+        <div class="main-content">
+
+            
+            <div class="image-preview-area">
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="../script.js"></script>
+    <script>
+        // Page-specific navigation function
+        // Navigation function - using global script.js version
+        
+        let selectedStyle = 'none';
+        
+        // Initialize image generation functionality
+        function initializeImageGeneration() {
+            // Style selection
+            const styleOptions = document.querySelectorAll('.style-option');
+            styleOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove selected class from all options
+                    styleOptions.forEach(opt => opt.classList.remove('selected'));
+                    // Add selected class to clicked option
+                    this.classList.add('selected');
+                    selectedStyle = this.getAttribute('data-style');
+                });
+            });
+            
+            // Generate button
+            const generateBtn = document.getElementById('generateBtn');
+            const imageDescription = document.getElementById('imageDescription');
+            
+            generateBtn.addEventListener('click', function() {
+                const description = imageDescription.value.trim();
+                if (description) {
+                    showNotification('Image generation would start here with: ' + description);
+                } else {
+                    showNotification('Please add an image description first');
+                }
+            });
+            
+            // Auto-resize textarea
+            const textarea = document.getElementById('imageDescription');
+            textarea.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = Math.min(this.scrollHeight, 200) + 'px';
+            });
+        }
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeImageGeneration();
+        });
+    </script>
+
+    <!-- Disclaimer Text -->
+    <div class="disclaimer">
+        <p class="disclaimer-text">Airo can make mistakes, so double check its responses.</p>
+    </div>
+</body>
+</html>

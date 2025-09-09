@@ -1,0 +1,3545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoDaddy Airo - Domain Search</title>
+    <!-- Updated: Control bar sizing implementation -->
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        /* GD Sherpa Font Declarations */
+        @font-face {
+            font-family: 'GD Sherpa';
+            src: url('../assets/fonts/static web fonts/GD_Sherpa_Text-Regular.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        @font-face {
+            font-family: 'GD Sherpa';
+            src: url('../assets/fonts/static web fonts/GD_Sherpa_Text-Medium.woff2') format('woff2');
+            font-weight: 500;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        @font-face {
+            font-family: 'GD Sherpa';
+            src: url('../assets/fonts/static web fonts/GD_Sherpa_Text-Bold.woff2') format('woff2');
+            font-weight: 600;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        @font-face {
+            font-family: 'GD Sherpa';
+            src: url('../assets/fonts/static web fonts/GD_Sherpa_Text-Bold.woff2') format('woff2');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        @font-face {
+            font-family: 'GD Sherpa Display';
+            src: url('../assets/fonts/static web fonts/GD_Sherpa_Display-Regular.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        @font-face {
+            font-family: 'GD Sherpa Display';
+            src: url('../assets/fonts/static web fonts/GD_Sherpa_Display-Medium.woff2') format('woff2');
+            font-weight: 500;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        @font-face {
+            font-family: 'GD Sherpa Display';
+            src: url('../assets/fonts/static web fonts/GD_Sherpa_Display-Bold.woff2') format('woff2');
+            font-weight: 600;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        @font-face {
+            font-family: 'GD Sherpa Display';
+            src: url('../assets/fonts/static web fonts/GD_Sherpa_Display-Bold.woff2') format('woff2');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        /* Global font family override */
+        * {
+            font-family: 'GD Sherpa', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+        }
+        
+        /* Use Display font for headings */
+        h1, h2, h3, h4, h5, h6,
+        .domain-results-title,
+        .protection-title,
+        .pricing-title {
+            font-family: 'GD Sherpa Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+        }
+    </style>
+    <style>
+        /* Main Content Wrapper - Flex container for chat and sidebar */
+        .main-content-wrapper {
+            display: flex;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            min-height: calc(100vh - 80px);
+            gap: 24px;
+            align-items: flex-start; /* Align items to top */
+            position: relative; /* Establish containing block for absolute positioned children */
+            overflow: hidden; /* Prevent content from bleeding outside wrapper */
+        }
+
+        /* Mobile responsive for wrapper */
+        @media (max-width: 768px) {
+            .main-content-wrapper {
+                flex-direction: column;
+                padding: 0 16px;
+            }
+        }
+
+        .chat-interface {
+            flex: 1; /* Take remaining space in flex container */
+            padding: 40px 0 120px;
+            min-height: calc(100vh - 160px);
+            max-height: calc(100vh - 160px);
+            display: flex;
+            flex-direction: column;
+            background-color: transparent;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+            position: relative; /* Establish proper stacking context */
+            z-index: 1; /* Keep chat below sidebar */
+        }
+        
+        .chat-messages {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        
+        .airo-message {
+            align-self: flex-start;
+            max-width: 80%;
+            animation: slideInLeft 0.4s ease-out;
+        }
+        
+        .airo-bubble {
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            color: #333333;
+            padding: 20px 24px;
+            border-radius: 20px;
+            border-bottom-left-radius: 6px;
+            font-size: 16px;
+            line-height: 1.5;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .chat-interface {
+                padding: 24px 16px 120px;
+                max-height: calc(100vh - 120px);
+            }
+            
+            .airo-message {
+                max-width: 90%;
+            }
+
+            .airo-bubble {
+                padding: 14px 18px;
+                font-size: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .chat-interface {
+                padding: 20px 12px 120px;
+                max-height: calc(100vh - 100px);
+            }
+            
+            .airo-message {
+                max-width: 95%;
+            }
+
+            .airo-bubble {
+                padding: 12px 16px;
+                font-size: 14px;
+            }
+        }
+
+        /* User message styling to match generate-logo page */
+        .user-message {
+            align-self: flex-end;
+            max-width: 70%;
+        }
+        
+        .user-bubble {
+            background: #F5F7F8 !important;
+            color: #333333;
+            padding: 16px 20px;
+            border-radius: 20px;
+            border-bottom-right-radius: 6px;
+            font-size: 16px;
+            line-height: 1.4;
+            border: 1px solid #e5e5e5;
+        }
+
+        /* Action buttons styling */
+        .user-action-buttons {
+            align-self: flex-end;
+            max-width: 80%;
+            margin-top: 16px;
+        }
+
+        .action-buttons-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        .standalone-btn {
+            padding: 12px 20px;
+            border: 1px solid #7B2CBF;
+            background: transparent;
+            color: #7B2CBF;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+
+        .standalone-btn:hover {
+            background: #7B2CBF;
+            color: white;
+        }
+
+        .helper-text {
+            margin-top: 12px;
+            text-align: right;
+        }
+
+        .helper-message {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .helper-icon {
+            font-size: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .user-message {
+                max-width: 90%;
+            }
+
+            .user-bubble {
+                padding: 14px 18px;
+                font-size: 15px;
+            }
+
+            .action-buttons-container {
+                gap: 8px;
+            }
+
+            .standalone-btn {
+                padding: 10px 16px;
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .user-message {
+                max-width: 95%;
+            }
+
+            .user-bubble {
+                padding: 12px 16px;
+                font-size: 14px;
+            }
+
+            .standalone-btn {
+                padding: 8px 14px;
+                font-size: 12px;
+            }
+        }
+
+        /* Hang Tight Sidebar - matches logo-selection-sidebar positioning */
+        .hang-tight-sidebar {
+            width: 60%;
+            flex-shrink: 0;
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 16px;
+            display: none;
+            flex-direction: column;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+            overflow-y: auto;
+            overflow-x: hidden;
+            height: calc(100vh - 145px);
+            margin-top: 10px;
+            z-index: 100;
+            position: relative;
+        }
+
+        .hang-tight-sidebar.visible {
+            display: flex;
+        }
+
+        .sidebar-loading-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .loading-icon {
+            margin-bottom: 24px;
+        }
+
+        .loading-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333333;
+            margin-bottom: 8px;
+        }
+
+        .loading-subtitle {
+            font-size: 14px;
+            color: #666666;
+        }
+
+        /* Body classes for sidebar positioning - ensure chat stays visible with 60% sidebar */
+        body.logo-sidebar-open .chat-interface.with-large-sidebar {
+            /* Adjust chat width to accommodate 60% sidebar */
+            width: calc(40% - 24px);
+            max-width: calc(40% - 24px);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Large sidebar control bar - exact copy from generate-logo page */
+        body.logo-sidebar-open .control-bar {
+            left: max(24px, calc((100vw - 1200px) / 2 + 24px)) !important; /* Align with left boundary + padding */
+            right: auto !important;
+            transform: translateX(0) !important;
+            width: calc(min(1200px, 100vw - 48px) * 0.4 * 0.9 - 24px) !important; /* 90% of 40% chat area for 60% sidebar */
+            max-width: none !important;
+        }
+
+        /* Large sidebar states - disclaimer follows control bar */
+        body.logo-sidebar-open .disclaimer {
+            left: max(24px, calc((100vw - 1200px) / 2 + 24px)) !important;
+            right: auto !important;
+            transform: translateX(0) !important;
+            width: calc(min(1200px, 100vw - 48px) * 0.4 * 0.9 - 24px) !important; /* Match control bar width exactly */
+            max-width: none !important;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Typing Dots Animation - exact copy from generate-logo page */
+        .typing-indicator {
+            align-self: flex-start !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 12px !important;
+            margin-top: 16px !important;
+        }
+        
+        .typing-dots {
+            display: flex !important;
+            gap: 4px !important;
+        }
+        
+        .typing-dot {
+            width: 8px !important;
+            height: 8px !important;
+            background: #6C47B4 !important;
+            border-radius: 50% !important;
+            animation: typingPulse 1.4s infinite !important;
+        }
+        
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s !important;
+        }
+        
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s !important;
+        }
+        
+        .typing-text {
+            color: #666666 !important;
+            font-size: 14px !important;
+            font-style: italic !important;
+        }
+        
+        @keyframes typingPulse {
+            0%, 60%, 100% {
+                opacity: 0.3;
+                transform: scale(0.8);
+            }
+            30% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Domain Results Styling - matching uploaded image */
+        .domain-results-content {
+            padding: 24px;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .domain-results-header {
+            margin-bottom: 24px;
+        }
+
+        .domain-results-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #000000;
+            margin: 0;
+        }
+
+        .domain-results-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .domain-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            background: #ffffff;
+            gap: 12px;
+        }
+
+        .domain-heart-icon {
+            flex-shrink: 0;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .domain-item.primary {
+            /* No special border for primary */
+        }
+
+        .domain-item.premium {
+            position: relative;
+            padding-top: 32px;
+        }
+
+        .domain-info {
+            flex: 1;
+        }
+
+        .domain-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 4px;
+        }
+
+        .domain-price {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .price-original {
+            font-size: 14px;
+            color: #666666;
+            text-decoration: line-through;
+        }
+
+        .price-sale {
+            font-size: 16px;
+            font-weight: 600;
+            color: #000000;
+        }
+
+        .price-term {
+            font-size: 12px;
+            color: #666666;
+        }
+
+        .domain-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .btn-refresh, .btn-cart, .btn-favorite {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 6px;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #666666;
+        }
+
+        .btn-refresh:hover, .btn-cart:hover, .btn-favorite:hover {
+            background: #f8f9fa;
+            color: #000000;
+        }
+
+        .btn-primary {
+            background: #000000;
+            color: #ffffff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background: #333333;
+        }
+
+        /* Bundle section */
+        .domain-bundle {
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            background: #ffffff;
+        }
+
+        .bundle-badge {
+            background: #A6FFF8;
+            color: #000000;
+            font-size: 9px;
+            font-weight: 600;
+            padding: 8px 16px;
+            text-align: left;
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            border-radius: 4px;
+        }
+
+        .bundle-item {
+            padding: 16px;
+            padding-top: 48px;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            min-height: 120px;
+        }
+
+        .bundle-info {
+            flex: 1;
+        }
+
+        .bundle-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 12px;
+        }
+
+        .domain-ext {
+            color: #666666;
+            border: 1px solid #d1d5db;
+            background: #ffffff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-left: 4px;
+        }
+
+        .bundle-extensions {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .ext-tag {
+            background: #ffffff;
+            color: #374151;
+            padding: 6px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .bundle-price {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .price-hash {
+            font-size: 18px;
+            font-weight: 600;
+            color: #000000;
+        }
+
+        .price-hash.original {
+            text-decoration: line-through;
+            color: #666666;
+            font-size: 16px;
+        }
+
+        .bundle-price .price-info {
+            font-size: 16px;
+            color: #666666;
+        }
+
+        .bundle-actions {
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-end;
+            margin-top: auto;
+        }
+
+        .bundle-heart {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* User Action Buttons - appear on user's side */
+        .user-action-buttons {
+            align-self: flex-end;
+            max-width: 70%;
+            margin-top: 16px;
+            animation: fadeInUp 0.3s ease-out 0.5s both;
+            background: transparent !important;
+            border: none !important;
+            padding: 0 !important;
+            box-shadow: none !important;
+        }
+        
+        .user-action-buttons .user-bubble {
+            background: transparent !important;
+            border: none !important;
+            padding: 0 !important;
+            box-shadow: none !important;
+        }
+        
+        .action-buttons-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 16px;
+        }
+
+        .action-buttons-row {
+            display: flex;
+            flex-direction: row;
+            gap: 12px;
+        }
+
+        .action-buttons-row:last-child {
+            margin-left: 50px !important;
+            position: relative;
+            left: 50px;
+        }
+
+        .action-buttons-row .action-btn {
+            flex: 1;
+        }
+
+        .action-buttons-row.horizontal-layout {
+            display: flex;
+            flex-direction: row;
+            gap: 16px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .action-buttons-row.horizontal-layout .action-btn {
+            flex: 0 1 auto;
+            min-width: 140px;
+            white-space: nowrap;
+            font-size: 14px;
+            padding: 12px 20px;
+        }
+
+        .action-btn.full-width {
+            width: 100%;
+        }
+
+        .action-btn {
+            flex: 1.5;
+            padding: 12px 24px;
+            border: 1px solid #6C47B4;
+            background: #ffffff;
+            color: #6C47B4;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        .action-btn:hover {
+            background: #f3f0ff;
+            border-color: #6C47B4;
+            color: #6C47B4;
+        }
+
+        .standalone-btn {
+            padding: 12px 24px;
+            border: 1px solid #6C47B4;
+            background: #ffffff;
+            color: #6C47B4;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        .standalone-btn:hover {
+            background: #f3f0ff;
+            border-color: #6C47B4;
+            color: #6C47B4;
+        }
+
+        .outline-btn {
+            background: #ffffff;
+            color: #6C47B4;
+            border-color: #6C47B4;
+        }
+
+        .helper-text {
+            text-align: right;
+            color: #666666;
+            font-size: 14px;
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .user-bubble.system-message {
+            background: #F5F7F8 !important;
+            color: #333333 !important;
+        }
+
+        /* Cart View Styles */
+        .cart-content {
+            background: #ffffff;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .cart-scrollable {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+        }
+
+        .cart-header {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 20px 12px 16px 12px;
+            margin-bottom: 0;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-spacer {
+            width: 40px; /* Same width as back button to center the title */
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            font-size: 16px;
+            color: #09757A;
+            cursor: pointer;
+            padding: 8px;
+            margin-left: -8px;
+        }
+
+        .back-btn:hover {
+            color: #075d61;
+        }
+
+        .cart-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #000000;
+            margin: 0;
+            flex: 1;
+            text-align: center;
+        }
+
+        .cart-accordion {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+
+        .accordion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: #ffffff;
+            cursor: pointer;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .accordion-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #000000;
+            margin: 0;
+        }
+
+        .accordion-arrow {
+            font-size: 16px;
+            color: #666666;
+            transform: rotate(180deg);
+            transition: transform 0.3s ease;
+        }
+
+        .accordion-arrow.collapsed {
+            transform: rotate(0deg);
+        }
+
+        .accordion-content {
+            padding: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .cart-item-card {
+            padding: 10px 16px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .cart-item-card:last-child {
+            border-bottom: none;
+        }
+
+        .cart-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0;
+        }
+
+        .item-title-section {
+            flex: 1;
+        }
+
+        .item-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #000000;
+            margin: 0 0 4px 0;
+        }
+
+        .item-subtitle {
+            font-size: 14px;
+            color: #666666;
+        }
+
+        .item-pricing {
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 2px;
+        }
+
+        .current-price {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2E8B57;
+        }
+
+        .original-price {
+            font-size: 14px;
+            color: #666666;
+            text-decoration: line-through;
+        }
+
+        .discount-text {
+            font-size: 12px;
+            color: #2E8B57;
+            font-weight: 500;
+        }
+
+        .free-months {
+            font-size: 12px;
+            color: #666666;
+        }
+
+        .term-length-section {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 16px;
+        }
+
+        .term-label {
+            font-size: 14px;
+            color: #333333;
+            font-weight: 500;
+        }
+
+        .term-dropdown {
+            position: relative;
+        }
+
+        .term-select {
+            width: 200px;
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            background: #ffffff;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 10px center;
+            background-repeat: no-repeat;
+            background-size: 16px;
+            padding-right: 36px;
+        }
+
+        .term-duration {
+            font-size: 14px;
+            color: #666666;
+            margin-top: 4px;
+        }
+
+        .remove-item-btn {
+            background: none;
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+            color: #666666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .remove-item-btn:hover {
+            color: #ef4444;
+        }
+
+        /* Cart Footer Styles */
+        .cart-footer {
+            flex-shrink: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: #ffffff;
+            border-top: 1px solid #e5e7eb;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .cart-summary-left {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .subtotal-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .subtotal-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #000000;
+            margin: 0;
+        }
+
+        .subtotal-price {
+            font-size: 16px;
+            font-weight: 600;
+            color: #09757A;
+            margin: 0;
+        }
+
+        .item-count {
+            font-size: 12px;
+            color: #666666;
+            margin: 0;
+        }
+
+        /* Billing Information Styles */
+        .billing-section {
+            margin: 20px 0;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .billing-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .billing-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #000000;
+            margin: 0;
+        }
+
+        .billing-status {
+            display: flex;
+            align-items: center;
+        }
+
+        .check-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .billing-display {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .billing-info {
+            flex: 1;
+        }
+
+        .billing-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 8px;
+        }
+
+        .billing-address {
+            font-size: 14px;
+            color: #666666;
+            line-height: 1.4;
+            margin-bottom: 4px;
+        }
+
+        .billing-company {
+            font-size: 14px;
+            color: #666666;
+        }
+
+        .edit-btn {
+            background: none;
+            border: none;
+            color: #09757A;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: underline;
+            padding: 4px 8px;
+        }
+
+        .edit-btn:hover {
+            color: #075d61;
+            text-decoration: none;
+        }
+
+        .billing-edit {
+            padding: 20px;
+            background: #f9f9f9;
+        }
+
+        .billing-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        .form-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #333333;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+            background: #ffffff;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #6C47B4;
+            box-shadow: 0 0 0 2px rgba(108, 71, 180, 0.1);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 8px;
+        }
+
+        .cancel-btn {
+            background: none;
+            border: 1px solid #d1d5db;
+            color: #666666;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .cancel-btn:hover {
+            background: #f3f4f6;
+        }
+
+        .save-btn {
+            background: #6C47B4;
+            border: none;
+            color: #ffffff;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .save-btn:hover {
+            background: #5a3a99;
+        }
+
+        /* Payment Section Styles */
+        .payment-section {
+            margin: 20px 0;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .payment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .payment-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #000000;
+            margin: 0;
+        }
+
+        .payment-status {
+            display: flex;
+            align-items: center;
+        }
+
+        .payment-display {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .payment-info {
+            flex: 1;
+        }
+
+        .payment-method {
+            display: flex;
+            align-items: center;
+        }
+
+        .card-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-number {
+            font-size: 16px;
+            font-weight: 500;
+            color: #000000;
+        }
+
+        .payment-edit {
+            padding: 20px;
+            background: #f9f9f9;
+        }
+
+        .payment-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Input formatting for card number */
+        #cardNumber {
+            font-family: 'Courier New', monospace;
+            letter-spacing: 1px;
+        }
+
+        #expiryDate {
+            font-family: 'Courier New', monospace;
+        }
+
+        #cvv {
+            font-family: 'Courier New', monospace;
+            text-align: center;
+        }
+
+        .checkout-btn {
+            padding: 10px 20px;
+            background: #000000;
+            border: none;
+            border-radius: 6px;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .checkout-btn:hover {
+            background: #333333;
+        }
+
+        /* Confirmation Buttons Styles */
+        .confirmation-buttons-container {
+            margin: 16px 0;
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .confirmation-buttons {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        /* Override for confirmation buttons to match generate-logo styling */
+        .confirmation-buttons .standalone-btn,
+        .confirmation-buttons .outline-btn {
+            border-color: #6C47B4 !important;
+            color: #6C47B4 !important;
+            background: transparent !important;
+        }
+
+        .confirmation-buttons .standalone-btn:hover,
+        .confirmation-buttons .outline-btn:hover {
+            background: #D3C1F7 !important;
+            border-color: #6C47B4 !important;
+            color: #6C47B4 !important;
+        }
+
+        /* Receipt Page Styles */
+        .receipt-content {
+            background: #ffffff;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .receipt-header {
+            flex-shrink: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .godaddy-logo {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        .header-spacer {
+            width: 40px; /* Same width as back button to center the logo */
+        }
+
+        .receipt-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px 20px;
+        }
+
+        .receipt-title {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .receipt-title h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #000000;
+            margin: 0 0 8px 0;
+            line-height: 1.2;
+        }
+
+        .receipt-title p {
+            font-size: 14px;
+            color: #666666;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .receipt-card {
+            background: transparent;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .success-icon {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .receipt-message {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .receipt-message h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #000000;
+            margin: 0 0 8px 0;
+        }
+
+        .receipt-message p {
+            font-size: 14px;
+            color: #666666;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .receipt-items {
+            margin-bottom: 24px;
+        }
+
+        .receipt-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .receipt-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-icon {
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .item-details {
+            flex: 1;
+        }
+
+        .item-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #000000;
+            margin-bottom: 4px;
+            line-height: 1.3;
+        }
+
+        .item-subtitle {
+            font-size: 12px;
+            color: #666666;
+        }
+
+        .item-price {
+            font-size: 14px;
+            font-weight: 600;
+            color: #000000;
+            white-space: nowrap;
+        }
+
+        .receipt-footer {
+            flex-shrink: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: #ffffff;
+            border-top: 1px solid #e5e7eb;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .receipt-summary-left {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .receipt-summary-left .subtotal-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .receipt-summary-left .subtotal-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #000000;
+            margin: 0;
+        }
+
+        .receipt-summary-left .subtotal-price {
+            font-size: 16px;
+            font-weight: 600;
+            color: #09757A;
+            margin: 0;
+        }
+
+        .continue-btn {
+            padding: 10px 20px;
+            background: #000000;
+            border: none;
+            border-radius: 6px;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .continue-btn:hover {
+            background: #333333;
+        }
+
+        /* Confetti Animation (copied from generate-privacy-policy) */
+        .confetti {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+        
+        .confetti-piece {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+            animation: confetti-fall 3s linear forwards;
+        }
+        
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+        
+        .confetti-piece:nth-child(odd) {
+            background: #666;
+        }
+        
+        .confetti-piece:nth-child(even) {
+            background: #FFD700;
+        }
+        
+        .confetti-piece:nth-child(3n) {
+            background: #FF6B6B;
+        }
+        
+        .confetti-piece:nth-child(4n) {
+            background: #4ECDC4;
+        }
+        
+        .confetti-piece:nth-child(5n) {
+            background: #45B7D1;
+        }
+
+
+        /* Domain Protection Sidebar Styles */
+        .domain-protection-content {
+            background: #ffffff;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .protection-scrollable {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .protection-header {
+            margin-bottom: 20px;
+        }
+
+        .back-button {
+            background: none;
+            border: none;
+            font-size: 16px;
+            color: #333333;
+            cursor: pointer;
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-button:hover {
+            color: #6C47B4;
+        }
+
+        .protection-hero {
+            background: #f1f3f4;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .hero-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .protection-main {
+            flex: 1;
+        }
+
+        .protection-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+
+        .protection-subtitle {
+            font-size: 16px;
+            color: #666666;
+            margin-bottom: 24px;
+            line-height: 1.4;
+        }
+
+        .pricing-card {
+            background: transparent;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .pricing-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .pricing-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .price-old {
+            font-size: 16px;
+            color: #666666;
+            text-decoration: line-through;
+        }
+
+        .price-new {
+            font-size: 24px;
+            font-weight: 700;
+            color: #000000;
+        }
+
+        .discount-badge {
+            background: #FFEEA9;
+            color: #000000;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-left: auto;
+        }
+
+        .pricing-details {
+            font-size: 14px;
+            color: #666666;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .features-container {
+            background: #F5F7F8;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .protection-features {
+            margin-bottom: 24px;
+        }
+
+        .features-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 16px;
+        }
+
+        .feature-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .feature-icon {
+            font-size: 20px;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        img.feature-icon {
+            width: 26px;
+            height: 26px;
+            margin-top: 0;
+        }
+
+        .feature-text {
+            font-size: 14px;
+            color: #333333;
+            line-height: 1.4;
+        }
+
+        .renewal-protection {
+            background: transparent;
+            border-radius: 0;
+            padding: 0;
+            padding-top: 24px;
+            margin-bottom: 0;
+            margin-top: 24px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .renewal-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 8px;
+        }
+
+        .renewal-subtitle {
+            font-size: 14px;
+            color: #333333;
+            margin-bottom: 12px;
+        }
+
+        .renewal-feature {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            background: #D8EFEF;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 16px;
+        }
+
+        .renewal-checkbox {
+            margin-top: 4px;
+            flex-shrink: 0;
+        }
+
+        .renewal-label {
+            font-size: 14px;
+            color: #333333;
+            line-height: 1.4;
+            cursor: pointer;
+        }
+
+        .protection-actions {
+            flex-shrink: 0;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            padding: 12px 16px;
+            background: #ffffff;
+            border-top: 1px solid #e5e7eb;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .skip-btn {
+            background: none;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 400;
+            color: #666666;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .skip-btn:hover {
+            color: #333333;
+            text-decoration: none;
+        }
+
+        .add-to-cart-btn {
+            width: auto;
+            min-width: 140px;
+            padding: 10px 20px;
+            background: #000000;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .add-to-cart-btn:hover {
+            background: #333333;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .protection-scrollable {
+                padding: 16px;
+            }
+
+            .protection-title {
+                font-size: 24px;
+            }
+
+            .protection-subtitle {
+                font-size: 14px;
+            }
+
+            .pricing-card {
+                padding: 16px;
+            }
+
+            .pricing-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            .price-new {
+                font-size: 20px;
+            }
+
+            .protection-actions {
+                flex-direction: column;
+                padding: 16px;
+            }
+
+            .skip-btn {
+                padding: 12px 16px;
+                font-size: 14px;
+            }
+            
+            .add-to-cart-btn {
+                padding: 12px 20px;
+                font-size: 14px;
+                min-width: 120px;
+            }
+
+            .hero-image {
+                max-height: 200px;
+                object-fit: contain;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .protection-scrollable {
+                padding: 12px;
+            }
+
+            .protection-title {
+                font-size: 20px;
+            }
+
+            .pricing-card, .renewal-protection {
+                padding: 12px;
+            }
+
+            .feature-item {
+                gap: 8px;
+            }
+
+            .feature-icon {
+                font-size: 16px;
+            }
+
+            .feature-text {
+                font-size: 13px;
+            }
+
+            .protection-actions {
+                padding: 12px;
+            }
+        }
+
+        /* Premium domain */
+        .premium-badge {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background: #A6FFF8;
+            color: #000000;
+            font-size: 9px;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            width: fit-content;
+        }
+
+        .verified-icon {
+            font-size: 9px;
+        }
+
+        /* Footer */
+        .domain-footer {
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid #e5e5e5;
+        }
+
+        .privacy-note {
+            font-size: 12px;
+            color: #666666;
+            text-align: center;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .info-icon {
+            font-size: 14px;
+            color: #666666;
+        }
+
+        @media (max-width: 768px) {
+            .hang-tight-sidebar {
+                width: calc(100% - 48px) !important;
+                height: calc(100vh - 140px) !important;
+                margin-top: 20px !important;
+                margin-bottom: 20px !important;
+            }
+
+            .chat-interface {
+                padding: 24px 16px 120px;
+                max-height: calc(100vh - 120px);
+            }
+            
+            .user-message, .airo-message {
+                max-width: 90%;
+            }
+
+            .domain-results-content {
+                padding: 16px;
+            }
+
+            .domain-item {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+
+            .domain-actions {
+                justify-content: flex-end;
+            }
+
+            .bundle-item {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .bundle-actions {
+                justify-content: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo" onclick="navigateToPage('index')" style="cursor: pointer;">
+                <img src="../assets/images/logo.svg" alt="GoDaddy Airo" class="logo-icon" />
+            </div>
+            <div class="header-actions">
+                <button class="upgrade-btn" onclick="navigateToPage('upgrade')">Upgrade to Airo Plus™</button>
+                <button class="close-btn" onclick="navigateToPage('index')">×</button>
+            </div>
+        </div>
+    </header>
+
+    <script>
+        // Check if user has already purchased and remove upgrade button immediately
+        if (localStorage.getItem('airo_purchased') === 'true') {
+            const upgradeButton = document.querySelector('.upgrade-btn');
+            if (upgradeButton) {
+                upgradeButton.remove();
+            }
+        }
+    </script>
+
+    <!-- Main Content Wrapper -->
+    <div class="main-content-wrapper">
+        <!-- Chat Interface -->
+        <main class="chat-interface" id="chatInterface">
+            <div class="chat-messages">
+                <!-- Airo Message -->
+                <div class="airo-message">
+                    <div class="airo-bubble">
+                        Hi, I'm Airo, your AI-powered assistant. Tell me about your idea, product or service and I'll find good names for you, or choose an option to get started.
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Floating Control Bar -->
+    <div class="control-bar">
+        <div class="control-main">
+            <button class="home-btn" onclick="navigateToPage('index')">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M3 7l7-4 7 4v11a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M9 17V11h2v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            <div class="input-container">
+                <input type="text" class="chat-input" placeholder="I start typing...">
+                <button class="attach-btn">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M7 3a3 3 0 013 3v7a1 1 0 01-2 0V6a1 1 0 00-2 0v7a3 3 0 01-6 0V6a5 5 0 0110 0v7a1 1 0 102 0V6a7 7 0 00-14 0v7a5 5 0 0010 0V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+            <button class="send-btn">
+                <img src="../assets/images/sendicon.png" alt="Send" class="send-icon-img">
+            </button>
+        </div>
+        
+        <!-- Expanded Grid Panel (shows between input and buttons) -->
+        <div class="airo-grid-panel" id="airoGridPanel">
+            <div class="grid-item" onclick="navigateToPage('generate-privacy-policy')">
+                <div class="grid-item-icon">
+                    <img src="../assets/images/privacypolicyicon.png" alt="Privacy Policy" width="20" height="20">
+                </div>
+                <div class="grid-item-content">
+                    <div class="grid-item-title">Create a privacy policy</div>
+                    <div class="grid-item-desc">Build a policy to create trust with your customers</div>
+                </div>
+            </div>
+            <div class="grid-item" onclick="navigateToPage('generate-marketing-strategy')">
+                <div class="grid-item-icon">
+                    <img src="../assets/images/marketingicon.png" alt="Marketing" width="20" height="20">
+                </div>
+                <div class="grid-item-content">
+                    <div class="grid-item-title">Market my business</div>
+                    <div class="grid-item-desc">Get tailored insights to help grow your business</div>
+                </div>
+            </div>
+            <div class="grid-item" onclick="alert('Generate Images - Coming Soon!')">
+                <div class="grid-item-icon">
+                    <img src="../assets/images/imagesicon.png" alt="Generate Images" width="20" height="20">
+                </div>
+                <div class="grid-item-content">
+                    <div class="grid-item-title">Generate images</div>
+                    <div class="grid-item-desc">Explore how Airo™ can help you create images that match your brand</div>
+                </div>
+            </div>
+            <div class="grid-item" onclick="navigateToPage('generate-logo')">
+                <div class="grid-item-icon">
+                    <img src="../assets/images/logoicon.png" alt="Design Logo" width="20" height="20">
+                </div>
+                <div class="grid-item-content">
+                    <div class="grid-item-title">Design a logo</div>
+                    <div class="grid-item-desc">See how a logo designed by the best AI could look</div>
+                </div>
+            </div>
+            <div class="grid-item" onclick="navigateToPage('optimize-site')">
+                <div class="grid-item-icon">
+                    <img src="../assets/images/optimizeicon.png" alt="Optimize Site" width="20" height="20">
+                </div>
+                <div class="grid-item-content">
+                    <div class="grid-item-title">Optimize my site</div>
+                    <div class="grid-item-desc">Find ways to boost your website</div>
+                </div>
+            </div>
+            <div class="grid-item" onclick="navigateToPage('setup-llc')">
+                <div class="grid-item-icon">
+                    <img src="../assets/images/LLCicon.png" alt="Set up LLC" width="20" height="20">
+                </div>
+                <div class="grid-item-content">
+                    <div class="grid-item-title">Set up my LLC</div>
+                    <div class="grid-item-desc">Set up your business, LLC, and more</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="control-dropdowns">
+            <div class="dropdown-container dropdown-left">
+                <button class="dropdown-btn" id="askAiroBtn">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M8 1v6m0 0l3-3m-3 3L5 4M1 9h14l-1 6H2L1 9z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Ask Airo to...
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="dropdown-arrow">
+                        <path d="M3 4.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="dropdown-container dropdown-right">
+                <button class="dropdown-btn" id="recentChatsBtn">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M8 5v3l2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                    Recent Chats
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="dropdown-arrow">
+                        <path d="M3 4.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                <div class="dropdown-menu" id="recentChatsDropdown">
+                    <a href="#" onclick="navigateToPage('privacy-policy')">Privacy Policy</a>
+                    <a href="#" onclick="navigateToPage('carpet-logo')">Eugene's Cafe</a>
+                    <a href="#" onclick="navigateToPage('rug-warehouse')">Image of a Rug Warehouse</a>
+                    <a href="#" onclick="navigateToPage('business-goals')">Set Business Goals</a>
+                    <a href="#" onclick="navigateToPage('set-up-llc')">Set Up LLC</a>
+                    <a href="#" onclick="navigateToPage('coming-soon')">Coming Soon Page</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Disclaimer Text -->
+    <div class="disclaimer">
+        <p class="disclaimer-text">Airo can make mistakes, so double check its responses.</p>
+    </div>
+
+    <script src="../script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle send button click
+            const sendBtn = document.querySelector('.send-btn');
+            const chatInput = document.querySelector('.chat-input');
+            
+            if (sendBtn) {
+                sendBtn.addEventListener('click', function() {
+                    handleSendMessage();
+                });
+            }
+            
+            // Handle enter key in input
+            if (chatInput) {
+                chatInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        handleSendMessage();
+                    }
+                });
+            }
+        });
+
+        function handleSendMessage() {
+            const userText = "portfolio site for a product designer with software and hardware experience";
+            const chatInput = document.querySelector('.chat-input');
+            
+            // Set the input text briefly, then clear it
+            if (chatInput) {
+                chatInput.value = userText;
+                // Clear the input field after a brief moment
+                setTimeout(() => {
+                    chatInput.value = "";
+                    chatInput.placeholder = "Start typing...";
+                }, 100);
+            }
+            
+            // Add user message
+            addUserMessage(userText);
+            
+            // Add Airo response with domain suggestion after a short delay
+            setTimeout(() => {
+                addDomainSuggestionResponse();
+            }, 1000);
+        }
+
+        function addUserMessage(text) {
+            const chatMessages = document.querySelector('.chat-messages');
+            const userMessage = document.createElement('div');
+            userMessage.className = 'user-message';
+            userMessage.innerHTML = `<div class="user-bubble sent">${text}</div>`;
+            
+            chatMessages.appendChild(userMessage);
+            scrollToLatestMessage();
+        }
+
+        function addDomainSuggestionResponse() {
+            const chatMessages = document.querySelector('.chat-messages');
+            
+            // First show typing indicator in chat
+            showTypingIndicator();
+            
+            // Then show hang tight sidebar after a short delay
+            setTimeout(() => {
+                showHangTightSidebar();
+                
+                // Show domain results after loading animation
+                setTimeout(() => {
+                    showDomainResults();
+                }, 2000);
+            }, 500);
+            
+            scrollToLatestMessage();
+        }
+
+        // Show typing indicator in chat - exact copy from generate-logo page
+        function showTypingIndicator() {
+            console.log('Showing typing indicator');
+            
+            const chatMessages = document.querySelector('.chat-messages');
+            const typingMessage = document.createElement('div');
+            typingMessage.className = 'airo-message typing-indicator';
+            typingMessage.innerHTML = `
+                <div class="typing-indicator">
+                    <div class="typing-dots">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                    <div class="typing-text">Hang tight! This will only take a moment</div>
+                </div>
+            `;
+            
+            chatMessages.appendChild(typingMessage);
+            scrollToLatestMessage();
+        }
+
+        // Hide typing indicator
+        function hideTypingIndicator() {
+            console.log('Hiding typing indicator');
+            
+            // Remove all possible loading indicators
+            const indicators = document.querySelectorAll('.typing-indicator, .airo-message.typing-indicator');
+            indicators.forEach(indicator => indicator.remove());
+        }
+
+        // Show domain search results in sidebar
+        function showDomainResults() {
+            console.log('🔍 Showing domain search results');
+            
+            const hangTightSidebar = document.getElementById('hangTightSidebar');
+            if (!hangTightSidebar) {
+                console.error('❌ Hang tight sidebar not found');
+                return;
+            }
+
+            // Replace loading content with domain results
+            hangTightSidebar.innerHTML = `
+                <div class="domain-results-content">
+                    <div class="domain-results-header">
+                        <h2 class="domain-results-title">Availablename.com is available!</h2>
+                    </div>
+                    
+                    <div class="domain-results-list">
+                        <!-- Primary domain result -->
+                        <div class="domain-item primary">
+                            <button class="domain-heart-icon" title="Add to favorites">
+                                <img src="../assets/images/icons/heart-outline.svg" alt="Add to favorites" width="24" height="24">
+                            </button>
+                            <div class="domain-info">
+                                <div class="domain-name">availablename.com</div>
+                                <div class="domain-price">
+                                    <span class="price-original">$17.99</span>
+                                    <span class="price-sale">$14.50*</span>
+                                    <span class="price-term">for first year</span>
+                                </div>
+                            </div>
+                            <div class="domain-actions">
+                                <button class="btn-refresh" title="Refresh">
+                                    <img src="../assets/images/icons/refresh-1.svg" alt="Refresh" width="24" height="24">
+                                </button>
+                                <button class="btn-cart" title="Add to cart">
+                                    <img src="../assets/images/icons/add-to-cart-1.svg" alt="Add to cart" width="24" height="24">
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Bundle section -->
+                        <div class="domain-bundle">
+                            <div class="bundle-badge">BUNDLE AND SAVE</div>
+                            <button class="bundle-heart" title="Add to favorites">
+                                <img src="../assets/images/icons/heart-outline.svg" alt="Add to favorites" width="24" height="24">
+                            </button>
+                            <div class="bundle-item">
+                                <div class="bundle-info">
+                                    <div class="bundle-name">availablename <span class="domain-ext">.com</span></div>
+                                    <div class="bundle-extensions">
+                                        <span class="ext-tag">.buzz</span>
+                                        <span class="ext-tag">.co</span>
+                                        <span class="ext-tag">.online</span>
+                                        <span class="ext-tag">.store</span>
+                                    </div>
+                                    <div class="bundle-price">
+                                        <span class="price-hash original">$72.50</span>
+                                        <span class="price-info">ⓘ</span>
+                                        <span class="price-hash">$50.00</span>
+                                    </div>
+                                    <div class="price-term">for the 1st yr with a 2 yr registration</div>
+                                </div>
+                                <div class="bundle-actions">
+                                    <button class="btn-primary" onclick="handleMakeItYours()">Make it Yours</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Additional domains -->
+                        <div class="domain-item">
+                            <button class="domain-heart-icon" title="Add to favorites">
+                                <img src="../assets/images/icons/heart-outline.svg" alt="Add to favorites" width="24" height="24">
+                            </button>
+                            <div class="domain-info">
+                                <div class="domain-name">availablename.com</div>
+                                <div class="domain-price">
+                                    <span class="price-original">$17.99</span>
+                                    <span class="price-sale">$14.50*</span>
+                                    <span class="price-term">for first year</span>
+                                </div>
+                            </div>
+                            <div class="domain-actions">
+                                <button class="btn-refresh" title="Refresh">
+                                    <img src="../assets/images/icons/refresh-1.svg" alt="Refresh" width="24" height="24">
+                                </button>
+                                <button class="btn-cart" title="Add to cart">
+                                    <img src="../assets/images/icons/add-to-cart-1.svg" alt="Add to cart" width="24" height="24">
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Premium domain -->
+                        <div class="domain-item premium">
+                            <div class="premium-badge">
+                                <span class="verified-icon">✓</span>
+                                VERIFIED PREMIUM DOMAIN
+                            </div>
+                            <button class="domain-heart-icon" title="Add to favorites">
+                                <img src="../assets/images/icons/heart-outline.svg" alt="Add to favorites" width="24" height="24">
+                            </button>
+                            <div class="domain-info">
+                                <div class="domain-name">premiumname.com</div>
+                                <div class="domain-price">
+                                    <span class="price-original">$2,999.99</span>
+                                    <span class="price-sale">$2,020.68</span>
+                                    <span class="price-term">for first year</span>
+                                </div>
+                            </div>
+                            <div class="domain-actions">
+                                <button class="btn-refresh" title="Refresh">
+                                    <img src="../assets/images/icons/refresh-1.svg" alt="Refresh" width="24" height="24">
+                                </button>
+                                <button class="btn-cart" title="Add to cart">
+                                    <img src="../assets/images/icons/add-to-cart-1.svg" alt="Add to cart" width="24" height="24">
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- More domains -->
+                        <div class="domain-item">
+                            <button class="domain-heart-icon" title="Add to favorites">
+                                <img src="../assets/images/icons/heart-outline.svg" alt="Add to favorites" width="24" height="24">
+                            </button>
+                            <div class="domain-info">
+                                <div class="domain-name">availablename.com</div>
+                                <div class="domain-price">
+                                    <span class="price-original">$17.99</span>
+                                    <span class="price-sale">$14.50*</span>
+                                    <span class="price-term">for first year</span>
+                                </div>
+                            </div>
+                            <div class="domain-actions">
+                                <button class="btn-refresh" title="Refresh">
+                                    <img src="../assets/images/icons/refresh-1.svg" alt="Refresh" width="24" height="24">
+                                </button>
+                                <button class="btn-cart" title="Add to cart">
+                                    <img src="../assets/images/icons/add-to-cart-1.svg" alt="Add to cart" width="24" height="24">
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="domain-item">
+                            <button class="domain-heart-icon" title="Add to favorites">
+                                <img src="../assets/images/icons/heart-outline.svg" alt="Add to favorites" width="24" height="24">
+                            </button>
+                            <div class="domain-info">
+                                <div class="domain-name">availablename2.com</div>
+                                <div class="domain-price">
+                                    <span class="price-original">$17.99</span>
+                                    <span class="price-sale">$14.50*</span>
+                                    <span class="price-term">for first year</span>
+                                </div>
+                            </div>
+                            <div class="domain-actions">
+                                <button class="btn-refresh" title="Refresh">
+                                    <img src="../assets/images/icons/refresh-1.svg" alt="Refresh" width="24" height="24">
+                                </button>
+                                <button class="btn-cart" title="Add to cart">
+                                    <img src="../assets/images/icons/add-to-cart-1.svg" alt="Add to cart" width="24" height="24">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="domain-footer">
+                        <p class="privacy-note">Domain includes free Privacy Protection forever. <span class="info-icon">ⓘ</span></p>
+                    </div>
+                </div>
+            `;
+
+            // Hide typing indicator and remove it
+            hideTypingIndicator();
+            
+            // Add predefined prompt buttons after domain results are shown
+            setTimeout(() => {
+                const actionButtons = [
+                    { text: 'More Domains', onclick: 'handleMoreDomains()' },
+                    { text: 'Shorter Domains', onclick: 'handleShorterDomains()' },
+                    { text: 'Budget Domains', onclick: 'handleBudgetDomains()' },
+                    { text: 'Filter by Industry', onclick: 'handleFilterByIndustry()' }
+                ];
+                
+                addUserActionButtons(actionButtons);
+            }, 500);
+            
+            console.log('✅ Domain results displayed');
+        }
+
+        // Show "Hang tight" sidebar loading screen
+        function showHangTightSidebar() {
+            console.log('🔄 showHangTightSidebar called - creating hang tight loading sidebar');
+            const mainContentWrapper = document.querySelector('.main-content-wrapper');
+            
+            if (!mainContentWrapper) {
+                console.error('❌ Main content wrapper not found for hang tight sidebar');
+                return;
+            }
+            
+            // Remove any existing hang tight sidebar
+            const existingHangTightSidebar = document.getElementById('hangTightSidebar');
+            if (existingHangTightSidebar) {
+                existingHangTightSidebar.remove();
+            }
+            
+            // Create hang tight sidebar
+            const hangTightSidebar = document.createElement('div');
+            hangTightSidebar.id = 'hangTightSidebar';
+            hangTightSidebar.className = 'hang-tight-sidebar visible';
+            hangTightSidebar.innerHTML = `
+                <div class="sidebar-loading-content">
+                    <div class="loading-video-container">
+                        <video width="192" height="192" autoplay muted loop playsinline style="border-radius: 8px;">
+                            <source src="../assets/videos/loadinganimation.mp4" type="video/mp4">
+                            <!-- Fallback to spinner if video fails to load -->
+                            <div class="loading-icon">
+                                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="animation: spin 1s linear infinite;">
+                                    <path d="M16 2L20 10L28 6L24 14L32 16L24 18L28 26L20 22L16 30L12 22L4 26L8 18L0 16L8 14L4 6L12 10L16 2Z" fill="#6C47B4"/>
+                                </svg>
+                            </div>
+                        </video>
+                    </div>
+                    <div class="loading-title">Hang tight!</div>
+                    <div class="loading-subtitle">This will only take a moment...</div>
+                </div>
+            `;
+            
+            // Insert hang tight sidebar into main content wrapper (replaces logo sidebar space)
+            mainContentWrapper.appendChild(hangTightSidebar);
+            
+            // Add body classes to position chat interface correctly (like logo sidebar)
+            document.body.classList.add('logo-sidebar-open');
+            const chatInterface = document.querySelector('.chat-interface');
+            if (chatInterface) {
+                chatInterface.classList.add('with-large-sidebar');
+                
+                // Ensure chat interface remains visible
+                chatInterface.style.display = 'block';
+                chatInterface.style.visibility = 'visible';
+                chatInterface.style.opacity = '1';
+                
+                // Debug: Log current chat messages
+                const chatMessages = chatInterface.querySelector('.chat-messages');
+                if (chatMessages) {
+                    console.log('💬 Chat messages found:', chatMessages.children.length);
+                    console.log('💬 Chat messages HTML:', chatMessages.innerHTML);
+                    
+                    // Ensure chat messages container remains visible
+                    chatMessages.style.display = 'flex';
+                    chatMessages.style.flexDirection = 'column';
+                    chatMessages.style.gap = '16px';
+                    chatMessages.style.visibility = 'visible';
+                    chatMessages.style.opacity = '1';
+                }
+                
+                // Resize existing chat bubbles for better fit with sidebar
+                const allMessages = chatInterface.querySelectorAll('.airo-message, .user-message');
+                console.log('💬 Found messages to resize:', allMessages.length);
+                allMessages.forEach((message, index) => {
+                    console.log(`💬 Resizing message ${index}:`, message.textContent?.slice(0, 50));
+                    message.style.maxWidth = '85%'; // Slightly smaller for better layout with sidebar
+                    message.style.visibility = 'visible';
+                    message.style.opacity = '1';
+                    message.style.position = 'relative';
+                    message.style.zIndex = '2';
+                    message.style.display = 'block';
+                });
+
+                // Ensure both airo and user bubbles inside messages are visible
+                const allBubbles = chatInterface.querySelectorAll('.airo-bubble, .user-bubble');
+                allBubbles.forEach((bubble, index) => {
+                    console.log(`💬 Making bubble ${index} visible:`, bubble.textContent?.slice(0, 30));
+                    bubble.style.visibility = 'visible';
+                    bubble.style.opacity = '1';
+                    bubble.style.display = 'block';
+                });
+            }
+            
+            console.log('✅ Hang tight sidebar displayed with proper positioning');
+        }
+
+        // Hide hang tight sidebar
+        function hideHangTightSidebar() {
+            console.log('🔄 hideHangTightSidebar called');
+            
+            // Hide typing indicator first
+            hideTypingIndicator();
+            
+            const hangTightSidebar = document.getElementById('hangTightSidebar');
+            if (hangTightSidebar) {
+                hangTightSidebar.remove();
+                console.log('✅ Hang tight sidebar removed');
+            }
+            
+            // Remove body classes and chat interface classes
+            document.body.classList.remove('logo-sidebar-open');
+            const chatInterface = document.querySelector('.chat-interface');
+            if (chatInterface) {
+                chatInterface.classList.remove('with-large-sidebar');
+                
+                // Restore original chat bubble sizes
+                const allMessages = chatInterface.querySelectorAll('.airo-message, .user-message');
+                allMessages.forEach(message => {
+                    message.style.maxWidth = ''; // Reset to original CSS values
+                });
+            }
+        }
+
+        function scrollToLatestMessage() {
+            const chatInterface = document.querySelector('.chat-interface');
+            if (chatInterface) {
+                chatInterface.scrollTop = chatInterface.scrollHeight;
+            }
+        }
+
+        function addUserActionButtons(buttons) {
+            const chatMessages = document.querySelector('.chat-messages');
+            
+            const userActionButtons = document.createElement('div');
+            userActionButtons.className = 'user-message user-action-buttons';
+            
+            // Create two-row layout for domain action buttons
+            if (buttons.length === 4) {
+                userActionButtons.innerHTML = `
+                    <div class="action-buttons-container">
+                        <div class="action-buttons-row">
+                            <button class="standalone-btn outline-btn" onclick="${buttons[0].onclick}">${buttons[0].text}</button>
+                            <button class="standalone-btn outline-btn" onclick="${buttons[1].onclick}">${buttons[1].text}</button>
+                        </div>
+                        <div class="action-buttons-row">
+                            <button class="standalone-btn outline-btn" onclick="${buttons[2].onclick}">${buttons[2].text}</button>
+                            <button class="standalone-btn outline-btn" onclick="${buttons[3].onclick}">${buttons[3].text}</button>
+                        </div>
+                        <div class="helper-text">
+                            <div class="helper-message">
+                                <span class="helper-icon">↰</span>
+                                Or, write your own response below
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // Default layout for other button configurations
+                userActionButtons.innerHTML = `
+                    <div class="action-buttons-container">
+                        ${buttons.map(btn => `<button class="standalone-btn outline-btn" onclick="${btn.onclick}">${btn.text}</button>`).join('')}
+                        <div class="helper-text">
+                            <div class="helper-message">
+                                <span class="helper-icon">↰</span>
+                                Or, write your own response below
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            chatMessages.appendChild(userActionButtons);
+            scrollToLatestMessage();
+        }
+
+        // Handler functions for domain search prompts
+        function handleMoreDomains() {
+            console.log('More Domains clicked');
+            replaceActionButtonWithUserMessage('More Domains');
+            
+            setTimeout(() => {
+                addAiroMessage("Great! I'll show you additional domain options. Let me search for more variations...");
+            }, 500);
+        }
+
+        function handleShorterDomains() {
+            console.log('Shorter Domains clicked');
+            replaceActionButtonWithUserMessage('Shorter Domains');
+            
+            setTimeout(() => {
+                addAiroMessage("Perfect! I'll find shorter domain alternatives that are easier to remember and type...");
+            }, 500);
+        }
+
+        function handleBudgetDomains() {
+            console.log('Budget Domains clicked');
+            replaceActionButtonWithUserMessage('Budget Domains');
+            
+            setTimeout(() => {
+                addAiroMessage("Smart choice! Let me find budget-friendly domain options for you...");
+            }, 500);
+        }
+
+        function handleFilterByIndustry() {
+            console.log('Filter by Industry clicked');
+            replaceActionButtonWithUserMessage('Filter by Industry');
+            
+            setTimeout(() => {
+                addAiroMessage("Excellent! I can help you find domains that are perfect for your specific industry. What industry are you in?");
+            }, 500);
+        }
+
+        function replaceActionButtonWithUserMessage(message) {
+            const actionButtons = document.querySelector('.user-action-buttons');
+            if (actionButtons) {
+                actionButtons.remove();
+            }
+            addUserMessage(message);
+        }
+
+        function addAiroMessage(text) {
+            const chatMessages = document.querySelector('.chat-messages');
+            const airoMessage = document.createElement('div');
+            airoMessage.className = 'airo-message';
+            airoMessage.innerHTML = `<div class="airo-bubble">${text}</div>`;
+            
+            chatMessages.appendChild(airoMessage);
+            scrollToLatestMessage();
+        }
+
+        function addSystemMessage(text) {
+            const chatMessages = document.querySelector('.chat-messages');
+            const systemMessage = document.createElement('div');
+            systemMessage.className = 'user-message';
+            systemMessage.innerHTML = `<div class="user-bubble system-message">${text}</div>`;
+            
+            chatMessages.appendChild(systemMessage);
+            scrollToLatestMessage();
+        }
+
+        function handleMakeItYours() {
+            console.log('Make it Yours clicked');
+            
+            // Remove action buttons if they exist
+            const actionButtons = document.querySelector('.user-action-buttons');
+            if (actionButtons) {
+                actionButtons.remove();
+            }
+
+            // Add the cart confirmation message
+            setTimeout(() => {
+                addSystemMessage("You added Availablename.com to your cart");
+                
+                // Add the domain protection message after a short delay
+                setTimeout(() => {
+                    addAiroMessage("Your domain is secure right now—but protection adds an extra layer of safety against hackers, mistakes, or expiration slips. Want to keep it worry-free?");
+                    
+                    // Update sidebar to show domain protection offer
+                    setTimeout(() => {
+                        showDomainProtectionSidebar();
+                    }, 1000);
+                }, 800);
+            }, 300);
+        }
+
+        function showDomainProtectionSidebar() {
+            console.log('Showing domain protection sidebar');
+            
+            const hangTightSidebar = document.getElementById('hangTightSidebar');
+            if (!hangTightSidebar) {
+                console.error('Sidebar not found');
+                return;
+            }
+
+            // Update sidebar content with domain protection offer
+            hangTightSidebar.innerHTML = `
+                <div class="domain-protection-content">
+                    <div class="protection-scrollable">
+                        <!-- Back button -->
+                        <div class="protection-header">
+                            <button class="back-button" onclick="hideDomainProtectionSidebar()">
+                                <span>← Back</span>
+                            </button>
+                        </div>
+
+                        <!-- Hero image -->
+                        <div class="protection-hero">
+                            <img src="../assets/images/DOP_image.png" alt="Domain Protection" class="hero-image">
+                        </div>
+
+                        <!-- Main content -->
+                        <div class="protection-main">
+                            <h1 class="protection-title">Protect your domain</h1>
+                            <p class="protection-subtitle">Safeguard your online business from potential threats and email spoofers.</p>
+
+                            <!-- Pricing card -->
+                            <div class="pricing-card">
+                                <div class="pricing-header">
+                                    <div class="pricing-group">
+                                        <span class="price-old">$1.09</span>
+                                        <span class="price-new">$0.99/mo</span>
+                                    </div>
+                                    <span class="discount-badge">33% OFF</span>
+                                </div>
+                                <p class="pricing-details">With a 1-year term. You pay $21.99 today. Renews at $32.99/year</p>
+                            </div>
+
+                            <!-- Domain Protection Title -->
+                            <h3 class="features-title">Domain Protection includes:</h3>
+                            
+                            <!-- Combined Features and Renewal Protection -->
+                            <div class="features-container">
+                                <!-- Features -->
+                                <div class="protection-features">
+                                    <div class="feature-list">
+                                    <div class="feature-item">
+                                        <img src="../assets/images/icons/Icon_Box_verify.svg" alt="Verify" class="feature-icon" width="26" height="26">
+                                        <span class="feature-text">Verify your identity before completing high-risk domain actions</span>
+                                    </div>
+                                        <div class="feature-item">
+                                            <img src="../assets/images/icons/Icon_Box_alerts.svg" alt="Alerts" class="feature-icon" width="26" height="26">
+                                            <span class="feature-text">Get alerted before your domain is transferred out of your account</span>
+                                        </div>
+                                        <div class="feature-item">
+                                            <img src="../assets/images/icons/Icon_Box_verified_user.svg" alt="Verified Users" class="feature-icon" width="26" height="26">
+                                            <span class="feature-text">Make sure only verified users can change your domain contact info</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Renewal protection -->
+                                <div class="renewal-protection">
+                                    <h3 class="renewal-title">Don't lose your domain because of a payment issue</h3>
+                                    <p class="renewal-subtitle">Add renewal protection for only <strong>$0.83/mo</strong></p>
+                                    <div class="renewal-feature">
+                                        <input type="checkbox" id="renewal-checkbox" class="renewal-checkbox">
+                                        <label for="renewal-checkbox" class="renewal-label">
+                                            Keeps your domain registered and active 90 days after it expires
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action buttons -->
+                    <div class="protection-actions">
+                        <button class="skip-btn" onclick="skipDomainProtection()">Skip Recommendation</button>
+                        <button class="add-to-cart-btn" onclick="addDomainProtectionToCart()">Add to Cart</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function hideDomainProtectionSidebar() {
+            console.log('Hiding domain protection sidebar');
+            const hangTightSidebar = document.getElementById('hangTightSidebar');
+            if (hangTightSidebar) {
+                hangTightSidebar.remove();
+            }
+        }
+
+        // Track domain protection status
+        let domainProtectionSkipped = false;
+
+        function skipDomainProtection() {
+            console.log('Skip domain protection clicked');
+            domainProtectionSkipped = true;
+            addSystemMessage("Skip Recommendation");
+            showCartView();
+        }
+
+        function addDomainProtectionToCart() {
+            console.log('Add domain protection to cart clicked');
+            addSystemMessage("Add to Cart - Domain Protection");
+            showCartView();
+        }
+
+        function showCartView() {
+            const hangTightSidebar = document.getElementById('hangTightSidebar');
+            if (!hangTightSidebar) return;
+
+            // Calculate item count and pricing based on protection status
+            const itemCount = domainProtectionSkipped ? 1 : 2;
+            const subtotal = domainProtectionSkipped ? "$21.99" : "$43.83";
+
+            // Domain protection HTML (conditionally included)
+            const domainProtectionHTML = domainProtectionSkipped ? '' : `
+                                <!-- Domain Protection Item -->
+                                <div class="cart-item-card">
+                                    <div class="cart-item-header">
+                                        <div class="item-title-section">
+                                            <h4 class="item-title">Full Domain Protection</h4>
+                                            <div class="item-subtitle">Renews August 2024 for $XX.XX/mo ($XX.XX total)</div>
+                                        </div>
+                                        <div class="item-pricing">
+                                            <div class="current-price">$1.00</div>
+                                            <div class="original-price">$1.09</div>
+                                            <button class="remove-item-btn" onclick="confirmRemoveItem('protection', 'Full Domain Protection')">
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                                    <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                    <path d="M10 11v6M14 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>`;
+
+            hangTightSidebar.innerHTML = `
+                <div class="cart-content">
+                    <!-- Cart Header -->
+                    <div class="cart-header">
+                        <button class="back-btn" onclick="showDomainProtectionSidebar()">
+                            ← Back
+                        </button>
+                        <h2 class="cart-title">Purchase Now</h2>
+                        <div class="header-spacer"></div>
+                    </div>
+                    
+                    <div class="cart-scrollable">
+
+                        <!-- Your Items Accordion -->
+                        <div class="cart-accordion">
+                            <div class="accordion-header" onclick="toggleCartAccordion()">
+                                <h3 class="accordion-title">Your Items (${itemCount})</h3>
+                                <span class="accordion-arrow">^</span>
+                            </div>
+                            <div class="accordion-content" id="cartAccordionContent">
+                                <!-- Domain Item -->
+                                <div class="cart-item-card">
+                                    <div class="cart-item-header">
+                                        <div class="item-title-section">
+                                            <h4 class="item-title">Domain</h4>
+                                            <div class="item-subtitle">availablename.com</div>
+                                            
+                                            <div class="term-length-section">
+                                                <label class="term-label">Term length</label>
+                                                <div class="term-dropdown">
+                                                    <select class="term-select" onchange="updateTermLength(this.value)">
+                                                        <option value="3">3 Year</option>
+                                                        <option value="1">1 Year</option>
+                                                        <option value="2">2 Year</option>
+                                                    </select>
+                                                </div>
+                                                <div class="term-duration">36 Months</div>
+                                            </div>
+                                        </div>
+                                        <div class="item-pricing">
+                                            <div class="current-price">$XX.XX</div>
+                                            <div class="original-price">$XX.XX</div>
+                                            <div class="discount-text">XX% off</div>
+                                            <div class="free-months" id="free-months-text">Free for 36 Months</div>
+                                            <button class="remove-item-btn" onclick="confirmRemoveItem('domain', 'availablename.com')">
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                                    <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                    <path d="M10 11v6M14 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                ${domainProtectionHTML}
+                            </div>
+                        </div>
+
+                        <!-- Billing Information -->
+                        <div class="billing-section">
+                            <div class="billing-header">
+                                <h3 class="billing-title">Billing Information</h3>
+                                <div class="billing-status">
+                                    <svg class="check-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                        <circle cx="12" cy="12" r="10" stroke="#2E8B57" stroke-width="2" fill="#2E8B57"/>
+                                        <path d="m9 12 2 2 4-4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            
+                            <div class="billing-display" id="billingDisplay">
+                                <div class="billing-info">
+                                    <div class="billing-name">Your Name</div>
+                                    <div class="billing-address">14455 North Hayden Road, Suite 219, Scottsdale, Arizona 85260, United States</div>
+                                    <div class="billing-company">Go Daddy Software</div>
+                                </div>
+                                <button class="edit-btn" onclick="toggleBillingEdit()">Edit</button>
+                            </div>
+                            
+                            <div class="billing-edit" id="billingEdit" style="display: none;">
+                                <div class="billing-form">
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="firstName">First Name</label>
+                                            <input type="text" id="firstName" value="Your">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="lastName">Last Name</label>
+                                            <input type="text" id="lastName" value="Name">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="company">Company</label>
+                                        <input type="text" id="company" value="Go Daddy Software">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="address">Address</label>
+                                        <input type="text" id="address" value="14455 North Hayden Road, Suite 219">
+                                    </div>
+                                    
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="city">City</label>
+                                            <input type="text" id="city" value="Scottsdale">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="state">State</label>
+                                            <select id="state">
+                                                <option value="AZ" selected>Arizona</option>
+                                                <option value="CA">California</option>
+                                                <option value="TX">Texas</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="zipCode">ZIP Code</label>
+                                            <input type="text" id="zipCode" value="85260">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="country">Country</label>
+                                            <select id="country">
+                                                <option value="US" selected>United States</option>
+                                                <option value="CA">Canada</option>
+                                                <option value="UK">United Kingdom</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-actions">
+                                        <button class="cancel-btn" onclick="cancelBillingEdit()">Cancel</button>
+                                        <button class="save-btn" onclick="saveBillingInfo()">Save</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Payment Section -->
+                        <div class="payment-section">
+                            <div class="payment-header">
+                                <h3 class="payment-title">Payment</h3>
+                                <div class="payment-status">
+                                    <svg class="check-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                        <circle cx="12" cy="12" r="10" stroke="#2E8B57" stroke-width="2" fill="#2E8B57"/>
+                                        <path d="m9 12 2 2 4-4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            
+                            <div class="payment-display" id="paymentDisplay">
+                                <div class="payment-info">
+                                    <div class="payment-method">
+                                        <div class="card-info">
+                                            <div class="card-icon">
+                                                <svg width="24" height="16" viewBox="0 0 24 16" fill="none">
+                                                    <rect width="24" height="16" rx="2" fill="#1A1F71"/>
+                                                    <path d="M4 6h3v1H4zM4 8h4v1H4zM4 10h2v1H4z" fill="white"/>
+                                                    <text x="20" y="12" font-size="8" fill="white" text-anchor="end">VISA</text>
+                                                </svg>
+                                            </div>
+                                            <span class="card-number">Ending in 9999</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="edit-btn" onclick="togglePaymentEdit()">Edit</button>
+                            </div>
+                            
+                            <div class="payment-edit" id="paymentEdit" style="display: none;">
+                                <div class="payment-form">
+                                    <div class="form-group">
+                                        <label for="cardNumber">Card Number</label>
+                                        <input type="text" id="cardNumber" placeholder="1234 5678 9012 9999" maxlength="19">
+                                    </div>
+                                    
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="expiryDate">Expiry Date</label>
+                                            <input type="text" id="expiryDate" placeholder="MM/YY" maxlength="5">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="cvv">CVV</label>
+                                            <input type="text" id="cvv" placeholder="123" maxlength="4">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="cardName">Name on Card</label>
+                                        <input type="text" id="cardName" value="Your Name">
+                                    </div>
+                                    
+                                    <div class="form-actions">
+                                        <button class="cancel-btn" onclick="cancelPaymentEdit()">Cancel</button>
+                                        <button class="save-btn" onclick="savePaymentInfo()">Save</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Cart Footer with Subtotal and Checkout -->
+                    <div class="cart-footer">
+                        <div class="cart-summary-left">
+                            <div class="subtotal-row">
+                                <div class="subtotal-title">Subtotal (USD)</div>
+                                <div class="subtotal-price">${subtotal}</div>
+                            </div>
+                            <div class="item-count">${itemCount} items</div>
+                        </div>
+                        <button class="checkout-btn" onclick="proceedToCheckout()">Ready for Checkout</button>
+                    </div>
+                </div>
+            `;
+            
+            // Add payment input formatting after cart is rendered
+            setTimeout(() => {
+                addPaymentFormatting();
+            }, 100);
+        }
+
+        function proceedToCheckout() {
+            console.log('Proceeding to checkout');
+            showReceiptPage();
+        }
+
+        function showReceiptPage() {
+            const hangTightSidebar = document.getElementById('hangTightSidebar');
+            if (!hangTightSidebar) return;
+
+            // Calculate pricing based on current cart state
+            const domainPrice = getDomainPriceForCurrentTerm();
+            const protectionPrice = domainProtectionSkipped ? 0 : 21.84;
+            const taxesAndFees = 0.50;
+            const total = domainPrice + protectionPrice + taxesAndFees;
+
+            // Trigger confetti animation when receipt is shown
+            triggerConfetti();
+
+            hangTightSidebar.innerHTML = `
+                <div class="receipt-content">
+                    <div class="receipt-header">
+                        <button class="back-btn" onclick="navigateToPage('index')">
+                            ← Back
+                        </button>
+                        <div class="godaddy-logo">
+                            <img src="../assets/images/logo.svg" alt="GoDaddy" style="height: 24px;">
+                        </div>
+                        <div class="header-spacer"></div>
+                    </div>
+                    
+                    <div class="receipt-body">
+                        <div class="receipt-title">
+                            <h1>availablename.com is yours!</h1>
+                            <p>Your domain is registered and ready to use. Let's put it to work.</p>
+                        </div>
+                        
+                        <div class="receipt-card">
+                            <div class="success-icon">
+                                <img src="../assets/images/icons/checkmark.svg" alt="Success" width="48" height="48">
+                            </div>
+                            
+                            <div class="receipt-message">
+                                <h2>Thank you for your order!</h2>
+                                <p>We've sent a copy of the full receipt to <strong>kylebakery@gmail.com</strong>.</p>
+                            </div>
+                            
+                            <div class="receipt-items">
+                                <div class="receipt-item">
+                                    <div class="item-icon">
+                                        <img src="../assets/images/icons/domain_receipt.svg" alt="Domain" width="64" height="64">
+                                    </div>
+                                    <div class="item-details">
+                                        <div class="item-name">COM Domain Name Renewal - ${getCurrentTermText()} (recurring)</div>
+                                        <div class="item-subtitle">availablename.com</div>
+                                    </div>
+                                    <div class="item-price">$${domainPrice.toFixed(2)}</div>
+                                </div>
+                                
+                                <div class="receipt-item">
+                                    <div class="item-icon">
+                                        <img src="../assets/images/icons/taxes_fees.svg" alt="Taxes and Fees" width="64" height="64">
+                                    </div>
+                                    <div class="item-details">
+                                        <div class="item-name">Taxes and Fees</div>
+                                    </div>
+                                    <div class="item-price">$${taxesAndFees.toFixed(2)}</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                    <div class="receipt-footer">
+                        <div class="receipt-summary-left">
+                            <div class="subtotal-row">
+                                <div class="subtotal-title">Total</div>
+                                <div class="subtotal-price">$${total.toFixed(2)}</div>
+                            </div>
+                        </div>
+                        <button class="continue-btn" onclick="navigateToPage('index')">Continue</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getCurrentTermText() {
+            const termSelect = document.querySelector('.term-select');
+            if (termSelect) {
+                const years = termSelect.value;
+                return years === '1' ? '1 Year' : `${years} Years`;
+            }
+            return '1 Year'; // default to match screenshot
+        }
+
+        function getDomainPriceForCurrentTerm() {
+            const termSelect = document.querySelector('.term-select');
+            if (termSelect) {
+                const years = termSelect.value;
+                switch (years) {
+                    case '1': return 20.00; // Match screenshot price
+                    case '2': return 39.99;
+                    case '3':
+                    default: return 54.99;
+                }
+            }
+            return 20.00; // default to match screenshot
+        }
+
+        function toggleCartAccordion() {
+            const content = document.getElementById('cartAccordionContent');
+            const arrow = document.querySelector('.accordion-arrow');
+            
+            if (content.style.display === 'none') {
+                content.style.display = 'block';
+                arrow.classList.remove('collapsed');
+            } else {
+                content.style.display = 'none';
+                arrow.classList.add('collapsed');
+            }
+        }
+
+        function removeItem(itemType) {
+            console.log(`Removing item: ${itemType}`);
+            addSystemMessage(`Removed ${itemType} from cart`);
+            // Here you would typically update the cart and refresh the view
+        }
+
+        function toggleBillingEdit() {
+            const billingDisplay = document.getElementById('billingDisplay');
+            const billingEdit = document.getElementById('billingEdit');
+            
+            if (billingEdit.style.display === 'none') {
+                billingDisplay.style.display = 'none';
+                billingEdit.style.display = 'block';
+            } else {
+                billingDisplay.style.display = 'flex';
+                billingEdit.style.display = 'none';
+            }
+        }
+
+        function cancelBillingEdit() {
+            const billingDisplay = document.getElementById('billingDisplay');
+            const billingEdit = document.getElementById('billingEdit');
+            
+            billingDisplay.style.display = 'flex';
+            billingEdit.style.display = 'none';
+            
+            // Reset form values to original
+            document.getElementById('firstName').value = 'Your';
+            document.getElementById('lastName').value = 'Name';
+            document.getElementById('company').value = 'Go Daddy Software';
+            document.getElementById('address').value = '14455 North Hayden Road, Suite 219';
+            document.getElementById('city').value = 'Scottsdale';
+            document.getElementById('state').value = 'AZ';
+            document.getElementById('zipCode').value = '85260';
+            document.getElementById('country').value = 'US';
+        }
+
+        function saveBillingInfo() {
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const company = document.getElementById('company').value;
+            const address = document.getElementById('address').value;
+            const city = document.getElementById('city').value;
+            const state = document.getElementById('state');
+            const zipCode = document.getElementById('zipCode').value;
+            const country = document.getElementById('country');
+            
+            // Update display with new values
+            const billingName = document.querySelector('.billing-name');
+            const billingAddress = document.querySelector('.billing-address');
+            const billingCompany = document.querySelector('.billing-company');
+            
+            billingName.textContent = `${firstName} ${lastName}`;
+            billingAddress.textContent = `${address}, ${city}, ${state.options[state.selectedIndex].text} ${zipCode}, ${country.options[country.selectedIndex].text}`;
+            billingCompany.textContent = company;
+            
+            // Hide edit form and show display
+            const billingDisplay = document.getElementById('billingDisplay');
+            const billingEdit = document.getElementById('billingEdit');
+            
+            billingDisplay.style.display = 'flex';
+            billingEdit.style.display = 'none';
+            
+            console.log('Billing information saved');
+            addSystemMessage("Billing information updated");
+        }
+
+        function togglePaymentEdit() {
+            const paymentDisplay = document.getElementById('paymentDisplay');
+            const paymentEdit = document.getElementById('paymentEdit');
+            
+            if (paymentEdit.style.display === 'none') {
+                paymentDisplay.style.display = 'none';
+                paymentEdit.style.display = 'block';
+            } else {
+                paymentDisplay.style.display = 'flex';
+                paymentEdit.style.display = 'none';
+            }
+        }
+
+        function cancelPaymentEdit() {
+            const paymentDisplay = document.getElementById('paymentDisplay');
+            const paymentEdit = document.getElementById('paymentEdit');
+            
+            paymentDisplay.style.display = 'flex';
+            paymentEdit.style.display = 'none';
+            
+            // Reset form values
+            document.getElementById('cardNumber').value = '';
+            document.getElementById('expiryDate').value = '';
+            document.getElementById('cvv').value = '';
+            document.getElementById('cardName').value = 'Your Name';
+        }
+
+        function savePaymentInfo() {
+            const cardNumber = document.getElementById('cardNumber').value;
+            const cardName = document.getElementById('cardName').value;
+            
+            // Extract last 4 digits for display
+            const lastFour = cardNumber.replace(/\s/g, '').slice(-4) || '9999';
+            
+            // Update display with new values
+            const cardNumberDisplay = document.querySelector('.card-number');
+            cardNumberDisplay.textContent = `Ending in ${lastFour}`;
+            
+            // Hide edit form and show display
+            const paymentDisplay = document.getElementById('paymentDisplay');
+            const paymentEdit = document.getElementById('paymentEdit');
+            
+            paymentDisplay.style.display = 'flex';
+            paymentEdit.style.display = 'none';
+            
+            console.log('Payment information saved');
+            addSystemMessage("Payment information updated");
+        }
+
+        // Format card number input
+        function formatCardNumber(input) {
+            let value = input.value.replace(/\s/g, '');
+            let formattedValue = value.replace(/(.{4})/g, '$1 ').trim();
+            input.value = formattedValue;
+        }
+
+        // Format expiry date input
+        function formatExpiryDate(input) {
+            let value = input.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                value = value.substring(0, 2) + '/' + value.substring(2, 4);
+            }
+            input.value = value;
+        }
+
+        // Add event listeners for formatting when the cart is shown
+        function addPaymentFormatting() {
+            const cardNumberInput = document.getElementById('cardNumber');
+            const expiryInput = document.getElementById('expiryDate');
+            
+            if (cardNumberInput) {
+                cardNumberInput.addEventListener('input', function() {
+                    formatCardNumber(this);
+                });
+            }
+            
+            if (expiryInput) {
+                expiryInput.addEventListener('input', function() {
+                    formatExpiryDate(this);
+                });
+            }
+        }
+
+        function updateTermLength(years) {
+            const months = years * 12;
+            
+            // Update the months display
+            const termDurationElement = document.querySelector('.term-duration');
+            if (termDurationElement) {
+                termDurationElement.textContent = `${months} Months`;
+            }
+            
+            // Update the free months text
+            const freeMonthsElement = document.getElementById('free-months-text');
+            if (freeMonthsElement) {
+                freeMonthsElement.textContent = `Free for ${months} Months`;
+            }
+            
+            // Update pricing based on term length
+            updatePricingForTerm(years);
+        }
+
+        function updatePricingForTerm(years) {
+            const currentPriceElement = document.querySelector('.cart-item-card .current-price');
+            const originalPriceElement = document.querySelector('.cart-item-card .original-price');
+            
+            // Calculate pricing based on term length
+            let currentPrice, originalPrice;
+            switch (years) {
+                case '1':
+                    currentPrice = '$21.99';
+                    originalPrice = '$23.99';
+                    break;
+                case '2':
+                    currentPrice = '$39.99';
+                    originalPrice = '$47.98';
+                    break;
+                case '3':
+                default:
+                    currentPrice = '$54.99';
+                    originalPrice = '$71.97';
+                    break;
+            }
+            
+            if (currentPriceElement) {
+                currentPriceElement.textContent = currentPrice;
+            }
+            if (originalPriceElement) {
+                originalPriceElement.textContent = originalPrice;
+            }
+            
+            // Update subtotal
+            updateSubtotal(years);
+        }
+
+        function updateSubtotal(years) {
+            const subtotalPriceElement = document.querySelector('.subtotal-price');
+            if (!subtotalPriceElement) return;
+            
+            // Calculate new subtotal based on domain price + protection (if not skipped)
+            let domainPrice;
+            switch (years) {
+                case '1':
+                    domainPrice = 21.99;
+                    break;
+                case '2':
+                    domainPrice = 39.99;
+                    break;
+                case '3':
+                default:
+                    domainPrice = 54.99;
+                    break;
+            }
+            
+            const protectionPrice = domainProtectionSkipped ? 0 : 21.84; // Protection price remains constant
+            const newSubtotal = domainPrice + protectionPrice;
+            
+            subtotalPriceElement.textContent = `$${newSubtotal.toFixed(2)}`;
+        }
+
+        // Global variable to track pending deletion
+        let pendingDeletion = null;
+
+        function confirmRemoveItem(itemType, itemName) {
+            // Store the pending deletion details
+            pendingDeletion = { type: itemType, name: itemName };
+            
+            // Add confirmation message to chat
+            addAiroMessage(`Do you want to delete ${itemName}?`);
+            
+            // Add Yes/No buttons to chat
+            addConfirmationButtons();
+        }
+
+        function addConfirmationButtons() {
+            const chatMessages = document.querySelector('.chat-messages');
+            if (!chatMessages) return;
+
+            const buttonContainer = document.createElement('div');
+            buttonContainer.className = 'confirmation-buttons-container';
+            buttonContainer.innerHTML = `
+                <div class="confirmation-buttons">
+                    <button class="standalone-btn outline-btn yes-btn" onclick="confirmDeletion(true)">Yes</button>
+                    <button class="standalone-btn outline-btn no-btn" onclick="confirmDeletion(false)">No</button>
+                </div>
+            `;
+
+            chatMessages.appendChild(buttonContainer);
+            scrollToLatestMessage();
+        }
+
+        function confirmDeletion(confirmed) {
+            // Remove the confirmation buttons
+            const buttonContainer = document.querySelector('.confirmation-buttons-container');
+            if (buttonContainer) {
+                buttonContainer.remove();
+            }
+
+            if (!confirmed || !pendingDeletion) {
+                // User said no or no pending deletion
+                if (!confirmed) {
+                    addUserMessage('No');
+                }
+                pendingDeletion = null;
+                return;
+            }
+
+            // User confirmed deletion
+            addUserMessage('Yes');
+            
+            // Perform the deletion
+            if (pendingDeletion.type === 'domain') {
+                deleteDomain();
+            } else if (pendingDeletion.type === 'protection') {
+                deleteProtection();
+            }
+
+            pendingDeletion = null;
+        }
+
+        function deleteDomain() {
+            // Add confirmation message
+            addAiroMessage('Domain has been removed from your cart.');
+            
+            // Since domain is required for protection, empty the entire cart
+            // Reset protection flag
+            domainProtectionSkipped = false;
+            
+            // Return to domain search results in sidebar after a short delay
+            setTimeout(() => {
+                showDomainResults();
+            }, 1500);
+        }
+
+        function deleteProtection() {
+            // Add confirmation message
+            addAiroMessage('Full Domain Protection has been removed from your cart.');
+            
+            // Mark protection as skipped and refresh cart
+            domainProtectionSkipped = true;
+            
+            // Refresh the cart view to reflect the change
+            setTimeout(() => {
+                showCartView();
+            }, 1000);
+        }
+
+        // Trigger confetti animation (copied from generate-privacy-policy)
+        function triggerConfetti() {
+            console.log('triggerConfetti() called');
+            const confettiContainer = document.createElement('div');
+            confettiContainer.className = 'confetti';
+            document.body.appendChild(confettiContainer);
+            
+            // Create 50 confetti pieces
+            for (let i = 0; i < 50; i++) {
+                const piece = document.createElement('div');
+                piece.className = 'confetti-piece';
+                piece.style.left = Math.random() * 100 + '%';
+                piece.style.animationDelay = Math.random() * 3 + 's';
+                piece.style.animationDuration = (2 + Math.random() * 3) + 's';
+                confettiContainer.appendChild(piece);
+            }
+            
+            // Remove confetti after animation
+            setTimeout(() => {
+                confettiContainer.remove();
+            }, 6000);
+        }
+    </script>
+</body>
+</html>

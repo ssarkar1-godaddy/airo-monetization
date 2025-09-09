@@ -1,0 +1,1530 @@
+/* GD Sherpa Font Declarations */
+@font-face {
+    font-family: 'GD Sherpa';
+    src: url('assets/fonts/static web fonts/GD_Sherpa_Text-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'GD Sherpa';
+    src: url('assets/fonts/static web fonts/GD_Sherpa_Text-Medium.woff2') format('woff2');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'GD Sherpa';
+    src: url('assets/fonts/static web fonts/GD_Sherpa_Text-Bold.woff2') format('woff2');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'GD Sherpa';
+    src: url('assets/fonts/static web fonts/GD_Sherpa_Text-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'GD Sherpa Display';
+    src: url('assets/fonts/static web fonts/GD_Sherpa_Display-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'GD Sherpa Display';
+    src: url('assets/fonts/static web fonts/GD_Sherpa_Display-Medium.woff2') format('woff2');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'GD Sherpa Display';
+    src: url('assets/fonts/static web fonts/GD_Sherpa_Display-Bold.woff2') format('woff2');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'GD Sherpa Display';
+    src: url('assets/fonts/static web fonts/GD_Sherpa_Display-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'GD Sherpa', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #ffffff;
+    background-image: url('assets/images/purple-orbs.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    color: #333333;
+    line-height: 1.5;
+    padding-bottom: 130px; /* Space for floating control bar */
+}
+
+/* Use Display font for headings */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'GD Sherpa Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Header */
+.header {
+    background-color: transparent;
+    padding: 36px 24px 28px 24px;
+    position: sticky;  
+    top: 0;
+    z-index: 100;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.header-content {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 10px;
+}
+
+.logo-icon {
+    height: 24px;
+    width: auto;
+}
+
+.logo-text {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333333;
+}
+
+.airo {
+    background: linear-gradient(135deg, #7B2CBF, #9D4EDD);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.upgrade-btn {
+    background: transparent;
+    border: none;
+    color: #999999;
+    padding: 0;
+    font-size: 14px;
+    font-weight: 400;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.upgrade-btn:hover {
+    color: #7B2CBF;
+}
+
+.close-btn {
+    background: transparent;
+    border: none;
+    font-size: 24px;
+    color: #666666;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.close-btn:hover {
+    background-color: #f5f5f5;
+}
+
+/* Consistent Layout Container - Aligns with Header Boundaries */
+.layout-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    width: 100%;
+}
+
+/* Sidebar and Overlay Boundary Alignment */
+.sidebar-boundary-right {
+    right: max(24px, calc((100vw - 1200px) / 2));
+}
+
+.sidebar-boundary-left {
+    left: max(24px, calc((100vw - 1200px) / 2));
+}
+
+/* Content area adjustments when sidebars are open */
+.content-boundary-with-sidebar-right {
+    margin-right: calc(350px + max(24px, calc((100vw - 1200px) / 2)));
+}
+
+.content-boundary-with-sidebar-left {
+    margin-left: calc(350px + max(24px, calc((100vw - 1200px) / 2)));
+}
+
+/* Main Content */
+.main-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.container {
+    width: 100%;
+    max-width: 100%;
+}
+
+/* Welcome Section */
+.welcome-section {
+    padding: 40px 0 32px;
+}
+
+.welcome-title {
+    font-size: 32px;
+    font-weight: 600;
+    color: #333333;
+    margin-bottom: 8px;
+}
+
+.welcome-subtitle {
+    font-size: 16px;
+    color: #666666;
+    line-height: 1.5;
+}
+
+
+
+/* Section Titles */
+.section-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333333;
+    margin-bottom: 24px;
+}
+
+/* Recent Chats */
+.recent-chats {
+    margin-bottom: 48px;
+}
+
+.chat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 16px;
+}
+
+.chat-item {
+    background: #ffffff;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.chat-item:hover {
+    border-color: #7B2CBF;
+    box-shadow: 0 4px 12px rgba(123, 44, 191, 0.1);
+}
+
+.chat-icon {
+    width: 40px;
+    height: 40px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.chat-content {
+    flex: 1;
+}
+
+.chat-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333333;
+    margin-bottom: 4px;
+}
+
+.chat-time {
+    font-size: 14px;
+    color: #666666;
+}
+
+.chat-menu {
+    background: transparent;
+    border: none;
+    font-size: 20px;
+    color: #666666;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.chat-menu:hover {
+    background-color: #f5f5f5;
+}
+
+/* Recommendations */
+.recommendations {
+    margin-bottom: 48px;
+}
+
+.recommendation-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    max-width: 100%;
+}
+
+.recommendation-card {
+    background: #ffffff;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.2s ease;
+}
+
+/* Removed hover effects since cards are no longer clickable */
+
+.card-image {
+    height: 160px;
+    position: relative;
+    overflow: hidden;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+.card-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+}
+
+.card-image-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 8px;
+}
+
+.card-content {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.card-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333333;
+    margin-bottom: 12px;
+    line-height: 1.4;
+    min-height: 3.5em; /* Ensure consistent height for button alignment */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-btn {
+    background: transparent;
+    color: #333333;
+    border: 1px solid #333333;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: auto;
+}
+
+.card-btn:hover {
+    background-color: transparent;
+    border-color: #008B8B;
+    color: #008B8B;
+}
+
+.card-btn:active {
+    background-color: #008B8B;
+    border-color: #008B8B;
+    color: #ffffff;
+    transform: scale(0.98);
+}
+
+/* Create Section */
+.create-section {
+    margin-bottom: 48px;
+}
+
+.create-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 16px;
+}
+
+.create-item {
+    background: #ffffff;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.create-item:hover {
+    border-color: #7B2CBF;
+    box-shadow: 0 4px 12px rgba(123, 44, 191, 0.1);
+}
+
+.create-icon {
+    width: 48px;
+    height: 48px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.create-content {
+    flex: 1;
+}
+
+.create-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333333;
+    margin-bottom: 8px;
+}
+
+.create-description {
+    font-size: 14px;
+    color: #666666;
+    line-height: 1.4;
+}
+
+/* Floating Control Bar */
+.control-bar {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ffffff;
+    border: 1px solid #e5e5e5;
+    border-radius: 20px;
+    padding: 16px;
+    z-index: 2000;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    max-width: 800px;
+    width: calc(100vw - 48px);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Control bar positioning: Red (small sidebar) moved 25px left, Blue (large sidebar) adjusts */
+
+/* Small sidebar control bar - move 200px to the left */
+body.sidebar-open .control-bar {
+    left: calc(50% - 200px) !important;
+    transform: translateX(-50%) !important;
+}
+
+/* Large sidebar control bar - align with chat interface boundaries with 90% width */
+body.loading-with-sidebar .control-bar,
+body.large-sidebar-open .control-bar {
+    left: max(24px, calc((100vw - 1200px) / 2 + 24px)) !important; /* Align with left boundary + padding */
+    right: auto !important;
+    transform: translateX(0) !important;
+    width: calc((min(1200px, 100vw - 48px) / 2 - 12px) * 0.9) !important; /* 90% of chat area for better coverage */
+    max-width: none !important;
+}
+
+.control-main {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.control-dropdowns {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.home-btn {
+    background: #ffffff;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    padding: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666666;
+}
+
+.home-btn:hover {
+    background-color: #f8f9fa;
+    border-color: #7B2CBF;
+    color: #7B2CBF;
+}
+
+.input-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    background: #ffffff;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    padding: 0 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input-container:focus-within {
+    border-color: #7B2CBF;
+    box-shadow: 0 2px 8px rgba(123, 44, 191, 0.15);
+}
+
+.chat-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 14px 0;
+    font-size: 16px;
+    outline: none;
+    color: #333333;
+}
+
+.chat-input::placeholder {
+    color: #999999;
+}
+
+.attach-btn {
+    background: transparent;
+    border: none;
+    font-size: 18px;
+    color: #666666;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.attach-btn:hover {
+    background-color: #f8f9fa;
+    color: #7B2CBF;
+}
+
+.send-btn {
+    background: transparent;
+    color: white;
+    border: none;
+    box-shadow: none;
+    border-radius: 12px;
+    width: 40px;
+    height: 42px;
+    padding: 0;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    
+}
+
+.send-btn:hover {
+    background-color: transparent;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(123, 44, 191, 0.2);
+}
+.send-icon-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 12px; /* Match the button's border radius */
+    object-fit: cover;
+}
+
+
+/* Dropdown Containers */
+.dropdown-container {
+    position: relative;
+}
+
+.dropdown-btn {
+    background: transparent;
+    border: none;
+    padding: 8px 0;
+    font-size: 14px;
+    font-weight: 500;
+    color: #666666;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.dropdown-btn:hover {
+    color: #7B2CBF;
+}
+
+.dropdown-left {
+    align-self: flex-start;
+}
+
+.dropdown-right {
+    align-self: flex-end;
+}
+
+.dropdown-arrow {
+    font-size: 14px;
+    transition: transform 0.2s ease;
+}
+
+.dropdown-btn.active {
+    color: #7B2CBF;
+}
+
+.dropdown-menu {
+    position: absolute;
+    background: #ffffff;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    min-width: 320px;
+    max-width: 400px;
+    margin-bottom: 12px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    z-index: 2001;
+}
+
+/* Ensure Ask Airo dropdown is always accessible */
+.dropdown-container {
+    position: relative;
+    z-index: 2001;
+}
+
+.dropdown-btn {
+    position: relative;
+    z-index: 2001;
+    pointer-events: auto;
+}
+
+/* Ensure control bar dropdowns are never blocked */
+.control-bar {
+    pointer-events: auto;
+}
+
+.control-bar * {
+    pointer-events: auto;
+}
+
+/* Ensure dropdowns work even when sidebars are active */
+body.sidebar-open .dropdown-container,
+body.large-sidebar-open .dropdown-container,
+body.loading-with-sidebar .dropdown-container {
+    z-index: 2001;
+    pointer-events: auto;
+}
+
+body.sidebar-open .airo-grid-panel,
+body.large-sidebar-open .airo-grid-panel,
+body.loading-with-sidebar .airo-grid-panel {
+    z-index: 2002;
+    pointer-events: auto;
+}
+
+.dropdown-left .dropdown-menu {
+    bottom: 100%;
+    left: 0;
+    transform: translateY(8px);
+}
+
+.dropdown-left .dropdown-menu.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-right .dropdown-menu {
+    bottom: 100%;
+    right: 0;
+    transform: translateY(8px);
+}
+
+.dropdown-right .dropdown-menu.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-section {
+    padding: 8px 0;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 16px 20px;
+    color: #333333;
+    text-decoration: none;
+    border-bottom: 1px solid #f5f5f5;
+    transition: background-color 0.2s ease;
+    gap: 12px;
+}
+
+.dropdown-item:first-child {
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+.dropdown-item:last-child {
+    border-bottom: none;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+.dropdown-item:hover {
+    background-color: #f8f9fa;
+}
+
+.dropdown-item-icon {
+    width: 40px;
+    height: 40px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.dropdown-item-content {
+    flex: 1;
+}
+
+.dropdown-item-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333333;
+    margin-bottom: 4px;
+    line-height: 1.3;
+}
+
+.dropdown-item-desc {
+    font-size: 14px;
+    color: #666666;
+    line-height: 1.4;
+}
+
+.dropdown-item:hover .dropdown-item-title {
+    color: #7B2CBF;
+}
+
+.dropdown-item:hover .dropdown-item-icon {
+    background-color: #e9ecef;
+}
+
+/* Airo Grid Panel - Expands between input and buttons */
+.airo-grid-panel {
+    display: none;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 16px 0;
+    margin: 0;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 2002;
+    position: relative;
+}
+
+.airo-grid-panel.show {
+    display: grid;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.grid-item {
+    background: #f8f9fa;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.grid-item:hover {
+    background: #ffffff;
+    border-color: #7B2CBF;
+    box-shadow: 0 4px 12px rgba(123, 44, 191, 0.1);
+    transform: translateY(-2px);
+}
+
+.grid-item-icon {
+    width: 40px;
+    height: 40px;
+    background: #ffffff;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+    margin-top: 3px;
+}
+
+.grid-item-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* Specific positioning for Generate images and Design a logo icons */
+.grid-item[onclick*="generate-image"] .grid-item-icon,
+.grid-item[onclick*="generate-logo"] .grid-item-icon {
+    margin-top: 5px;
+}
+
+.grid-item:hover .grid-item-icon {
+    border-color: #7B2CBF;
+    background: #f8f9fa;
+}
+
+.grid-item-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.grid-item-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333333;
+    margin-bottom: 4px;
+    line-height: 1.3;
+}
+
+.grid-item-desc {
+    font-size: 12px;
+    color: #666666;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.grid-item:hover .grid-item-title {
+    color: #7B2CBF;
+}
+
+/* Legacy support for simple dropdown items */
+.dropdown-menu a:not(.dropdown-item) {
+    display: block;
+    padding: 12px 16px;
+    color: #333333;
+    text-decoration: none;
+    font-size: 14px;
+    border-bottom: 1px solid #f5f5f5;
+    transition: background-color 0.2s ease;
+}
+
+.dropdown-menu a:not(.dropdown-item):hover {
+    background-color: #f8f9fa;
+    color: #7B2CBF;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .main-content {
+        max-width: 1300px;
+        padding: 0 20px;
+    }
+    
+    .header {
+        padding: 32px 20px 26px 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .header {
+        padding: 28px 16px 24px 16px;
+    }
+    
+    .header-actions {
+        gap: 12px;
+    }
+    
+    .upgrade-btn {
+        font-size: 13px;
+    }
+    
+    .main-content {
+        max-width: 1200px;
+        padding: 0 16px;
+    }
+    
+    .welcome-title {
+        font-size: 28px;
+    }
+    
+
+    
+    .chat-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .recommendation-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+    
+    .card-image {
+        height: 140px;
+        padding: 12px;
+    }
+    
+    .card-content {
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .card-title {
+        font-size: 13px;
+        margin-bottom: 8px;
+    }
+    
+    .card-btn {
+        font-size: 13px;
+        padding: 8px 16px;
+    }
+    
+    .create-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .control-bar {
+        width: calc(100vw - 32px);
+        bottom: 32px;
+    }
+    
+    /* REMOVED: Mobile sidebar control bar overrides - desktop only prototype */
+    
+    .dropdown-btn {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+    
+    .control-dropdowns {
+        justify-content: space-around;
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        padding: 24px 12px 20px 12px;
+    }
+    
+    .main-content {
+        max-width: 100%;
+        padding: 0 12px;
+    }
+    
+    .welcome-section {
+        padding: 24px 0;
+    }
+    
+    .welcome-title {
+        font-size: 24px;
+    }
+    
+    .recommendation-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .card-image {
+        height: 120px;
+        padding: 10px;
+    }
+    
+    .card-title {
+        font-size: 12px;
+    }
+    
+    .control-bar {
+        width: calc(100vw - 24px);
+        bottom: 28px;
+        padding: 12px;
+    }
+    
+    /* REMOVED: Mobile sidebar control bar overrides - desktop only prototype */
+    
+    .control-main {
+        gap: 8px;
+    }
+    
+    .control-dropdowns {
+        justify-content: space-between;
+        gap: 16px;
+    }
+    
+    .dropdown-btn {
+        font-size: 12px;
+        padding: 6px 0;
+    }
+    
+    .dropdown-menu {
+        min-width: 280px;
+        max-width: 320px;
+    }
+    
+    .dropdown-item {
+        padding: 12px 16px;
+        gap: 10px;
+    }
+    
+    .dropdown-item-icon {
+        width: 32px;
+        height: 32px;
+        font-size: 16px;
+    }
+    
+    .dropdown-item-title {
+        font-size: 14px;
+    }
+    
+    .dropdown-item-desc {
+        font-size: 12px;
+    }
+    
+    /* Grid Panel Mobile */
+    .airo-grid-panel {
+        gap: 8px;
+        padding: 12px 0;
+    }
+    
+    .grid-item {
+        padding: 12px;
+        gap: 10px;
+    }
+    
+    .grid-item-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+    }
+    
+    .grid-item-title {
+        font-size: 13px;
+    }
+    
+    .grid-item-desc {
+        font-size: 11px;
+        -webkit-line-clamp: 1;
+    }
+    
+    .home-btn {
+        padding: 12px;
+    }
+    
+    .send-btn {
+        padding: 12px 14px;
+    }
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.chat-item,
+.recommendation-card,
+.create-item {
+    animation: fadeIn 0.3s ease;
+}
+
+/* Focus States */
+.chat-input:focus {
+    outline: none;
+}
+
+.input-container:focus-within {
+    border-color: #7B2CBF;
+    box-shadow: 0 0 0 3px rgba(123, 44, 191, 0.1);
+}
+
+button:focus-visible {
+    outline: 2px solid #7B2CBF;
+    outline-offset: 2px;
+}
+
+/* Loading States */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #e5e5e5;
+    border-left-color: #7B2CBF;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ==================== UNIVERSAL DISCLAIMER POSITIONING ==================== */
+
+/* Disclaimer follows control bar positioning - UNIVERSAL RULES */
+.disclaimer {
+    position: fixed !important;
+    bottom: 15px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    z-index: 999 !important;
+    pointer-events: none !important;
+    transition: all 0.3s ease !important; /* Smooth movement */
+}
+
+.disclaimer-text {
+    font-size: 14px !important;
+    color: #666666 !important;
+    margin: 0 !important;
+    text-align: center !important;
+}
+
+/* Disclaimer follows control bar positioning - simplified */
+body.marketing-sidebar-open .disclaimer,
+body.sidebar-open .disclaimer {
+    left: calc(50% - 200px) !important;
+    transform: translateX(-50%) !important;
+}
+
+body.large-sidebar-open .disclaimer {
+    left: calc(31%) !important; /* Fine-tune center position within chat space */
+    transform: translateX(-50%) !important; /* Center the disclaimer itself */
+}
+
+/* Mobile responsive disclaimer positioning - simplified */
+@media (max-width: 768px) {
+    body.large-sidebar-open .disclaimer,
+    body.marketing-sidebar-open .disclaimer,
+    body.loading-with-sidebar .disclaimer {
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        width: calc(100vw - 48px) !important;
+        max-width: 600px !important;
+    }
+}
+
+/* Force all icons to be grey */
+.control-bar svg,
+.home-btn,
+.attach-btn,
+.send-btn,
+.dropdown-btn,
+.create-icon svg,
+.grid-item-icon svg,
+.analysis-icon svg {
+    color: #666;
+}
+
+.control-bar svg {
+    color: #666;
+}
+
+/* Ensure all SVG icons are grey */
+svg {
+    color: #666;
+}
+
+/* ==================== GLOBAL CHAT INTERFACE STYLES ==================== */
+
+/* Global Chat Button Styling - Transparent Background Initially */
+.chat-interface button,
+.chat-messages button,
+.standalone-btn,
+.card-btn {
+    background: transparent !important;
+    border: 1px solid #333333 !important;
+    color: #333333 !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+}
+
+/* CTA Button Specific Styling - Purple Outline */
+.action-btn,
+.outline-btn,
+.privacy-cta-btn,
+.looks-good-btn {
+    background: transparent !important;
+    border: 1px solid #6C47B4 !important; /* Purple border */
+    color: #6C47B4 !important; /* Purple text */
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+}
+
+/* Chat Button Hover Effects */
+.chat-interface button:hover,
+.chat-messages button:hover,
+.standalone-btn:hover {
+    background: #008B8B !important;
+    border-color: #008B8B !important;
+    color: #ffffff !important;
+}
+
+/* CTA Button Hover Effects - Purple Theme */
+.action-btn:hover,
+.outline-btn:hover,
+.privacy-cta-btn:hover,
+.looks-good-btn:hover {
+    background: #D3C1F7 !important; /* Purple background on hover */
+    border-color: #6C47B4 !important;
+    color: #6C47B4 !important;
+}
+
+/* Card Button Hover Effects - Transparent background with cyan border/text */
+.card-btn:hover {
+    background: transparent !important;
+    border-color: #008B8B !important;
+    color: #008B8B !important;
+}
+
+/* Active/Click Effects for Chat Buttons */
+.chat-interface button:active,
+.chat-messages button:active,
+.standalone-btn:active,
+.card-btn:active {
+    background: #008B8B !important;
+    border-color: #008B8B !important;
+    color: #ffffff !important;
+    transform: scale(0.98) !important;
+}
+
+/* Active/Click Effects for CTA Buttons - Purple Theme */
+.action-btn:active,
+.outline-btn:active,
+.privacy-cta-btn:active,
+.looks-good-btn:active {
+    background: #7C3AED !important; /* Darker purple for active state */
+    border-color: #7C3AED !important;
+    color: #ffffff !important;
+    transform: scale(0.98) !important;
+}
+
+/* Global Chat Bubble Styling - Sharper/More Angular Border Radius */
+.user-bubble {
+    border-radius: 8px !important;
+    border-bottom-right-radius: 4px !important;
+}
+
+.airo-bubble, .ai-bubble {
+    border-radius: 8px !important;
+    border-bottom-left-radius: 4px !important;
+}
+
+/* User Message Color Logic - Grey for sent messages, white for typing */
+.user-bubble.sent {
+    background: #F5F7F8 !important;
+    color: #333333 !important;
+}
+
+.user-bubble.typing {
+    background: #ffffff !important;
+    color: #333333 !important;
+}
+
+/* CTA-triggered messages should be grey immediately, even when typing */
+.user-bubble.cta-triggered {
+    background: #F5F7F8 !important;
+    color: #333333 !important;
+}
+
+/* CTA messages override typing state - grey even when typing */
+.user-bubble.cta-triggered.typing {
+    background: #F5F7F8 !important;
+    color: #333333 !important;
+}
+
+/* Additional specificity for CTA messages - ensure they're always grey */
+.user-message .user-bubble.cta-triggered,
+.chat-messages .user-bubble.cta-triggered,
+div.user-bubble.cta-triggered {
+    background: #F5F7F8 !important;
+    color: #333333 !important;
+}
+
+/* Enhanced specificity for CTA-triggered messages from buttons */
+.user-bubble.cta-triggered[data-message*="looks"],
+.user-bubble.cta-triggered[data-message*="Looks"] {
+    background: #F5F7F8 !important;
+    color: #333333 !important;
+}
+
+/* Default user bubble state (unsent) - should be white until marked as sent */
+.user-bubble:not(.sent):not(.typing):not(.cta-triggered) {
+    background: #ffffff !important;
+    color: #333333 !important;
+}
+
+/* Force sent user bubbles to be grey regardless of other styles */
+.user-bubble.sent {
+    background: #F5F7F8 !important;
+    color: #333333 !important;
+}
+
+/* Additional CSS debugging - ensure the classes are visible */
+.user-bubble.sent::before {
+    content: "SENT";
+    position: absolute;
+    top: -20px;
+    right: 0;
+    font-size: 10px;
+    color: red;
+    background: yellow;
+    padding: 2px 4px;
+    border-radius: 2px;
+    display: none; /* DISABLED - was causing visual artifacts */
+}
+
+.user-bubble.typing::before {
+    content: "TYPING";
+    position: absolute;
+    top: -20px;
+    right: 0;
+    font-size: 10px;
+    color: blue;
+    background: cyan;
+    padding: 2px 4px;
+    border-radius: 2px;
+    display: none; /* DISABLED - was causing visual artifacts */
+}
+
+.user-bubble.cta-triggered::before {
+    content: "CTA";
+    position: absolute;
+    top: -20px;
+    right: 0;
+    font-size: 10px;
+    color: white;
+    background: green;
+    padding: 2px 4px;
+    border-radius: 2px;
+    display: none; /* DISABLED - was causing visual artifacts */
+}
+
+/* Ensure user-message containers are positioned for debugging labels */
+.user-message {
+    position: relative;
+}
+
+/* FINAL OVERRIDES - Ensure CTA styling takes precedence over page-specific styles */
+
+/* CTA Button Final Override - Purple Styling */
+.action-btn, .outline-btn, .privacy-cta-btn, .looks-good-btn,
+.standalone-btn.outline-btn, button.standalone-btn.outline-btn {
+    background: transparent !important;
+    border: 1px solid #6C47B4 !important;
+    color: #6C47B4 !important;
+    border-radius: 6px !important;
+    padding: 8px 16px !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+}
+
+/* CTA Button Final Hover Override - Purple Theme */
+.action-btn:hover, .outline-btn:hover, .privacy-cta-btn:hover, .looks-good-btn:hover,
+.standalone-btn.outline-btn:hover, button.standalone-btn.outline-btn:hover {
+    background: #D3C1F7 !important;
+    border-color: #6C47B4 !important;
+    color: #6C47B4 !important;
+}
+
+/* CTA Button Final Active Override - Darker Purple */
+.action-btn:active, .outline-btn:active, .privacy-cta-btn:active, .looks-good-btn:active,
+.standalone-btn.outline-btn:active, button.standalone-btn.outline-btn:active {
+    background: #7C3AED !important;
+    border-color: #7C3AED !important;
+    color: #ffffff !important;
+    transform: scale(0.98) !important;
+}
+
+/* Final CTA Message Override - Always Grey When CTA-Triggered */
+.user-bubble.cta-triggered,
+.user-message .user-bubble.cta-triggered,
+.chat-messages .user-bubble.cta-triggered,
+div.user-bubble.cta-triggered,
+.user-bubble.cta-triggered.typing,
+.user-bubble.cta-triggered.sent {
+    background: #F5F7F8 !important;
+    color: #333333 !important;
+    border: none !important;
+}
+
+/* ==================== DUPLICATE REMOVED - CONSOLIDATED ABOVE ==================== */
+
+/* ==================== GLOBAL CHAT RESPONSIVENESS ==================== */
+
+/* Mobile chat bubble adjustments */
+@media (max-width: 768px) {
+    .user-bubble, .airo-bubble, .ai-bubble {
+        border-radius: 6px !important;
+    }
+    
+    .user-bubble {
+        border-bottom-right-radius: 3px !important;
+    }
+    
+    .airo-bubble, .ai-bubble {
+        border-bottom-left-radius: 3px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .user-bubble, .airo-bubble, .ai-bubble {
+        border-radius: 5px !important;
+    }
+    
+    .user-bubble {
+        border-bottom-right-radius: 2px !important;
+    }
+    
+    .airo-bubble, .ai-bubble {
+        border-bottom-left-radius: 2px !important;
+    }
+}
+
+/* ==================== GLOBAL JAVASCRIPT FUNCTIONS ==================== */
+
+/*
+JavaScript functions to be used across all pages for user message state management:
+
+// Function to mark a user message as sent (grey)
+function markUserMessageAsSent(userBubbleElement) {
+    if (userBubbleElement && userBubbleElement.classList.contains('user-bubble')) {
+        userBubbleElement.classList.remove('typing');
+        userBubbleElement.classList.add('sent');
+    }
+}
+
+// Function to mark a user message as typing (white)
+function markUserMessageAsTyping(userBubbleElement) {
+    if (userBubbleElement && userBubbleElement.classList.contains('user-bubble')) {
+        userBubbleElement.classList.remove('sent');
+        userBubbleElement.classList.add('typing');
+    }
+}
+
+// Function to mark all existing user messages as sent when page loads
+function markAllExistingUserMessagesAsSent() {
+    const userBubbles = document.querySelectorAll('.user-bubble');
+    userBubbles.forEach(bubble => {
+        if (!bubble.classList.contains('typing')) {
+            bubble.classList.add('sent');
+        }
+    });
+}
+
+// Auto-initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Mark all existing user messages as sent
+    markAllExistingUserMessagesAsSent();
+});
+*/
