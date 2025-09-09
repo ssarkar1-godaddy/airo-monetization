@@ -46,6 +46,7 @@ airo-prototype/
 
 ### Recent Chats Section
 Each chat item is clickable and will navigate to the corresponding page:
+- Buy a domain
 - Privacy Policy
 - Carpet Logo
 - Image of a Rug Warehouse
@@ -55,6 +56,7 @@ Each chat item is clickable and will navigate to the corresponding page:
 
 ### Recommendations Cards
 Interactive cards that lead to different tools:
+- Domain purchase
 - Generate images to promote products
 - Logo generation tool
 - Marketing consultant
@@ -62,6 +64,7 @@ Interactive cards that lead to different tools:
 
 ### Create Section
 Links to various creation tools:
+- Domain search and purchase
 - Design a logo
 - Optimize my site
 - Generate images
