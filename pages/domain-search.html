@@ -529,6 +529,34 @@
             color: #000000;
         }
 
+        /* Continue state for cart buttons */
+        .btn-cart.continue-state {
+            background: transparent;
+            color: #ffffff;
+            min-width: auto;
+            padding: 0;
+            height: auto;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: none;
+            border: none;
+        }
+
+        .btn-cart.continue-state:hover {
+            background: transparent;
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-cart.continue-state img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
         .btn-primary {
             background: #000000;
             color: #ffffff;
@@ -2267,9 +2295,29 @@
             indicators.forEach(indicator => indicator.remove());
         }
 
-        // Show domain search results in sidebar
+        // Show domain search results in sidebar (with action buttons)
         function showDomainResults() {
             console.log('🔍 Showing domain search results');
+            showDomainResultsOnly();
+            
+            // Add predefined prompt buttons after domain results are shown
+            setTimeout(() => {
+                const actionButtons = [
+                    { text: 'More Domains', onclick: 'handleMoreDomains()' },
+                    { text: 'Shorter Domains', onclick: 'handleShorterDomains()' },
+                    { text: 'Budget Domains', onclick: 'handleBudgetDomains()' },
+                    { text: 'Filter by Industry', onclick: 'handleFilterByIndustry()' }
+                ];
+                
+                addUserActionButtons(actionButtons);
+            }, 500);
+            
+            console.log('✅ Domain results displayed');
+        }
+
+        // Show domain search results in sidebar (without action buttons)
+        function showDomainResultsOnly() {
+            console.log('🔍 Showing domain search results only');
             
             const hangTightSidebar = document.getElementById('hangTightSidebar');
             if (!hangTightSidebar) {
@@ -2362,7 +2410,7 @@
                         <!-- Premium domain -->
                         <div class="domain-item premium">
                             <div class="premium-badge">
-                                <span class="verified-icon">✓</span>
+                                <img src="../assets/images/icons/checkmark.svg" alt="Checkmark" class="verified-icon" style="width: 12px; height: 12px;">
                                 VERIFIED PREMIUM DOMAIN
                             </div>
                             <button class="domain-heart-icon" title="Add to favorites">
@@ -2438,22 +2486,11 @@
                 </div>
             `;
 
+            // Show the sidebar
+            hangTightSidebar.style.display = 'block';
+            
             // Hide typing indicator and remove it
             hideTypingIndicator();
-            
-            // Add predefined prompt buttons after domain results are shown
-            setTimeout(() => {
-                const actionButtons = [
-                    { text: 'More Domains', onclick: 'handleMoreDomains()' },
-                    { text: 'Shorter Domains', onclick: 'handleShorterDomains()' },
-                    { text: 'Budget Domains', onclick: 'handleBudgetDomains()' },
-                    { text: 'Filter by Industry', onclick: 'handleFilterByIndustry()' }
-                ];
-                
-                addUserActionButtons(actionButtons);
-            }, 500);
-            
-            console.log('✅ Domain results displayed');
         }
 
         // Show "Hang tight" sidebar loading screen
@@ -2588,7 +2625,7 @@
             const userActionButtons = document.createElement('div');
             userActionButtons.className = 'user-message user-action-buttons';
             
-            // Create two-row layout for domain action buttons
+            // Create layout for domain action buttons
             if (buttons.length === 4) {
                 userActionButtons.innerHTML = `
                     <div class="action-buttons-container">
@@ -2599,6 +2636,29 @@
                         <div class="action-buttons-row">
                             <button class="standalone-btn outline-btn" onclick="${buttons[2].onclick}">${buttons[2].text}</button>
                             <button class="standalone-btn outline-btn" onclick="${buttons[3].onclick}">${buttons[3].text}</button>
+                        </div>
+                        <div class="helper-text">
+                            <div class="helper-message">
+                                <span class="helper-icon">↰</span>
+                                Or, write your own response below
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (buttons.length === 6) {
+                userActionButtons.innerHTML = `
+                    <div class="action-buttons-container">
+                        <div class="action-buttons-row">
+                            <button class="standalone-btn outline-btn" onclick="${buttons[0].onclick}">${buttons[0].text}</button>
+                            <button class="standalone-btn outline-btn" onclick="${buttons[1].onclick}">${buttons[1].text}</button>
+                        </div>
+                        <div class="action-buttons-row">
+                            <button class="standalone-btn outline-btn" onclick="${buttons[2].onclick}">${buttons[2].text}</button>
+                            <button class="standalone-btn outline-btn" onclick="${buttons[3].onclick}">${buttons[3].text}</button>
+                        </div>
+                        <div class="action-buttons-row">
+                            <button class="standalone-btn outline-btn" onclick="${buttons[4].onclick}">${buttons[4].text}</button>
+                            <button class="standalone-btn outline-btn" onclick="${buttons[5].onclick}">${buttons[5].text}</button>
                         </div>
                         <div class="helper-text">
                             <div class="helper-message">
@@ -2704,16 +2764,6 @@
             // Add the cart confirmation message
             setTimeout(() => {
                 addSystemMessage("You added Availablename.com to your cart");
-                
-                // Add the domain protection message after a short delay
-                setTimeout(() => {
-                    addAiroMessage("Your domain is secure right now—but protection adds an extra layer of safety against hackers, mistakes, or expiration slips. Want to keep it worry-free?");
-                    
-                    // Update sidebar to show domain protection offer
-                    setTimeout(() => {
-                        showDomainProtectionSidebar();
-                    }, 1000);
-                }, 800);
             }, 300);
         }
 
@@ -2799,8 +2849,8 @@
 
                     <!-- Action buttons -->
                     <div class="protection-actions">
-                        <button class="skip-btn" onclick="skipDomainProtection()">Skip Recommendation</button>
-                        <button class="add-to-cart-btn" onclick="addDomainProtectionToCart()">Add to Cart</button>
+                        <button class="skip-btn" onclick="skipDomainProtectionToCart()">Skip Recommendation</button>
+                        <button class="add-to-cart-btn" onclick="alert('Button clicked!'); addDomainProtectionToCart();">Add to Cart</button>
                     </div>
                 </div>
             `;
@@ -2824,11 +2874,6 @@
             showCartView();
         }
 
-        function addDomainProtectionToCart() {
-            console.log('Add domain protection to cart clicked');
-            addSystemMessage("Add to Cart - Domain Protection");
-            showCartView();
-        }
 
         function showCartView() {
             const hangTightSidebar = document.getElementById('hangTightSidebar');
@@ -3540,6 +3585,845 @@
                 confettiContainer.remove();
             }, 6000);
         }
+
+        // Cart Button functionality
+        function initializeCartButtons() {
+            // Try multiple selectors
+            const cartButtons = document.querySelectorAll('.btn-cart');
+            const titleButtons = document.querySelectorAll('button[title="Add to cart"]');
+            
+            // Use whichever selector finds buttons
+            let buttonsToUse = cartButtons.length > 0 ? cartButtons : titleButtons;
+            
+            if (buttonsToUse.length === 0) {
+                return;
+            }
+            
+            buttonsToUse.forEach((button) => {
+                // Remove any existing listeners first
+                button.removeEventListener('click', handleCartButtonClick);
+                
+                // Add event listener
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleCartButtonClick(this);
+                });
+                
+                // Visual indicator
+                button.style.cursor = 'pointer';
+                button.setAttribute('data-cart-ready', 'true');
+            });
+            
+            console.log('Cart buttons initialized successfully');
+        }
+
+        function handleCartButtonClick(button) {
+            // Check if already in "Continue" state
+            if (button.classList.contains('continue-state')) {
+                return;
+            }
+            
+            // Add continue state class
+            button.classList.add('continue-state');
+            
+            // Change button content to use continue.png
+            button.innerHTML = `<img src="../assets/images/continue.png" alt="Continue" style="max-width: 100%; height: auto;">`;
+            button.title = 'Continue';
+            
+            // Show cart confirmation message in chat immediately
+            showCartConfirmationMessage();
+            
+            // Add slight animation
+            button.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                button.style.transform = 'scale(1)';
+            }, 150);
+            
+            console.log('Cart button changed to continue.png and message added to chat');
+        }
+
+        function showEmailOfferSidebar() {
+            console.log('Showing email offer sidebar');
+            
+            const hangTightSidebar = document.getElementById('hangTightSidebar');
+            if (!hangTightSidebar) {
+                console.error('Sidebar not found');
+                return;
+            }
+
+            // Update sidebar content with email offer
+            hangTightSidebar.innerHTML = `
+                <div class="domain-protection-content">
+                    <div class="protection-scrollable">
+                        <!-- Hero Image -->
+                        <div class="email-hero" style="text-align: center; margin-bottom: 8px; padding: 16px 16px 0 16px;">
+                            <img src="../assets/images/Hero-email.png" alt="Build credibility with custom email" style="max-width: 100%; height: auto; border-radius: 8px;">
+                        </div>
+
+                        <!-- Main Content -->
+                        <div class="email-content" style="padding-left: 16px; padding-right: 16px;">
+                            <h2 style="font-size: 28px; font-weight: 700; margin-bottom: 16px; line-height: 1.2;">Build credibility with a custom email address</h2>
+                            
+                            <p style="font-size: 16px; color: #374151; margin-bottom: 24px; line-height: 1.5;">
+                                A custom email address like <strong>hello@availablename.com</strong> shows you take your business seriously.
+                            </p>
+
+                            <!-- Pricing Section -->
+                            <div class="pricing-card" style="border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; margin-bottom: 24px; background: white;">
+                                <div class="pricing-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
+                                    <span style="font-size: 16px; font-weight: 400;">Billed annually</span>
+                                    <span style="background: #fef3c7; color: #92400e; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">75% OFF</span>
+                                </div>
+                                
+                                <div class="pricing-display" style="margin-bottom: 2px;">
+                                    <span style="text-decoration: line-through; color: #6b7280; font-size: 18px;">$7.99</span>
+                                    <span style="font-size: 32px; font-weight: 700; margin-left: 8px;">$1.99</span>
+                                    <span style="font-size: 18px; color: #374151;">/mo</span>
+                                </div>
+                                
+                                <p style="font-size: 14px; color: #6b7280; margin: 0;">
+                                    You pay $23.88 today. Auto-Renews annually at $95.88 on your active mailboxes. Cancel anytime in the Account Settings
+                                </p>
+                            </div>
+
+                            <!-- Features Section -->
+                            <div class="features-section" style="margin-bottom: 32px;">
+                                <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 16px;">Microsoft 365 email essentials plan, includes:</h3>
+                                
+                                <div class="feature-list" style="background: #f9fafb; border-radius: 8px; padding: 16px;">
+                                    <div class="feature-item" style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                                        <div style="width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;">
+                                            <img src="../assets/images/Icon_Box_storage.svg" alt="Storage" style="width: 24px; height: 24px;">
+                                        </div>
+                                        <span style="font-size: 16px;">10 GB email storage (approx. 50,000 emails)</span>
+                                    </div>
+                                    
+                                    <div class="feature-item" style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                                        <div style="width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;">
+                                            <img src="../assets/images/Icon_Box_@.svg" alt="Email aliases" style="width: 24px; height: 24px;">
+                                        </div>
+                                        <span style="font-size: 16px;">Up to 400 email aliases like sales@ or support@</span>
+                                    </div>
+                                    
+                                    <div class="feature-item" style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                                        <div style="width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;">
+                                            <img src="../assets/images/Icon_Box_shield.svg" alt="Protection" style="width: 24px; height: 24px;">
+                                        </div>
+                                        <span style="font-size: 16px;">Proactive protection against spam, malware, and phishing attempts</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons - Sticky Bottom -->
+                    <div class="protection-actions">
+                        <button class="skip-btn" onclick="skipEmailOfferToCart()">Skip Recommendation</button>
+                        <button class="add-to-cart-btn" onclick="addEmailToCart()">Add to Cart</button>
+                    </div>
+                </div>
+            `;
+            
+            // Show the sidebar
+            hangTightSidebar.style.display = 'block';
+            
+            console.log('Email offer sidebar displayed');
+        }
+
+        function addEmailToCart() {
+            console.log('Email added to cart - going to cart page');
+            
+            // Set email as included and show the full cart
+            cartItems.email.included = true;
+            showCartViewWithItems('email-offer');
+        }
+
+        function skipEmailOfferToCart() {
+            console.log('Skipping email offer - going to cart page without email');
+            
+            // Set email as NOT included and show the cart
+            cartItems.email.included = false;
+            showCartViewWithItems('email-offer');
+        }
+
+        function skipEmailChatToCart() {
+            console.log('Skipping email chat - going to cart page without email');
+            
+            // Set email as NOT included and show the cart
+            cartItems.email.included = false;
+            showCartViewWithItems('email-chat');
+        }
+
+        // Global variable to track the previous state
+        let previousState = 'domain-search'; // default state
+
+        function showCartView(fromState = 'domain-search') {
+            console.log('🔄 Showing cart view from:', fromState, 'Type:', typeof fromState);
+            
+            // Store the previous state
+            previousState = fromState;
+            console.log('📝 Set previousState to:', previousState, 'Type:', typeof previousState);
+            
+            // Hide the chat interface
+            const chatContainer = document.querySelector('.chat-interface');
+            if (chatContainer) {
+                chatContainer.style.display = 'none';
+            }
+            
+            // Hide the control bar
+            const controlBar = document.querySelector('.control-bar');
+            if (controlBar) {
+                controlBar.style.display = 'none';
+            }
+            
+            // Expand sidebar to full width
+            const hangTightSidebar = document.getElementById('hangTightSidebar');
+            if (!hangTightSidebar) {
+                console.error('Sidebar not found');
+                return;
+            }
+            
+            // Make sidebar full width
+            hangTightSidebar.style.width = '100%';
+            hangTightSidebar.style.maxWidth = '100%';
+            hangTightSidebar.style.right = '0';
+            hangTightSidebar.style.left = '0';
+            
+            // Update sidebar content with cart
+            hangTightSidebar.innerHTML = `
+                <div class="cart-content" style="background: #ffffff; height: 100%; display: flex; flex-direction: column;">
+                    <!-- Header -->
+                    <div class="cart-header" style="display: flex; align-items: center; justify-content: space-between; padding: 20px; border-bottom: 1px solid #e5e7eb;">
+                        <button class="back-btn" onclick="returnFromCartView()" style="background: none; border: none; color: #6b7280; font-size: 16px; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                            ← Back
+                        </button>
+                        <h2 class="cart-title" style="font-size: 24px; font-weight: 700; margin: 0; flex: 1; text-align: center;">Purchase Now</h2>
+                        <div class="header-spacer" style="width: 60px;"></div>
+                    </div>
+                    
+                    <!-- Scrollable Content -->
+                    <div class="cart-scrollable" style="flex: 1; overflow-y: auto; padding: 20px;">
+                        <!-- Left Column - Forms -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; max-width: 1200px; margin: 0 auto;">
+                            <div class="forms-column">
+                                <!-- Billing Information -->
+                                <div class="billing-section" style="margin-bottom: 24px;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px;">
+                                        <div>
+                                            <h3 style="font-size: 18px; font-weight: 600; margin: 0 0 4px 0;">Billing Information</h3>
+                                            <p style="color: #6b7280; margin: 0; font-size: 14px;">3000 Carillon Point, Kirkland WA...</p>
+                                        </div>
+                                        <div style="display: flex; align-items: center; gap: 12px;">
+                                            <div style="width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                                <img src="../assets/images/icons/checkmark.svg" alt="Checkmark" style="width: 14px; height: 14px;">
+                                            </div>
+                                            <button style="background: none; border: none; color: #6b7280; cursor: pointer;">▼</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Payment Method -->
+                                <div class="payment-section">
+                                    <div style="display: flex; align-items: center; justify-content: space-between; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px;">
+                                        <div>
+                                            <h3 style="font-size: 18px; font-weight: 600; margin: 0 0 4px 0; display: flex; align-items: center; gap: 8px;">
+                                                <img src="../assets/images/lock.svg" alt="Lock" style="width: 18px; height: 18px;"> Secure Payment
+                                            </h3>
+                                            <p style="color: #6b7280; margin: 0; font-size: 14px; display: flex; align-items: center; gap: 8px;">
+                                                <span style="background: #1f2937; color: white; padding: 2px 6px; border-radius: 4px; font-size: 12px;">VISA</span>
+                                                Ending with 5555
+                                            </p>
+                                        </div>
+                                        <div style="display: flex; align-items: center; gap: 12px;">
+                                            <div style="width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                                <img src="../assets/images/icons/checkmark.svg" alt="Checkmark" style="width: 14px; height: 14px;">
+                                            </div>
+                                            <button style="background: none; border: none; color: #6b7280; cursor: pointer;">▼</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right Column - Order Summary -->
+                            <div class="order-column">
+                                <div class="order-summary" style="background: #f9fafb; border-radius: 8px; padding: 24px;">
+                                    <h3 style="font-size: 20px; font-weight: 600; margin: 0 0 16px 0;">Order Summary</h3>
+                                    <a href="#" style="color: #767676; text-decoration: none; font-size: 14px; margin-bottom: 20px; display: block;">View offer disclaimers</a>
+                                    
+                                    <div style="margin-bottom: 16px;">
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                            <span>Subtotal</span>
+                                            <span>$111.85</span>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
+                                            <span>Taxes and Fees</span>
+                                            <span>$0.00</span>
+                                        </div>
+                                        <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 16px 0;">
+                                        <div style="display: flex; justify-content: space-between; font-weight: 600; font-size: 18px;">
+                                            <span>Total (USD)</span>
+                                            <span style="color: #059669;">$111.85</span>
+                                        </div>
+                                    </div>
+
+                                    <div style="background: transparent; border: none; border-radius: 8px; padding: 12px; margin-bottom: 24px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                        <img src="../assets/images/GD_TheGo.svg" alt="Success" style="width: 20px; height: 20px;">
+                                        <span style="color: #065f46; font-size: 14px;"><strong>Nice!</strong> You saved $115.21 on your order.</span>
+                                    </div>
+
+                                    <button style="width: 100%; background: #000000; color: white; border: none; border-radius: 6px; padding: 16px; font-size: 16px; font-weight: 600; cursor: pointer; margin-bottom: 16px;">
+                                        <img src="../assets/images/lock.svg" alt="Lock" style="width: 16px; height: 16px; margin-right: 8px;"> Complete Purchase
+                                    </button>
+
+                                    <p style="font-size: 12px; color: #6b7280; line-height: 1.4; margin: 0;">
+                                        By clicking "Complete Purchase," you agree to our Terms & Conditions and Privacy Policy, and consent to enroll your product(s) in our automatic renewal service, which can be cancelled at any time via the Renewals and Billing page in your account. Automatic renewals are billed to the payment method selected for this order or your backup payment method(s), until cancelled.
+                                    </p>
+                                </div>
+
+                                <!-- Your Items Accordion -->
+                                <div class="cart-accordion" style="margin-top: 24px;">
+                                    <div class="accordion-header" onclick="toggleCartAccordion()" style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+                                        <h3 style="margin: 0; font-size: 16px; font-weight: 600;">Your Items(2)</h3>
+                                        <span style="color: #6b7280; font-size: 18px;">^</span>
+                                    </div>
+                                    <div class="accordion-content" id="cartAccordionContent" style="display: none; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 8px 8px; padding: 16px;">
+                                        <!-- Domain Item -->
+                                        <div class="cart-item-card" style="background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+                                            <div class="cart-item-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                                                <div class="item-title-section">
+                                                    <h4 style="margin: 0 0 4px 0; font-size: 16px; font-weight: 600;">Domain</h4>
+                                                    <p style="margin: 0; color: #6b7280; font-size: 14px;">availablename.com</p>
+                                                </div>
+                                                <div style="text-align: right;">
+                                                    <div style="font-size: 18px; font-weight: 600;">$87.97</div>
+                                                    <div style="color: #6b7280; font-size: 12px; text-decoration: line-through;">$109.95</div>
+                                                    <div style="color: #059669; font-size: 12px; font-weight: 600;">19% off</div>
+                                                </div>
+                                            </div>
+                                            <div style="margin-bottom: 12px;">
+                                                <label style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 4px;">Term length</label>
+                                                <select style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px; background: white;">
+                                                    <option>3 Year</option>
+                                                </select>
+                                                <p style="margin: 8px 0 0 0; font-size: 12px; color: #6b7280;">Auto-renews every 3 Years for $109.95</p>
+                                            </div>
+                                        </div>
+
+                                        <!-- Email Item -->
+                                        <div class="cart-item-card" style="background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px;">
+                                            <div class="cart-item-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                                                <div class="item-title-section">
+                                                    <h4 style="margin: 0 0 4px 0; font-size: 16px; font-weight: 600;">Microsoft 365 Email Essentials</h4>
+                                                </div>
+                                                <div style="text-align: right;">
+                                                    <div style="font-size: 18px; font-weight: 600;">$23.88</div>
+                                                    <div style="color: #6b7280; font-size: 12px; text-decoration: line-through;">$95.88</div>
+                                                    <div style="color: #059669; font-size: 12px; font-weight: 600;">75% off</div>
+                                                </div>
+                                            </div>
+                                            <div style="margin-bottom: 12px;">
+                                                <label style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 4px;">Term length</label>
+                                                <select style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px; background: white;">
+                                                    <option>3 Year</option>
+                                                </select>
+                                            </div>
+                                            <div style="margin-bottom: 12px;">
+                                                <label style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 4px;">Mailbox</label>
+                                                <div style="display: flex; align-items: center; gap: 12px;">
+                                                    <button style="width: 32px; height: 32px; border: 1px solid #d1d5db; background: white; border-radius: 4px; cursor: pointer;">−</button>
+                                                    <input type="number" value="0" style="width: 60px; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px; text-align: center;">
+                                                    <button style="width: 32px; height: 32px; border: 1px solid #d1d5db; background: white; border-radius: 4px; cursor: pointer;">+</button>
+                                                </div>
+                                                <p style="margin: 8px 0 0 0; font-size: 12px; color: #6b7280;">Auto-renews every 12 Months for $95.88</p>
+                                            </div>
+                                            <div style="text-align: right;">
+                                                <button style="background: none; border: none; color: #dc2626; cursor: pointer; font-size: 14px;">🗑</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            console.log('Cart view displayed');
+        }
+
+        function toggleCartAccordion() {
+            const content = document.getElementById('cartAccordionContent');
+            if (content) {
+                content.style.display = content.style.display === 'none' ? 'block' : 'none';
+            }
+        }
+
+        // Global cart state
+        let cartItems = {
+            domain: { included: true, price: 87.97, originalPrice: 109.95, discount: 19 },
+            email: { included: false, price: 23.88, originalPrice: 95.88, discount: 75 }
+        };
+
+        function addDomainProtectionToCart() {
+            console.log('🚀 DOMAIN PROTECTION ADD TO CART CLICKED!');
+            
+            // Store the previous state
+            previousState = 'domain-protection';
+            
+            // Hide the chat interface and control bar
+            const chatContainer = document.querySelector('.chat-interface');
+            if (chatContainer) {
+                chatContainer.style.display = 'none';
+            }
+            
+            const controlBar = document.querySelector('.control-bar');
+            if (controlBar) {
+                controlBar.style.display = 'none';
+            }
+            
+            // Expand sidebar to full width
+            const hangTightSidebar = document.getElementById('hangTightSidebar');
+            if (!hangTightSidebar) {
+                console.error('Sidebar not found');
+                return;
+            }
+            
+            hangTightSidebar.style.width = '100%';
+            hangTightSidebar.style.maxWidth = '100%';
+            hangTightSidebar.style.right = '0';
+            hangTightSidebar.style.left = '0';
+            
+            // Show simple cart view
+            hangTightSidebar.innerHTML = `
+                <div style="background: white; height: 100%; padding: 20px;">
+                    <h1>Cart - Domain Protection Added</h1>
+                    <p>Domain: $87.97</p>
+                    <p>Microsoft 365 Email Essentials: $23.88</p>
+                    <p><strong>Total: $111.85</strong></p>
+                    <button onclick="returnFromCartView()" style="background: #ccc; padding: 10px; margin-top: 20px;">← Back</button>
+                </div>
+            `;
+            
+            console.log('Cart view displayed');
+        }
+
+        function skipDomainProtectionToCart() {
+            console.log('Skipping domain protection to cart');
+            cartItems.email.included = false;
+            showCartViewWithItems('domain-protection');
+        }
+
+        function showCartViewWithItems(fromState = 'domain-search') {
+            console.log('🔄 Showing cart view with items from:', fromState);
+            
+            // Store the previous state
+            previousState = fromState;
+            console.log('📝 Set previousState to:', previousState);
+            
+            // Hide the chat interface and control bar
+            const chatContainer = document.querySelector('.chat-interface');
+            if (chatContainer) {
+                chatContainer.style.display = 'none';
+            }
+            
+            const controlBar = document.querySelector('.control-bar');
+            if (controlBar) {
+                controlBar.style.display = 'none';
+            }
+            
+            // Expand sidebar to full width
+            const hangTightSidebar = document.getElementById('hangTightSidebar');
+            if (!hangTightSidebar) {
+                console.error('Sidebar not found');
+                return;
+            }
+            
+            hangTightSidebar.style.width = '100%';
+            hangTightSidebar.style.maxWidth = '100%';
+            hangTightSidebar.style.right = '0';
+            hangTightSidebar.style.left = '0';
+            
+            // Calculate totals
+            let subtotal = 0;
+            let itemCount = 0;
+            let totalSavings = 0;
+            
+            if (cartItems.domain.included) {
+                subtotal += cartItems.domain.price;
+                itemCount++;
+                totalSavings += (cartItems.domain.originalPrice - cartItems.domain.price);
+            }
+            
+            if (cartItems.email.included) {
+                subtotal += cartItems.email.price;
+                itemCount++;
+                totalSavings += (cartItems.email.originalPrice - cartItems.email.price);
+            }
+            
+            const total = subtotal; // No taxes in this example
+            
+            // Generate email item HTML if included
+            const emailItemHTML = cartItems.email.included ? `
+                <!-- Email Item -->
+                <div class="cart-item-card" style="background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px;">
+                    <div class="cart-item-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                        <div class="item-title-section">
+                            <h4 style="margin: 0 0 4px 0; font-size: 16px; font-weight: 600;">Microsoft 365 Email Essentials</h4>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 18px; font-weight: 600;">$${cartItems.email.price}</div>
+                            <div style="color: #6b7280; font-size: 12px; text-decoration: line-through;">$${cartItems.email.originalPrice}</div>
+                            <div style="color: #059669; font-size: 12px; font-weight: 600;">${cartItems.email.discount}% off</div>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 12px;">
+                        <label style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 4px;">Term length</label>
+                        <select style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px; background: white;">
+                            <option>3 Year</option>
+                        </select>
+                    </div>
+                    <div style="margin-bottom: 12px;">
+                        <label style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 4px;">Mailbox</label>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <button style="width: 32px; height: 32px; border: 1px solid #d1d5db; background: white; border-radius: 4px; cursor: pointer;">−</button>
+                            <input type="number" value="0" style="width: 60px; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px; text-align: center;">
+                            <button style="width: 32px; height: 32px; border: 1px solid #d1d5db; background: white; border-radius: 4px; cursor: pointer;">+</button>
+                        </div>
+                        <p style="margin: 8px 0 0 0; font-size: 12px; color: #6b7280;">Auto-renews every 12 Months for $95.88</p>
+                    </div>
+                    <div style="text-align: right;">
+                        <button onclick="removeEmailFromCart()" style="background: none; border: none; color: #dc2626; cursor: pointer; font-size: 14px;">🗑</button>
+                    </div>
+                </div>
+            ` : '';
+            
+            // Update sidebar content with dynamic cart
+            hangTightSidebar.innerHTML = `
+                <div class="cart-content" style="background: #ffffff; height: 100%; display: flex; flex-direction: column;">
+                    <!-- Header -->
+                    <div class="cart-header" style="display: flex; align-items: center; justify-content: space-between; padding: 20px; border-bottom: 1px solid #e5e7eb;">
+                        <button class="back-btn" onclick="returnFromCartView()" style="background: none; border: none; color: #6b7280; font-size: 16px; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                            ← Back
+                        </button>
+                        <h2 class="cart-title" style="font-size: 24px; font-weight: 700; margin: 0; flex: 1; text-align: center;">Purchase Now</h2>
+                        <div class="header-spacer" style="width: 60px;"></div>
+                    </div>
+                    
+                    <!-- Scrollable Content -->
+                    <div class="cart-scrollable" style="flex: 1; overflow-y: auto; padding: 20px;">
+                        <!-- Left Column - Forms -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; max-width: 1200px; margin: 0 auto;">
+                            <div class="forms-column">
+                                <!-- Billing Information -->
+                                <div class="billing-section" style="margin-bottom: 24px;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px;">
+                                        <div>
+                                            <h3 style="font-size: 18px; font-weight: 600; margin: 0 0 4px 0;">Billing Information</h3>
+                                            <p style="color: #6b7280; margin: 0; font-size: 14px;">3000 Carillon Point, Kirkland WA...</p>
+                                        </div>
+                                        <div style="display: flex; align-items: center; gap: 12px;">
+                                            <div style="width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                                <img src="../assets/images/icons/checkmark.svg" alt="Checkmark" style="width: 14px; height: 14px;">
+                                            </div>
+                                            <button style="background: none; border: none; color: #6b7280; cursor: pointer;">▼</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Payment Method -->
+                                <div class="payment-section">
+                                    <div style="display: flex; align-items: center; justify-content: space-between; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px;">
+                                        <div>
+                                            <h3 style="font-size: 18px; font-weight: 600; margin: 0 0 4px 0; display: flex; align-items: center; gap: 8px;">
+                                                <img src="../assets/images/lock.svg" alt="Lock" style="width: 18px; height: 18px;"> Secure Payment
+                                            </h3>
+                                            <p style="color: #6b7280; margin: 0; font-size: 14px; display: flex; align-items: center; gap: 8px;">
+                                                <span style="background: #1f2937; color: white; padding: 2px 6px; border-radius: 4px; font-size: 12px;">VISA</span>
+                                                Ending with 5555
+                                            </p>
+                                        </div>
+                                        <div style="display: flex; align-items: center; gap: 12px;">
+                                            <div style="width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                                <img src="../assets/images/icons/checkmark.svg" alt="Checkmark" style="width: 14px; height: 14px;">
+                                            </div>
+                                            <button style="background: none; border: none; color: #6b7280; cursor: pointer;">▼</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right Column - Order Summary -->
+                            <div class="order-column">
+                                <div class="order-summary" style="background: #f9fafb; border-radius: 8px; padding: 24px;">
+                                    <h3 style="font-size: 20px; font-weight: 600; margin: 0 0 16px 0;">Order Summary</h3>
+                                    <a href="#" style="color: #767676; text-decoration: none; font-size: 14px; margin-bottom: 20px; display: block;">View offer disclaimers</a>
+                                    
+                                    <div style="margin-bottom: 16px;">
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                            <span>Subtotal</span>
+                                            <span>$${subtotal.toFixed(2)}</span>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
+                                            <span>Taxes and Fees</span>
+                                            <span>$0.00</span>
+                                        </div>
+                                        <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 16px 0;">
+                                        <div style="display: flex; justify-content: space-between; font-weight: 600; font-size: 18px;">
+                                            <span>Total (USD)</span>
+                                            <span style="color: #059669;">$${total.toFixed(2)}</span>
+                                        </div>
+                                    </div>
+
+                                    <div style="background: transparent; border: none; border-radius: 8px; padding: 12px; margin-bottom: 24px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                        <img src="../assets/images/GD_TheGo.svg" alt="Success" style="width: 20px; height: 20px;">
+                                        <span style="color: #065f46; font-size: 14px;"><strong>Nice!</strong> You saved $${totalSavings.toFixed(2)} on your order.</span>
+                                    </div>
+
+                                    <button style="width: 100%; background: #000000; color: white; border: none; border-radius: 6px; padding: 16px; font-size: 16px; font-weight: 600; cursor: pointer; margin-bottom: 16px;">
+                                        <img src="../assets/images/lock.svg" alt="Lock" style="width: 16px; height: 16px; margin-right: 8px;"> Complete Purchase
+                                    </button>
+
+                                    <p style="font-size: 12px; color: #6b7280; line-height: 1.4; margin: 0;">
+                                        By clicking "Complete Purchase," you agree to our Terms & Conditions and Privacy Policy, and consent to enroll your product(s) in our automatic renewal service, which can be cancelled at any time via the Renewals and Billing page in your account. Automatic renewals are billed to the payment method selected for this order or your backup payment method(s), until cancelled.
+                                    </p>
+                                </div>
+
+                                <!-- Your Items Accordion -->
+                                <div class="cart-accordion" style="margin-top: 24px;">
+                                    <div class="accordion-header" onclick="toggleCartAccordion()" style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+                                        <h3 style="margin: 0; font-size: 16px; font-weight: 600;">Your Items(${itemCount})</h3>
+                                        <span style="color: #6b7280; font-size: 18px;">^</span>
+                                    </div>
+                                    <div class="accordion-content" id="cartAccordionContent" style="display: none; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 8px 8px; padding: 16px;">
+                                        <!-- Domain Item -->
+                                        <div class="cart-item-card" style="background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+                                            <div class="cart-item-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                                                <div class="item-title-section">
+                                                    <h4 style="margin: 0 0 4px 0; font-size: 16px; font-weight: 600;">Domain</h4>
+                                                    <p style="margin: 0; color: #6b7280; font-size: 14px;">availablename.com</p>
+                                                </div>
+                                                <div style="text-align: right;">
+                                                    <div style="font-size: 18px; font-weight: 600;">$${cartItems.domain.price}</div>
+                                                    <div style="color: #6b7280; font-size: 12px; text-decoration: line-through;">$${cartItems.domain.originalPrice}</div>
+                                                    <div style="color: #059669; font-size: 12px; font-weight: 600;">${cartItems.domain.discount}% off</div>
+                                                </div>
+                                            </div>
+                                            <div style="margin-bottom: 12px;">
+                                                <label style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 4px;">Term length</label>
+                                                <select style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px; background: white;">
+                                                    <option>3 Year</option>
+                                                </select>
+                                                <p style="margin: 8px 0 0 0; font-size: 12px; color: #6b7280;">Auto-renews every 3 Years for $109.95</p>
+                                            </div>
+                                        </div>
+
+                                        ${emailItemHTML}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            console.log('Cart view with items displayed');
+        }
+
+        function removeEmailFromCart() {
+            cartItems.email.included = false;
+            showCartViewWithItems(previousState); // Refresh cart view
+        }
+
+        function returnFromCartView() {
+            console.log('⬅️ Returning from cart view to:', previousState);
+            
+            // Restore the chat interface
+            const chatContainer = document.querySelector('.chat-interface');
+            if (chatContainer) {
+                chatContainer.style.display = 'flex';
+                console.log('💬 Chat interface restored, messages count:', chatContainer.querySelectorAll('.user-message, .airo-message').length);
+            } else {
+                console.log('❌ Chat container not found');
+            }
+            
+            // Restore the control bar
+            const controlBar = document.querySelector('.control-bar');
+            if (controlBar) {
+                controlBar.style.display = 'flex';
+            }
+            
+            // Reset sidebar to original dimensions and hide it
+            const hangTightSidebar = document.getElementById('hangTightSidebar');
+            if (hangTightSidebar) {
+                hangTightSidebar.style.width = '';
+                hangTightSidebar.style.maxWidth = '';
+                hangTightSidebar.style.right = '';
+                hangTightSidebar.style.left = '';
+                
+                // Return to the appropriate state based on where user came from
+                if (previousState === 'email-offer') {
+                    // Return to email offer sidebar
+                    console.log('🔄 Returning to email offer sidebar');
+                    showEmailOfferSidebar();
+                } else if (previousState === 'email-chat') {
+                    // Return from email chat buttons - show domain results (user was viewing domain search with chat)
+                    console.log('🔄 Returning from email chat - showing domain results');
+                    showDomainResultsOnly(); // Show domain results without adding duplicate action buttons
+                    // Re-initialize cart button functionality after DOM update
+                    setTimeout(() => {
+                        initializeCartButtons();
+                    }, 100);
+                } else if (previousState === 'domain-search') {
+                    // Return to domain search results (hide sidebar completely)
+                    console.log('🔄 Returning to domain search - hiding sidebar');
+                    hangTightSidebar.style.display = 'none';
+                } else {
+                    console.log('❌ Unknown previousState:', previousState);
+                    hangTightSidebar.style.display = 'none';
+                }
+            }
+            
+            console.log('Restored previous state:', previousState);
+        }
+
+        function showCartConfirmationMessage() {
+            // Find or create the chat interface elements
+            const chatMessages = document.querySelector('.chat-messages');
+            
+            if (chatMessages) {
+                // Create user message element (cart confirmation)
+                const userMessage = document.createElement('div');
+                userMessage.className = 'user-message';
+                userMessage.innerHTML = `<div class="user-bubble system-message">You added <strong>availablename.com</strong> to your cart</div>`;
+                
+                // Add user message to chat
+                chatMessages.appendChild(userMessage);
+                
+                // Create system message element (email credibility) - aligned left
+                setTimeout(() => {
+                    const systemMessage = document.createElement('div');
+                    systemMessage.className = 'airo-message';
+                    systemMessage.innerHTML = `
+                        <div class="airo-bubble" style="background: white; border: 1px solid #e5e7eb; color: #374151;">
+                            <div style="display: flex; align-items: flex-start; gap: 12px;">
+                                <img src="../assets/images/Thumbnail.svg" alt="Email" width="24" height="24" style="flex-shrink: 0; margin-top: 4px;">
+                                <div>
+                                    <div style="font-weight: 600; margin-bottom: 8px; font-size: 20px;">Build your credibility with a custom email address</div>
+                                    <div style="font-size: 14px; line-height: 1.4;">
+                                        A custom email address like <strong>hello@availablename.com</strong> shows that you take your business seriously
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 12px;">
+                            <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
+                                <button class="standalone-btn outline-btn" onclick="showEmailOfferSidebar()" style="padding: 8px 16px; border: 1px solid #d1d5db; background: white; color: #374151; border-radius: 6px; font-size: 14px; cursor: pointer;">Get a custom email address</button>
+                                <button class="standalone-btn outline-btn" onclick="skipEmailChatToCart()" style="padding: 8px 16px; border: 1px solid #d1d5db; background: white; color: #374151; border-radius: 6px; font-size: 14px; cursor: pointer;">Not interested</button>
+                            </div>
+                            <div class="helper-text">
+                                <div class="helper-message">
+                                    <span class="helper-icon">↰</span>
+                                    Or, write your own response below
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    chatMessages.appendChild(systemMessage);
+                    
+                    // Scroll to latest message if scrollToLatestMessage function exists
+                    if (typeof scrollToLatestMessage === 'function') {
+                        scrollToLatestMessage();
+                    } else {
+                        // Fallback: scroll to bottom
+                        systemMessage.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }, 500); // Small delay to show system message after user message
+                
+                console.log('Cart confirmation and email credibility messages added to chat');
+            } else {
+                console.warn('Chat interface not found');
+            }
+        }
+
+        // Page loaded confirmation
+        console.log('Domain search page script loaded successfully!');
+        
+        // Global function to force cart button setup (always works)
+        window.setupCartButtons = function() {
+            console.log('🔧 Force setting up cart buttons...');
+            initializeCartButtons();
+            return document.querySelectorAll('.btn-cart[data-cart-ready="true"]').length + ' buttons ready';
+        };
+        
+        // Test function to manually trigger cart button conversion (for debugging)
+        window.testCartButton = function() {
+            console.log('🧪 Manual test triggered');
+            const firstCartButton = document.querySelector('.btn-cart');
+            if (firstCartButton) {
+                console.log('🎯 Found cart button for test:', firstCartButton);
+                handleCartButtonClick(firstCartButton);
+            } else {
+                console.log('❌ No cart button found for test');
+                // Try alternative selectors
+                const allButtons = document.querySelectorAll('button');
+                console.log('🔍 Total buttons found:', allButtons.length);
+                const cartButtons = document.querySelectorAll('button[title="Add to cart"]');
+                console.log('🛒 Buttons with "Add to cart" title:', cartButtons.length);
+            }
+        };
+        
+        // Also make the handler function globally accessible for testing
+        window.handleCartButtonClick = handleCartButtonClick;
+
+        // Simple, reliable initialization
+        function startCartButtonWatcher() {
+            // Try every 500ms until buttons are found and initialized
+            const watcher = setInterval(() => {
+                const cartButtons = document.querySelectorAll('.btn-cart');
+                const readyButtons = document.querySelectorAll('.btn-cart[data-cart-ready="true"]');
+                
+                if (cartButtons.length > 0 && readyButtons.length === 0) {
+                    console.log('Found cart buttons, initializing...');
+                    initializeCartButtons();
+                    clearInterval(watcher); // Stop checking once done
+                }
+            }, 500);
+            
+            // Stop trying after 10 seconds
+            setTimeout(() => clearInterval(watcher), 10000);
+        }
+
+        // Start immediately
+        startCartButtonWatcher();
+        
+        // Also add a manual check function that can be called from console
+        window.checkButtons = function() {
+            console.log('🔍 Manual button check:');
+            console.log('Total buttons:', document.querySelectorAll('button').length);
+            console.log('.btn-cart buttons:', document.querySelectorAll('.btn-cart').length);
+            console.log('Add to cart buttons:', document.querySelectorAll('button[title="Add to cart"]').length);
+            console.log('Ready cart buttons:', document.querySelectorAll('.btn-cart[data-cart-ready="true"]').length);
+            
+            // Try to force initialization
+            initializeCartButtons();
+        };
+        
+        // Enhanced debugging
+        window.debugCartButtons = function() {
+            console.log('🔧 Debug Cart Buttons:');
+            const buttons = document.querySelectorAll('.btn-cart');
+            buttons.forEach((btn, i) => {
+                console.log(`Button ${i + 1}:`, {
+                    element: btn,
+                    classes: btn.className,
+                    hasListener: btn.hasAttribute('data-cart-ready'),
+                    visible: btn.offsetParent !== null
+                });
+            });
+            return buttons;
+        };
     </script>
 </body>
 </html>
